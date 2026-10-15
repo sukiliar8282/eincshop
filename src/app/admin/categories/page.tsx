@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma";
 
 import { requireAdmin } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
