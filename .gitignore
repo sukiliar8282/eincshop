@@ -24,13 +24,15 @@
 .DS_Store
 *.pem
 
-# debug
+# debug & logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+logs/
+*.log
 
-# env files (can opt-in for committing if needed)
+# env files (Wajib diabaikan)
 .env*
 
 # vercel
@@ -39,3 +41,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI Assistant configs
+.agents/
+.cursor/
+.claude/
+.devin/
