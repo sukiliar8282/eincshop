@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { signIn } from "next-auth/react";
 
 import { LoadingButton } from "@/components/ui/loading-button";
 import { StatusMessage } from "@/components/ui/status-message";
+import { Turnstile } from "@/components/ui/turnstile";
 import { loginAction, registerAction, type AuthActionState } from "./actions";
-import { signIn } from "next-auth/react";
 
 type AuthFormProps = {
   mode: "login" | "register";
@@ -119,6 +120,9 @@ export function AuthForm({ mode }: AuthFormProps) {
         {state.error && (
           <StatusMessage tone="error">{state.error}</StatusMessage>
         )}
+
+        {/* Cloudflare Turnstile CAPTCHA */}
+        <Turnstile />
 
         <LoadingButton type="submit" loading={isPending} className="w-full">
           {isRegister ? "Buat akun" : "Masuk"}

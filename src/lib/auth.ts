@@ -8,12 +8,22 @@ import { prisma } from "@/lib/db";
 import { verifyPassword } from "@/lib/security/password";
 import { credentialsSchema } from "@/lib/validation/auth";
 
+// NO SILENT FAILURES: Validasi keras keberadaan AUTH_SECRET
+if (!process.env.AUTH_SECRET) {
+  throw new Error(
+    "FATAL ERROR [Auth]: AUTH_SECRET belum dikonfigurasi di file .env Anda! " +
+      "NextAuth memerlukan AUTH_SECRET untuk mengenkripsi dan mendekripsi JWT session token.",
+  );
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   adapter: PrismaAdapter(
     prisma as unknown as Parameters<typeof PrismaAdapter>[0],
   ),
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 hari
   },
 
   pages: {
@@ -92,12 +102,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async session({ session, token }) {
-      if (session.user && typeof token.userId === "string") {
-        session.user.id = token.userId;
-      }
-
-      if (session.user && typeof token.role === "string") {
-        session.user.role = token.role as UserRole;
+      if (session.user) {
+        session.user.id = (token.userId as string) || (token.sub as string);
+        if (token.role) {
+          session.user.role = token.role as UserRole;
+        }
       }
 
       return session;

@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db";
 import { getRequestIp } from "@/lib/security/request";
 import { consumeAuthRateLimit } from "@/lib/security/rate-limit";
 import { hashPassword } from "@/lib/security/password";
+import { verifyTurnstileToken } from "@/lib/security/turnstile";
 import { credentialsSchema, registrationSchema } from "@/lib/validation/auth";
 
 export type AuthActionState = {
@@ -34,6 +35,20 @@ export async function registerAction(
 
   const requestIp = await getRequestIp();
 
+  // 1. Verifikasi Cloudflare Turnstile CAPTCHA
+  const turnstileToken = formData.get("cf-turnstile-response");
+  const isHuman = await verifyTurnstileToken(
+    typeof turnstileToken === "string" ? turnstileToken : "",
+    requestIp,
+  );
+
+  if (!isHuman) {
+    return {
+      error: "Verifikasi keamanan (CAPTCHA) gagal. Silakan centang kembali.",
+    };
+  }
+
+  // 2. Proteksi Anti-Spam Rate Limit
   const rateLimit = await consumeAuthRateLimit(`register:${requestIp}`);
 
   if (!rateLimit.allowed) {
@@ -111,6 +126,20 @@ export async function loginAction(
 
   const requestIp = await getRequestIp();
 
+  // 1. Verifikasi Cloudflare Turnstile CAPTCHA
+  const turnstileToken = formData.get("cf-turnstile-response");
+  const isHuman = await verifyTurnstileToken(
+    typeof turnstileToken === "string" ? turnstileToken : "",
+    requestIp,
+  );
+
+  if (!isHuman) {
+    return {
+      error: "Verifikasi keamanan (CAPTCHA) gagal. Silakan centang kembali.",
+    };
+  }
+
+  // 2. Proteksi Anti-Brute Force Rate Limit
   const rateLimit = await consumeAuthRateLimit(
     `login:${parsed.data.email}:${requestIp}`,
   );
