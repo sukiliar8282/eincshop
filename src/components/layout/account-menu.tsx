@@ -83,6 +83,14 @@ export function AccountMenu({ name, email, role, image }: AccountMenuProps) {
             Order history
           </Link>
 
+          {/* Download Center Link */}
+          <Link
+            href="/account/downloads"
+            className="block rounded-[var(--radius-control)] px-3 py-2.5 text-sm text-[var(--color-text)] hover:bg-[var(--color-surface-muted)]"
+          >
+            Download center
+          </Link>
+
           {role === "ADMIN" && (
             <Link
               href="/admin"

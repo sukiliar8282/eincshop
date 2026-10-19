@@ -11,10 +11,7 @@ export const metadata: Metadata = {
   description: "Kelola profil dan ringkasan akun Anda.",
 };
 
-function getInitials(
-  name?: string | null,
-  email?: string | null,
-): string {
+function getInitials(name?: string | null, email?: string | null): string {
   const value = name?.trim() || email?.split("@")[0] || "U";
   return value
     .split(/\s+/)
@@ -33,7 +30,7 @@ function formatDate(date: Date): string {
 export default async function AccountPage() {
   const sessionUser = await requireUser();
 
-  // Query live langsung dari database PostgreSQL agar foto dan nama selalu realtime
+  // Query live langsung dari database PostgreSQL agar data selalu realtime
   const user = await prisma.user.findUnique({
     where: { id: sessionUser.id },
     select: {
@@ -46,6 +43,7 @@ export default async function AccountPage() {
       _count: {
         select: {
           orders: true,
+          downloadGrants: true,
         },
       },
     },
@@ -54,6 +52,7 @@ export default async function AccountPage() {
   const currentUser = user ?? sessionUser;
   const memberSince = user?.createdAt ? formatDate(user.createdAt) : null;
   const orderCount = user?._count.orders ?? 0;
+  const downloadCount = user?._count.downloadGrants ?? 0;
   const initials = getInitials(currentUser.name, currentUser.email);
 
   return (
@@ -162,8 +161,8 @@ export default async function AccountPage() {
           </section>
 
           {/* QUICK SHORTCUT CARDS GRID */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {/* Kartu Riwayat Pesanan */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* 1. Kartu Riwayat Pesanan */}
             <Link
               href="/account/orders"
               className="group flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 transition-all hover:border-[var(--color-ink)] hover:shadow-md active:scale-[0.99]"
@@ -196,12 +195,51 @@ export default async function AccountPage() {
                   Riwayat Pesanan
                 </h3>
                 <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                  Lacak status transaksi, unduh aset digital, dan nota pembelian.
+                  Lacak status transaksi dan nota pembelian.
                 </p>
               </div>
             </Link>
 
-            {/* Kartu Keamanan & Informasi */}
+            {/* 2. Kartu Download Center (Integrasi Baru) */}
+            <Link
+              href="/account/downloads"
+              className="group flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 transition-all hover:border-[var(--color-ink)] hover:shadow-md active:scale-[0.99]"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-surface-muted)] text-[var(--color-ink)] transition-colors group-hover:bg-[var(--color-ink)] group-hover:text-white">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    className="h-5 w-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                </div>
+
+                <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--color-ink)]">
+                  {downloadCount} File
+                </span>
+              </div>
+
+              <div className="mt-5">
+                <h3 className="text-base font-semibold text-[var(--color-ink)]">
+                  Download Center
+                </h3>
+                <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                  Unduh langsung file digital dari order yang telah
+                  diverifikasi.
+                </p>
+              </div>
+            </Link>
+
+            {/* 3. Kartu Pengaturan Profil */}
             <Link
               href="/account/profile"
               className="group flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 transition-all hover:border-[var(--color-ink)] hover:shadow-md active:scale-[0.99]"
@@ -235,7 +273,7 @@ export default async function AccountPage() {
                   Pengaturan Profil
                 </h3>
                 <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                  Ubah foto profil, nama tampilan, serta alamat email akun Anda.
+                  Ubah foto profil, nama tampilan, dan alamat email akun.
                 </p>
               </div>
             </Link>

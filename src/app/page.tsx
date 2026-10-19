@@ -141,7 +141,8 @@ export default async function HomePage() {
               {spotlightProduct ? (
                 <div className="pt-5">
                   {spotlightProduct.images[0]?.url ? (
-                    <div className="relative aspect-[16/9] overflow-hidden rounded-[var(--radius-image)] bg-[var(--color-surface-muted)]">
+                    /* FIX: Menggunakan aspect-[4/3] dan object-top agar judul foto tidak terpotong */
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-image)] bg-[var(--color-surface-muted)]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={spotlightProduct.images[0].url}
@@ -149,11 +150,11 @@ export default async function HomePage() {
                           spotlightProduct.images[0].altText ??
                           spotlightProduct.title
                         }
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover object-top transition-transform duration-300 hover:scale-[1.02]"
                       />
                     </div>
                   ) : (
-                    <div className="flex aspect-[16/9] items-end rounded-[var(--radius-image)] bg-[var(--color-surface-muted)] p-5">
+                    <div className="flex aspect-[4/3] items-end rounded-[var(--radius-image)] bg-[var(--color-surface-muted)] p-5">
                       <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
                         Preview produk
                       </span>

@@ -172,6 +172,7 @@ exports.Prisma.CategoryScalarFieldEnum = {
 
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
+  sellerId: 'sellerId',
   categoryId: 'categoryId',
   title: 'title',
   slug: 'slug',
@@ -229,6 +230,7 @@ exports.Prisma.CartItemScalarFieldEnum = {
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  storeName: 'storeName',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
@@ -385,6 +387,7 @@ exports.CartStatus = exports.$Enums.CartStatus = {
 
 exports.UserRole = exports.$Enums.UserRole = {
   CUSTOMER: 'CUSTOMER',
+  SELLER: 'SELLER',
   ADMIN: 'ADMIN'
 };
 

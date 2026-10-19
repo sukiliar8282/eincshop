@@ -12,6 +12,16 @@ const statusStyles: Record<string, string> = {
   FAILED: "bg-[var(--color-danger-soft)] text-[var(--color-danger-strong)]",
 };
 
+const statusLabels: Record<string, string> = {
+  PAID: "Sudah dibayar",
+  COMPLETED: "Selesai",
+  PENDING: "Menunggu pembayaran",
+  PENDING_PAYMENT: "Menunggu pembayaran",
+  FAILED: "Pembayaran gagal",
+  CANCELLED: "Dibatalkan",
+  EXPIRED: "Kedaluwarsa",
+};
+
 export function OrderStatus({ status }: OrderStatusProps) {
   return (
     <span
@@ -20,7 +30,7 @@ export function OrderStatus({ status }: OrderStatusProps) {
         "bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]"
       }`}
     >
-      {status.replaceAll("_", " ")}
+      {statusLabels[status] ?? status.replaceAll("_", " ")}
     </span>
   );
 }

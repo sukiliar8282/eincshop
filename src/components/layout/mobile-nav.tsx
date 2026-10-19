@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { NavLink } from "@/components/layout/nav-link";
 import { signOut } from "@/lib/auth";
 
 type MobileUser = {
@@ -30,14 +31,27 @@ export function MobileNav({ user, cartCount = 0 }: MobileNavProps) {
   const initials = user ? getInitials(user.name, user.email) : "U";
 
   return (
-    <details className="relative md:hidden">
-      <summary className="focus-ring flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line)] bg-white text-[var(--color-ink)] transition-colors active:scale-95 [&::-webkit-details-marker]:hidden">
-        <span className="sr-only">Buka menu</span>
+    /* Menambahkan class 'group' agar child dapat mendeteksi state open */
+    <details className="group relative md:hidden">
+      <summary
+        aria-label="Toggle navigation"
+        className="focus-ring flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line)] bg-white text-[var(--color-ink)] transition-colors active:scale-95 outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ink)] [&::-webkit-details-marker]:hidden"
+      >
+        <span className="sr-only">Toggle navigation</span>
 
-        <span className="flex w-5 flex-col gap-1.5" aria-hidden="true">
-          <span className="block h-0.5 bg-current" />
-          <span className="block h-0.5 bg-current" />
-          <span className="block h-0.5 bg-current" />
+        {/* CONTAINER 3 GARIS DENGAN ANIMASI BESPOKE MORPHING KE 'X' (300ms) */}
+        <span
+          className="relative flex h-4 w-5 flex-col justify-between items-center pointer-events-none"
+          aria-hidden="true"
+        >
+          {/* Garis 1 (Atas): Meluncur 7px ke bawah lalu rotasi 45 derajat */}
+          <span className="block h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out origin-center group-open:translate-y-[7px] group-open:rotate-45" />
+
+          {/* Garis 2 (Tengah): Geser dan memudar halus (opacity 0) */}
+          <span className="block h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out origin-center group-open:translate-x-1 group-open:opacity-0" />
+
+          {/* Garis 3 (Bawah): Meluncur 7px ke atas lalu rotasi -45 derajat */}
+          <span className="block h-0.5 w-5 rounded-full bg-current transition-all duration-300 ease-in-out origin-center group-open:-translate-y-[7px] group-open:-rotate-45" />
         </span>
       </summary>
 
@@ -75,19 +89,21 @@ export function MobileNav({ user, cartCount = 0 }: MobileNavProps) {
           </div>
         )}
 
+        {/* Link Publik (Katalog) */}
         {publicLinks.map((link) => (
-          <Link
+          <NavLink
             key={link.href}
             href={link.href}
-            className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+            className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
           >
             {link.label}
-          </Link>
+          </NavLink>
         ))}
 
-        <Link
+        {/* Link Keranjang */}
+        <NavLink
           href="/cart"
-          className="flex items-center justify-between rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+          className="flex items-center justify-between rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
         >
           <span>Keranjang</span>
 
@@ -96,38 +112,50 @@ export function MobileNav({ user, cartCount = 0 }: MobileNavProps) {
               {cartCount > 99 ? "99+" : cartCount}
             </span>
           )}
-        </Link>
+        </NavLink>
 
         {user ? (
           <>
-            <Link
+            {/* Link Account */}
+            <NavLink
               href="/account"
-              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
             >
               Account
-            </Link>
+            </NavLink>
 
-            <Link
+            {/* Link Profile */}
+            <NavLink
               href="/account/profile"
-              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
             >
               Profile
-            </Link>
+            </NavLink>
 
-            <Link
+            {/* Link Order History */}
+            <NavLink
               href="/account/orders"
-              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
             >
               Order history
+            </NavLink>
+
+            {/* Download Center Link */}
+            <Link
+              href="/account/downloads"
+              className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+            >
+              Download center
             </Link>
 
+            {/* Link Admin Dashboard (Jika Role Admin) */}
             {user.role === "ADMIN" && (
-              <Link
+              <NavLink
                 href="/admin"
-                className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)]"
+                className="block rounded-[var(--radius-control)] px-3 py-3 text-sm hover:bg-[var(--color-surface-muted)] aria-[current=page]:bg-[var(--color-surface-muted)] aria-[current=page]:text-[var(--color-ink)]"
               >
                 Admin dashboard
-              </Link>
+              </NavLink>
             )}
 
             <form

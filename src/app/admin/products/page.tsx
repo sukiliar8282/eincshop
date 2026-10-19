@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/container";
 import { archiveProductAction } from "@/modules/catalog/actions";
 
 export const metadata: Metadata = {
-  title: "Manage Products",
+  title: "Kelola Produk Saya",
 };
 
 function statusLabel(status: string) {
@@ -18,9 +18,13 @@ function statusLabel(status: string) {
 }
 
 export default async function AdminProductsPage() {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
+  // Kueri terisolasi: hanya ambil produk milik seller yang sedang login
   const products = await prisma.product.findMany({
+    where: {
+      OR: [{ sellerId: admin.id }, { sellerId: null }],
+    },
     select: {
       id: true,
       title: true,
@@ -39,47 +43,59 @@ export default async function AdminProductsPage() {
   });
 
   return (
-    <main className="py-16 sm:py-24">
+    <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-canvas)] py-8 sm:py-16 safe-bottom">
       <Container>
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        {/* Breadcrumb Navigasi Android Friendly */}
+        <Link
+          href="/admin"
+          className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[var(--color-accent-strong)] hover:underline"
+        >
+          ← Kembali ke Dashboard Admin
+        </Link>
+
+        <div className="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-              Admin catalog
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
+              Katalog Toko Anda
             </p>
 
-            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-              Products
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+              Produk Saya ({products.length})
             </h1>
           </div>
 
           <Link
             href="/admin/products/new"
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line)] bg-white px-4 text-sm font-medium text-black hover:bg-stone-50 sm:w-auto"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-[var(--color-ink)] px-5 text-sm font-semibold text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-95 sm:w-auto shadow-sm"
           >
-            New product
+            + Tambah Produk Baru
           </Link>
         </div>
 
-        <div className="mobile-scroll mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
+        {/* Tabel Responsif Mobile-Scroll */}
+        <div className="mobile-scroll mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-[var(--color-line)] bg-[var(--color-surface-muted)]">
               <tr>
-                <th className="px-5 py-4 font-semibold">Product</th>
-                <th className="px-5 py-4 font-semibold">Category</th>
-                <th className="px-5 py-4 font-semibold">Price</th>
+                <th className="px-5 py-4 font-semibold">Produk</th>
+                <th className="px-5 py-4 font-semibold">Kategori</th>
+                <th className="px-5 py-4 font-semibold">Harga</th>
                 <th className="px-5 py-4 font-semibold">Status</th>
-                <th className="px-5 py-4 font-semibold">Action</th>
+                <th className="px-5 py-4 font-semibold">Aksi</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-[var(--color-line)]">
               {products.map((product) => (
-                <tr key={product.id}>
+                <tr
+                  key={product.id}
+                  className="hover:bg-stone-50/50 transition-colors"
+                >
                   <td className="px-5 py-4">
                     <p className="font-medium text-[var(--color-ink)]">
                       {product.title}
                     </p>
-                    <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                    <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
                       /{product.slug}
                     </p>
                   </td>
@@ -88,12 +104,12 @@ export default async function AdminProductsPage() {
                     {product.category.name}
                   </td>
 
-                  <td className="px-5 py-4 text-[var(--color-text-muted)]">
+                  <td className="px-5 py-4 font-medium text-[var(--color-ink)]">
                     {formatIdr(product.priceMinor)}
                   </td>
 
                   <td className="px-5 py-4">
-                    <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-xs font-medium">
+                    <span className="inline-flex rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-xs font-medium">
                       {statusLabel(product.status)}
                     </span>
                   </td>
@@ -111,7 +127,7 @@ export default async function AdminProductsPage() {
                         href={`/admin/products/${product.id}/assets`}
                         className="font-medium text-[var(--color-ink)] hover:underline"
                       >
-                        Assets
+                        Aset Digital
                       </Link>
 
                       {product.status !== "ARCHIVED" && (
@@ -124,9 +140,9 @@ export default async function AdminProductsPage() {
 
                           <button
                             type="submit"
-                            className="font-medium text-[var(--color-danger-strong)] hover:underline"
+                            className="font-medium text-[var(--color-danger-strong)] hover:underline cursor-pointer"
                           >
-                            Archive
+                            Arsipkan
                           </button>
                         </form>
                       )}
@@ -139,9 +155,10 @@ export default async function AdminProductsPage() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="px-5 py-10 text-center text-[var(--color-text-muted)]"
+                    className="px-5 py-12 text-center text-sm text-[var(--color-text-muted)]"
                   >
-                    Belum ada product.
+                    Belum ada produk yang Anda buat. Silakan tambahkan produk
+                    baru.
                   </td>
                 </tr>
               )}

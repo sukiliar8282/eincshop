@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { requireAdmin } from "@/lib/auth/require-user";
+import { requireSuperAdmin } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { Container } from "@/components/ui/container";
 
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AuditLogsPage() {
-  await requireAdmin();
+  // Hanya Super Admin (bukan seller biasa) yang dapat mengakses riwayat audit sistem
+  await requireSuperAdmin();
 
   const logs = await prisma.auditLog.findMany({
     include: {
@@ -29,80 +30,64 @@ export default async function AuditLogsPage() {
   return (
     <main className="py-16 sm:py-24">
       <Container>
-        <div className="max-w-7xl">
+        <div className="max-w-4xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Security
+            Sistem & Kepatuhan
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-            Audit logs
+            Audit Logs
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-[var(--color-text-muted)]">
-            Catatan aktivitas sensitif yang dilakukan oleh admin.
+            Rekam jejak setiap aksi administratif di sistem platform.
           </p>
 
-          <div className="mobile-scroll mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
-            <table className="w-full min-w-[1000px] text-left text-sm">
-              <thead className="border-b border-[var(--color-line)] bg-[var(--color-surface-muted)]">
-                <tr>
-                  <th className="px-5 py-4 font-semibold">Time</th>
-                  <th className="px-5 py-4 font-semibold">Actor</th>
-                  <th className="px-5 py-4 font-semibold">Action</th>
-                  <th className="px-5 py-4 font-semibold">Entity</th>
-                  <th className="px-5 py-4 font-semibold">Metadata</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-[var(--color-line)]">
-                {logs.map((log) => (
-                  <tr key={log.id}>
-                    <td className="whitespace-nowrap px-5 py-4 text-[var(--color-text-muted)]">
-                      {log.createdAt.toLocaleString("id-ID")}
-                    </td>
-
-                    <td className="px-5 py-4">
-                      <p className="font-medium text-[var(--color-ink)]">
-                        {log.actor.name ?? "Unnamed"}
-                      </p>
-                      <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                        {log.actor.email}
-                      </p>
-                    </td>
-
-                    <td className="px-5 py-4 font-medium text-[var(--color-ink)]">
-                      {log.action}
-                    </td>
-
-                    <td className="px-5 py-4 text-[var(--color-text-muted)]">
-                      <p>{log.entityType}</p>
-                      {log.entityId && (
-                        <p className="mt-1 max-w-[220px] truncate text-xs">
-                          {log.entityId}
-                        </p>
-                      )}
-                    </td>
-
-                    <td className="max-w-[320px] px-5 py-4">
-                      <code className="block whitespace-pre-wrap break-words text-xs text-[var(--color-text-muted)]">
-                        {log.metadata ? JSON.stringify(log.metadata) : "-"}
-                      </code>
-                    </td>
-                  </tr>
-                ))}
-
-                {logs.length === 0 && (
+          <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b border-[var(--color-line)] bg-[var(--color-surface-muted)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-5 py-10 text-center text-[var(--color-text-muted)]"
-                    >
-                      Belum ada audit log.
-                    </td>
+                    <th className="px-4 py-3">Waktu</th>
+                    <th className="px-4 py-3">Aktor</th>
+                    <th className="px-4 py-3">Aksi</th>
+                    <th className="px-4 py-3">Tipe Entitas</th>
+                    <th className="px-4 py-3">IP Address</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[var(--color-line)]">
+                  {logs.map((log) => (
+                    <tr key={log.id} className="hover:bg-[var(--color-canvas)]">
+                      <td className="px-4 py-3 whitespace-nowrap text-[var(--color-text-muted)]">
+                        {new Date(log.createdAt).toLocaleString("id-ID")}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[var(--color-ink)]">
+                        {log.actor.name || log.actor.email}
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-[var(--color-accent-strong)]">
+                        {log.action}
+                      </td>
+                      <td className="px-4 py-3 text-[var(--color-text-muted)]">
+                        {log.entityType}
+                      </td>
+                      <td className="px-4 py-3 text-[var(--color-text-muted)] font-mono text-[11px]">
+                        {log.ipAddress || "-"}
+                      </td>
+                    </tr>
+                  ))}
+                  {logs.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-4 py-8 text-center text-[var(--color-text-muted)]"
+                      >
+                        Belum ada riwayat audit log.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </Container>

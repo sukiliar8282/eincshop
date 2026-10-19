@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
+import { OrderStatus } from "@/components/order/order-status";
 import { PayOrderButton } from "@/components/payment/pay-order-button";
 
 type OrderPageProps = {
@@ -65,14 +66,24 @@ export default async function OrderPage({ params }: OrderPageProps) {
             {order.orderNumber}
           </h1>
 
+          {/* Waktu Pembuatan Order (Batch 3) */}
+          <p className="mt-3 text-sm text-[var(--color-text-muted)]">
+            Dibuat pada{" "}
+            {order.createdAt.toLocaleString("id-ID", {
+              dateStyle: "long",
+              timeStyle: "short",
+            })}
+          </p>
+
           <div className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6">
             <dl className="grid gap-5 sm:grid-cols-2">
               <div>
                 <dt className="text-sm text-[var(--color-text-muted)]">
                   Order status
                 </dt>
-                <dd className="mt-1 font-medium text-[var(--color-ink)]">
-                  {order.status}
+                {/* Status Badge (Batch 2) */}
+                <dd className="mt-2">
+                  <OrderStatus status={order.status} />
                 </dd>
               </div>
 
@@ -80,8 +91,9 @@ export default async function OrderPage({ params }: OrderPageProps) {
                 <dt className="text-sm text-[var(--color-text-muted)]">
                   Payment status
                 </dt>
-                <dd className="mt-1 font-medium text-[var(--color-ink)]">
-                  {order.paymentStatus}
+                {/* Payment Status Badge (Batch 2) */}
+                <dd className="mt-2">
+                  <OrderStatus status={order.paymentStatus} />
                 </dd>
               </div>
             </dl>
@@ -156,10 +168,15 @@ export default async function OrderPage({ params }: OrderPageProps) {
             )}
           </div>
 
+          {/* Contextual Payment Notice (Batch 4 - Final) */}
           <div className="mt-6 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
             <p className="text-sm leading-6 text-[var(--color-text-muted)]">
-              Order sudah dibuat, tetapi payment provider belum aktif. Download
-              digital product belum tersedia sampai pembayaran diverifikasi.
+              {order.paymentStatus === "PAID"
+                ? "Pembayaran telah diverifikasi. File digital tersedia untuk diunduh pada daftar item di atas."
+                : order.paymentStatus === "FAILED" ||
+                    order.paymentStatus === "EXPIRED"
+                  ? "Pembayaran tidak berhasil diselesaikan. Anda dapat membuat order baru dari keranjang."
+                  : "Pembayaran masih menunggu verifikasi. File digital tersedia setelah pembayaran berhasil."}
             </p>
           </div>
         </div>

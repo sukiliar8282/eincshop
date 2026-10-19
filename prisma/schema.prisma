@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"       // 1. Tambah -js
-  output   = "../src/generated/prisma"   // 2. Hapus /client di buntutnya
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -9,6 +9,7 @@ datasource db {
 
 enum UserRole {
   CUSTOMER
+  SELLER
   ADMIN
 }
 
@@ -144,6 +145,7 @@ model Category {
 
 model Product {
   id          String        @id @default(cuid())
+  sellerId    String?
   categoryId  String
   title       String
   slug        String        @unique
@@ -157,12 +159,14 @@ model Product {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
+  seller        User?          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   images        ProductImage[]
   digitalAssets DigitalAsset[]
   cartItems     CartItem[]
   orderItems    OrderItem[]
 
+  @@index([sellerId])
   @@index([categoryId])
   @@index([productType])
   @@index([status])
@@ -238,6 +242,7 @@ model CartItem {
 model User {
   id            String     @id @default(cuid())
   name          String?
+  storeName     String?
   email         String?    @unique
   emailVerified DateTime?
   image         String?
@@ -251,6 +256,7 @@ model User {
   sessions       Session[]
   carts          Cart[]
   orders         Order[]
+  products       Product[]
   downloadGrants DownloadGrant[]
   auditLogs      AuditLog[]
 

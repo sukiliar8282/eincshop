@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AccountMenu } from "@/components/layout/account-menu";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { NavLink } from "@/components/layout/nav-link";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { auth } from "@/lib/auth";
@@ -63,15 +64,15 @@ export async function SiteHeader() {
           aria-label="Navigasi utama"
           className="hidden items-center gap-5 text-sm text-[var(--color-text-muted)] md:flex"
         >
-          <Link
+          <NavLink
             href="/products"
             className="transition-[color,transform] hover:text-[var(--color-ink)] active:scale-95"
           >
             Katalog
-          </Link>
+          </NavLink>
 
           {/* Link Keranjang Desktop dengan Badge Indikator */}
-          <Link
+          <NavLink
             href="/cart"
             className="relative transition-[color,transform] hover:text-[var(--color-ink)] active:scale-95"
           >
@@ -81,7 +82,7 @@ export async function SiteHeader() {
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
-          </Link>
+          </NavLink>
 
           {currentUser ? (
             <AccountMenu

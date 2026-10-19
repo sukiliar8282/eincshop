@@ -167,8 +167,10 @@ export async function createProductAction(
   let uploadedStorageKey: string | undefined;
 
   try {
-    const createdProduct = await prisma.product.create({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const createdProduct = await (prisma.product as any).create({
       data: {
+        sellerId: admin.id,
         categoryId: parsed.data.categoryId,
         title: parsed.data.title,
         slug: parsed.data.slug,
