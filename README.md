@@ -270,9 +270,17 @@ There is zero hardcoded user-facing text anywhere in the codebase. Every string 
 4. **Rate-Limited Authentication** -- Login attempts are tracked and throttled to prevent brute-force password guessing attacks.
 5. **Audit Trail** -- Every sensitive administrative action is recorded with the actor identity, timestamp, action type, affected entity, and source IP address. This log cannot be modified or deleted through the application interface.
 ---
-## **License**
+## # EINCSHOP — Proprietary License
 
-Distributed under the MIT License. Feel free to use and extend for commercial or portfolio purposes.
+Copyright © 2026 EINCSHOP. All Rights Reserved.
+
+The source code in this repository is provided for viewing and reference purposes only.
+
+No permission is granted to copy, modify, redistribute, sublicense, or use this code for commercial or public deployment without prior written permission from the copyright holder.
+
+All rights are reserved except where otherwise permitted by applicable law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 ---
 # **EINCSHOP -- Platform Marketplace Aset Digital Multi-Seller**
 
