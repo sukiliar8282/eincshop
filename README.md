@@ -270,17 +270,6 @@ There is zero hardcoded user-facing text anywhere in the codebase. Every string 
 4. **Rate-Limited Authentication** -- Login attempts are tracked and throttled to prevent brute-force password guessing attacks.
 5. **Audit Trail** -- Every sensitive administrative action is recorded with the actor identity, timestamp, action type, affected entity, and source IP address. This log cannot be modified or deleted through the application interface.
 ---
-## # EINCSHOP — Proprietary License
-
-Copyright © 2026 EINCSHOP. All Rights Reserved.
-
-The source code in this repository is provided for viewing and reference purposes only.
-
-No permission is granted to copy, modify, redistribute, sublicense, or use this code for commercial or public deployment without prior written permission from the copyright holder.
-
-All rights are reserved except where otherwise permitted by applicable law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 ---
 # **EINCSHOP -- Platform Marketplace Aset Digital Multi-Seller**
 
@@ -506,3 +495,15 @@ Tidak ada teks hardcoded yang dilihat pengguna di mana pun dalam codebase. Setia
 3. **Akses Download Bertanda Tangan** -- File digital tidak pernah disajikan melalui URL publik. Ketika pembeli mengklik download, sistem memverifikasi bahwa mereka memiliki grant download yang valid dan belum kedaluwarsa untuk file spesifik tersebut sebelum mengalirkan byte-nya. Bayangkan seperti tiket konser -- meskipun Anda tahu di mana tempatnya, Anda tidak bisa masuk tanpa tiket valid dengan nama Anda di atasnya.
 4. **Autentikasi dengan Rate Limit** -- Percobaan login dilacak dan dibatasi untuk mencegah serangan tebak password brute-force.
 5. **Jejak Audit** -- Setiap aksi administratif yang sensitif dicatat dengan identitas pelaku, timestamp, tipe aksi, entitas yang terpengaruh, dan alamat IP sumber. Log ini tidak bisa dimodifikasi atau dihapus melalui antarmuka aplikasi.
+
+## # EINCSHOP — Proprietary License
+
+Copyright © 2026 EINCSHOP. All Rights Reserved.
+
+The source code in this repository is provided for viewing and reference purposes only.
+
+No permission is granted to copy, modify, redistribute, sublicense, or use this code for commercial or public deployment without prior written permission from the copyright holder.
+
+All rights are reserved except where otherwise permitted by applicable law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
