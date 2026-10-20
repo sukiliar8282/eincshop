@@ -3,14 +3,16 @@ import Link from "next/link";
 import { AccountMenu } from "@/components/layout/account-menu";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { NavLink } from "@/components/layout/nav-link";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getDictionary } from "@/lib/i18n/server";
 import { siteConfig } from "@/config/site";
 
 export async function SiteHeader() {
-  const session = await auth();
+  const [session, { dict }] = await Promise.all([auth(), getDictionary()]);
 
   // Query user dan item keranjang yang valid secara paralel
   const [currentUser, activeCartItems] = session?.user?.id
@@ -61,14 +63,14 @@ export async function SiteHeader() {
 
         {/* Navigasi Desktop */}
         <nav
-          aria-label="Navigasi utama"
+          aria-label={dict.nav.mainNav}
           className="hidden items-center gap-5 text-sm text-[var(--color-text-muted)] md:flex"
         >
           <NavLink
             href="/products"
             className="transition-[color,transform] hover:text-[var(--color-ink)] active:scale-95"
           >
-            Katalog
+            {dict.common.catalog}
           </NavLink>
 
           {/* Link Keranjang Desktop dengan Badge Indikator */}
@@ -76,7 +78,7 @@ export async function SiteHeader() {
             href="/cart"
             className="relative transition-[color,transform] hover:text-[var(--color-ink)] active:scale-95"
           >
-            Keranjang
+            {dict.common.cart}
             {cartCount > 0 && (
               <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[var(--color-accent)] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                 {cartCount > 99 ? "99+" : cartCount}
@@ -84,21 +86,25 @@ export async function SiteHeader() {
             )}
           </NavLink>
 
+          {/* Sakelar Bahasa Minimalist Pill di Desktop */}
+          <LanguageToggle variant="pill" />
+
           {currentUser ? (
             <AccountMenu
               name={currentUser.name}
               email={currentUser.email}
               role={currentUser.role}
               image={currentUser.image}
+              dict={dict}
             />
           ) : (
             <ButtonLink href="/login" size="sm" className="!text-white">
-              Masuk
+              {dict.common.login}
             </ButtonLink>
           )}
         </nav>
 
-        {/* Navigasi Mobile (Meneruskan data user dan cartCount) */}
+        {/* Navigasi Mobile (Meneruskan data user, cartCount, dan dict) */}
         <div className="md:hidden">
           <MobileNav
             user={
@@ -112,6 +118,7 @@ export async function SiteHeader() {
                 : null
             }
             cartCount={cartCount}
+            dict={dict}
           />
         </div>
       </Container>

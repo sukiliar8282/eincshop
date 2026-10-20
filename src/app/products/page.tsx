@@ -5,6 +5,8 @@ import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/components/product/product-card";
 import { CatalogControls } from "@/components/product/catalog-controls";
 import { Pagination } from "@/components/product/pagination";
+import { getDictionary } from "@/lib/i18n/server";
+import { localizeProduct, localizeCategoryName } from "@/lib/i18n/catalog";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -25,7 +27,10 @@ const PAGE_SIZE = 9;
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
-  const params = await searchParams;
+  const [{ dict, locale }, params] = await Promise.all([
+    getDictionary(),
+    searchParams,
+  ]);
 
   const query = params.q?.trim() ?? "";
   const category = params.category?.trim() ?? "";
@@ -83,7 +88,7 @@ export default async function ProductsPage({
       : {}),
   };
 
-  const [categories, totalProducts, products] = await Promise.all([
+  const [rawCategories, totalProducts, rawProducts] = await Promise.all([
     prisma.category.findMany({
       where: {
         isActive: true,
@@ -110,6 +115,7 @@ export default async function ProductsPage({
         category: {
           select: {
             name: true,
+            slug: true,
           },
         },
         images: {
@@ -126,6 +132,12 @@ export default async function ProductsPage({
     }),
   ]);
 
+  const categories = rawCategories.map((c) => ({
+    slug: c.slug,
+    name: localizeCategoryName(c.slug, c.name, locale),
+  }));
+
+  const products = rawProducts.map((p) => localizeProduct(p, locale));
   const totalPages = Math.max(Math.ceil(totalProducts / PAGE_SIZE), 1);
 
   return (
@@ -133,15 +145,15 @@ export default async function ProductsPage({
       <Container>
         <div className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Catalog
+            {dict.catalog.badge}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-            Digital products
+            {dict.catalog.title}
           </h1>
 
           <p className="mt-4 text-base leading-7 text-[var(--color-text-muted)]">
-            Produk digital yang tersedia dari EINCSHOP.
+            {dict.catalog.desc}
           </p>
         </div>
 
@@ -150,6 +162,7 @@ export default async function ProductsPage({
           currentQuery={query}
           currentCategory={category}
           currentSort={sort}
+          dict={dict.catalog}
         />
 
         {products.length > 0 ? (
@@ -167,6 +180,7 @@ export default async function ProductsPage({
                       ...product,
                       image: product.images[0] ?? null,
                     }}
+                    locale={locale}
                   />
                 </div>
               ))}
@@ -183,11 +197,11 @@ export default async function ProductsPage({
         ) : (
           <div className="mt-10 rounded-[var(--radius-card)] border border-dashed border-[var(--color-line-strong)] p-10 text-center">
             <p className="font-medium text-[var(--color-ink)]">
-              Product tidak ditemukan.
+              {dict.catalog.emptyTitle}
             </p>
 
             <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-              Coba gunakan kata kunci atau kategori lain.
+              {dict.catalog.emptyDesc}
             </p>
           </div>
         )}

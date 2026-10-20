@@ -2,8 +2,11 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
+import { getDictionary } from "@/lib/i18n/server";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { dict } = await getDictionary();
+
   return (
     <footer className="mt-20 border-t border-[var(--color-line)] bg-white">
       <Container className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.8fr]">
@@ -16,13 +19,13 @@ export function SiteFooter() {
           </Link>
 
           <p className="mt-4 max-w-sm text-sm leading-6 text-[var(--color-text-muted)]">
-            {siteConfig.description}
+            {dict.footer.description}
           </p>
         </div>
 
         <div>
           <p className="text-sm font-semibold text-[var(--color-ink)]">
-            Navigasi
+            {dict.footer.navTitle}
           </p>
 
           <nav className="mt-4 grid gap-3 text-sm text-[var(--color-text-muted)]">
@@ -30,35 +33,35 @@ export function SiteFooter() {
               href="/"
               className="transition-colors hover:text-[var(--color-ink)]"
             >
-              Beranda
+              {dict.common.home}
             </Link>
 
             <Link
               href="/products"
               className="transition-colors hover:text-[var(--color-ink)]"
             >
-              Katalog
+              {dict.common.catalog}
             </Link>
 
             <Link
               href="/cart"
               className="transition-colors hover:text-[var(--color-ink)]"
             >
-              Keranjang
+              {dict.common.cart}
             </Link>
 
             <Link
               href="/login"
               className="transition-colors hover:text-[var(--color-ink)]"
             >
-              Masuk
+              {dict.common.login}
             </Link>
           </nav>
         </div>
 
         <div>
           <p className="text-sm font-semibold text-[var(--color-ink)]">
-            Hubungi kami
+            {dict.footer.contactTitle}
           </p>
 
           <div className="mt-4 grid gap-3 text-sm text-[var(--color-text-muted)]">
@@ -77,7 +80,7 @@ export function SiteFooter() {
             </a>
 
             <span className="text-xs leading-5 text-[var(--color-text-muted)]">
-              {siteConfig.contact.label}
+              {dict.footer.contactLabel}
             </span>
           </div>
         </div>
@@ -86,10 +89,11 @@ export function SiteFooter() {
       <div className="border-t border-[var(--color-line)]">
         <Container className="flex flex-col gap-2 py-4 text-xs text-[var(--color-text-muted)] sm:flex-row sm:items-center sm:justify-between">
           <span>
-            © {new Date().getFullYear()} {siteConfig.name}
+            © {new Date().getFullYear()} {siteConfig.name}.{" "}
+            {dict.footer.copyright}
           </span>
 
-          <span>Produk digital untuk pekerjaan yang lebih baik.</span>
+          <span>{dict.footer.tagline}</span>
         </Container>
       </div>
     </footer>

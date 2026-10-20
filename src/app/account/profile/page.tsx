@@ -5,15 +5,18 @@ import { Container } from "@/components/ui/container";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/auth/require-user";
 import { ProfileForm } from "./profile-form";
+import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: "Profile",
 };
 
 export default async function ProfilePage() {
-  const sessionUser = await requireUser();
+  const [sessionUser, { dict }] = await Promise.all([
+    requireUser(),
+    getDictionary(),
+  ]);
 
-  // Ambil data terbaru langsung dari database PostgreSQL agar foto & nama selalu fresh
   const user = await prisma.user.findUnique({
     where: {
       id: sessionUser.id,
@@ -34,15 +37,15 @@ export default async function ProfilePage() {
       <Container>
         <div className="max-w-xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Account
+            {dict.common.account}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-            Profile
+            {dict.profile.title}
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-[var(--color-text-muted)]">
-            Kelola informasi dasar akun Anda.
+            {dict.profile.subtitle}
           </p>
 
           <div className="mt-8">

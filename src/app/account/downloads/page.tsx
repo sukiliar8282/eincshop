@@ -4,15 +4,37 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
+import { getDictionary } from "@/lib/i18n/server";
+import { localizeProduct } from "@/lib/i18n/catalog";
 
 export const metadata: Metadata = {
   title: "Download Center",
 };
 
 export default async function DownloadCenterPage() {
-  const user = await requireUser();
+  const [user, { locale }] = await Promise.all([
+    requireUser(),
+    getDictionary(),
+  ]);
 
-  const grants = await prisma.downloadGrant.findMany({
+  const isEn = locale === "en";
+  const t = {
+    account: isEn ? "Account" : "Akun",
+    title: isEn ? "Download center" : "Pusat unduhan",
+    desc: isEn
+      ? "Digital assets unlocked from your verified paid orders."
+      : "File digital dari order yang pembayarannya sudah terverifikasi.",
+    downloadedTimes: (count: number) =>
+      isEn ? `Downloaded ${count} times` : `Diunduh ${count}x`,
+    viewOrder: isEn ? "View invoice →" : "Lihat order →",
+    downloadBtn: "Download",
+    empty: isEn
+      ? "No downloadable files available yet."
+      : "Belum ada file yang tersedia.",
+    exploreCatalog: isEn ? "Explore catalog" : "Jelajahi katalog",
+  };
+
+  const rawGrants = await prisma.downloadGrant.findMany({
     where: {
       userId: user.id,
       status: "ACTIVE",
@@ -36,6 +58,7 @@ export default async function DownloadCenterPage() {
           fileName: true,
           product: {
             select: {
+              slug: true,
               title: true,
             },
           },
@@ -47,20 +70,28 @@ export default async function DownloadCenterPage() {
     },
   });
 
+  const grants = rawGrants.map((grant) => ({
+    ...grant,
+    digitalAsset: {
+      ...grant.digitalAsset,
+      product: localizeProduct(grant.digitalAsset.product, locale),
+    },
+  }));
+
   return (
     <main className="py-16 sm:py-24">
       <Container>
         <div className="max-w-3xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Account
+            {t.account}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-            Download center
+            {t.title}
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-[var(--color-text-muted)]">
-            File digital dari order yang pembayarannya sudah terverifikasi.
+            {t.desc}
           </p>
 
           {grants.length > 0 ? (
@@ -80,39 +111,36 @@ export default async function DownloadCenterPage() {
                     </p>
 
                     <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-                      {grant.order.orderNumber} · Diunduh {grant.downloadCount}x
+                      {grant.order.orderNumber} ·{" "}
+                      {t.downloadedTimes(grant.downloadCount)}
                     </p>
 
-                    {/* Order Traceability: Tautan langsung menuju rincian invoice/order */}
                     <Link
                       href={`/orders/${grant.order.orderNumber}`}
                       className="mt-3 inline-flex text-sm font-medium text-[var(--color-accent-strong)] hover:underline"
                     >
-                      Lihat order →
+                      {t.viewOrder}
                     </Link>
                   </div>
 
-                  {/* Tombol Download dengan penegasan text-white! */}
                   <a
                     href={`/api/downloads/${grant.id}`}
                     className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-ink)] px-4 text-sm font-medium text-white! transition-colors hover:bg-[var(--color-ink-soft)] active:scale-95"
                   >
-                    Download
+                    {t.downloadBtn}
                   </a>
                 </article>
               ))}
             </div>
           ) : (
             <div className="mt-8 rounded-[var(--radius-card)] border border-dashed border-[var(--color-line-strong)] p-8 text-center">
-              <p className="font-medium text-[var(--color-ink)]">
-                Belum ada file yang tersedia.
-              </p>
+              <p className="font-medium text-[var(--color-ink)]">{t.empty}</p>
 
               <Link
                 href="/products"
                 className="mt-4 inline-flex text-sm font-medium text-[var(--color-accent-strong)] hover:underline"
               >
-                Jelajahi katalog
+                {t.exploreCatalog}
               </Link>
             </div>
           )}

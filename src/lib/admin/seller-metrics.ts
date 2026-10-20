@@ -11,18 +11,25 @@ export type SellerMetrics = {
 };
 
 /**
- * Mengambil ringkasan metrik kinerja operasional yang terisolasi khusus per akun seller.
- * Menggunakan pendekatan Direct Indexed Scalar Query untuk performa maksimal dan stabilitas 100%.
+ * Mengambil ringkasan metrik kinerja operasional yang terisolasi ketat per akun seller.
+ * STRICT MULTI-TENANT: SELLER hanya melihat produk miliknya sendiri.
  * @param sellerId ID unik dari akun admin/seller yang sedang login
+ * @param userRole Role akun (SELLER atau ADMIN)
  */
 export async function getSellerMetrics(
   sellerId: string,
+  userRole?: string,
 ): Promise<SellerMetrics> {
-  // 1. Ambil daftar produk milik seller ini (termasuk produk lama/legacy)
+  // Hanya Super Admin yang diizinkan melihat produk bawaan sistem (sellerId: null).
+  // Seller biasa HANYA boleh melihat produk yang benar-benar miliknya sendiri.
+  const whereClause =
+    userRole === "ADMIN"
+      ? { OR: [{ sellerId }, { sellerId: null }] }
+      : { sellerId };
+
+  // 1. Ambil daftar produk milik seller ini
   const sellerProducts = await prisma.product.findMany({
-    where: {
-      OR: [{ sellerId }, { sellerId: null }],
-    },
+    where: whereClause,
     select: {
       id: true,
       categoryId: true,
@@ -35,7 +42,7 @@ export async function getSellerMetrics(
     sellerProducts.map((product) => product.categoryId),
   ).size;
 
-  // Jika seller belum memiliki produk sama sekali, kembalikan metrik 0 instan tanpa beban kueri tambahan
+  // Jika seller baru belum memiliki produk sama sekali, kembalikan 0 murni tanpa kebocoran data
   if (productIds.length === 0) {
     return {
       totalRevenue: 0,
@@ -47,7 +54,6 @@ export async function getSellerMetrics(
   }
 
   // 2. Kueri data pesanan & omzet langsung via kolom terindeks (productId: { in: productIds })
-  // Menghilangkan penelusuran relasi bertingkat sehingga bebas dari bug seleksi Prisma 7
   const [paidOrderItems, totalOrdersCount, pendingOrdersCount] =
     await Promise.all([
       // A. Hitung omzet hanya dari item produk seller ini pada order yang PAID

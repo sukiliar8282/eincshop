@@ -6,6 +6,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { StatusMessage } from "@/components/ui/status-message";
 import { useToast } from "@/components/ui/toast-provider";
 import { updateProfileAction, type ProfileActionState } from "./actions";
+import { useI18n } from "@/lib/i18n/client";
 
 type ProfileFormProps = {
   name: string;
@@ -15,6 +16,7 @@ type ProfileFormProps = {
 const initialState: ProfileActionState = {};
 
 export function ProfileForm({ name, email }: ProfileFormProps) {
+  const { dict } = useI18n();
   const [state, formAction, isPending] = useActionState(
     updateProfileAction,
     initialState,
@@ -41,7 +43,7 @@ export function ProfileForm({ name, email }: ProfileFormProps) {
           htmlFor="name"
           className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
         >
-          Nama
+          {dict.profile.nameLabel}
         </label>
 
         <input
@@ -61,7 +63,7 @@ export function ProfileForm({ name, email }: ProfileFormProps) {
           htmlFor="email"
           className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
         >
-          Email
+          {dict.profile.emailLabel}
         </label>
 
         <input
@@ -73,7 +75,7 @@ export function ProfileForm({ name, email }: ProfileFormProps) {
         />
 
         <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-          Email tidak dapat diubah dari halaman ini.
+          {dict.profile.emailReadOnly}
         </p>
       </div>
 
@@ -84,7 +86,9 @@ export function ProfileForm({ name, email }: ProfileFormProps) {
       )}
 
       <LoadingButton type="submit" loading={isPending}>
-        Simpan profile
+        {isPending
+          ? dict.profile.savingProfileBtn
+          : dict.profile.saveProfileBtn}
       </LoadingButton>
     </form>
   );

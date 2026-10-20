@@ -192,13 +192,22 @@ function buildYearlyPoints(
   return summarizePoints(points);
 }
 
+/**
+ * Mengambil histori keuangan arus kas terisolasi ketat per seller.
+ * @param sellerId ID akun seller yang sedang login
+ * @param userRole Role akun (SELLER atau ADMIN)
+ */
 export async function getFinancialAnalytics(
   sellerId: string,
+  userRole?: string,
 ): Promise<FinancialAnalytics> {
+  const whereClause =
+    userRole === "ADMIN"
+      ? { OR: [{ sellerId }, { sellerId: null }] }
+      : { sellerId };
+
   const sellerProducts = await prisma.product.findMany({
-    where: {
-      OR: [{ sellerId }, { sellerId: null }],
-    },
+    where: whereClause,
     select: {
       id: true,
     },
@@ -207,6 +216,7 @@ export async function getFinancialAnalytics(
   const productIds = sellerProducts.map((p) => p.id);
   const now = new Date();
 
+  // Jika seller belum punya produk, kembalikan seluruh titik grafik sebagai 0 murni
   if (productIds.length === 0) {
     return {
       feeRatePercentage: AUTO_FEE_RATE * 100,

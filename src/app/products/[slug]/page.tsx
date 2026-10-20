@@ -10,6 +10,8 @@ import { Container } from "@/components/ui/container";
 import { Badge } from "@/components/ui/badge";
 import { AddToCartForm } from "@/components/cart/add-to-cart-form";
 import { ProductCard } from "@/components/product/product-card";
+import { getDictionary } from "@/lib/i18n/server";
+import { localizeProduct } from "@/lib/i18n/catalog";
 
 type ProductDetailPageProps = {
   params: Promise<{
@@ -30,6 +32,7 @@ async function getProduct(slug: string) {
       slug: true,
       description: true,
       priceMinor: true,
+      updatedAt: true,
       currency: true,
       category: {
         select: {
@@ -49,6 +52,18 @@ async function getProduct(slug: string) {
           altText: true,
         },
       },
+      digitalAssets: {
+        where: {
+          status: "ACTIVE",
+        },
+        take: 1,
+        select: {
+          fileName: true,
+          mimeType: true,
+          fileSize: true,
+          version: true,
+        },
+      },
     },
   });
 }
@@ -61,7 +76,7 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "Product tidak ditemukan",
+      title: "Product not found",
     };
   }
 
@@ -75,13 +90,19 @@ export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
   const { slug } = await params;
-  const product = await getProduct(slug);
+  const [{ dict, locale }, rawProduct] = await Promise.all([
+    getDictionary(),
+    getProduct(slug),
+  ]);
 
-  if (!product) {
+  if (!rawProduct) {
     notFound();
   }
 
-  const relatedProducts = await prisma.product.findMany({
+  const product = localizeProduct(rawProduct, locale);
+  const primaryAsset = product.digitalAssets[0];
+
+  const rawRelatedProducts = await prisma.product.findMany({
     where: {
       id: {
         not: product.id,
@@ -98,6 +119,7 @@ export default async function ProductDetailPage({
       category: {
         select: {
           name: true,
+          slug: true,
         },
       },
       images: {
@@ -117,24 +139,28 @@ export default async function ProductDetailPage({
     take: 3,
   });
 
+  const relatedProducts = rawRelatedProducts.map((p) =>
+    localizeProduct(p, locale),
+  );
   const session = await auth();
+  const d = dict.productDetail;
 
   return (
     <main className="py-16 sm:py-24">
       <Container>
-        {/* Breadcrumb */}
+        {/* Breadcrumb Navigasi */}
         <nav
           aria-label="Breadcrumb"
           className="mb-8 flex flex-wrap items-center gap-2 text-sm text-[var(--color-text-muted)]"
         >
           <Link href="/" className="hover:text-[var(--color-ink)]">
-            Beranda
+            {d.breadcrumbHome}
           </Link>
 
           <span aria-hidden="true">/</span>
 
           <Link href="/products" className="hover:text-[var(--color-ink)]">
-            Katalog
+            {d.breadcrumbCatalog}
           </Link>
 
           <span aria-hidden="true">/</span>
@@ -159,7 +185,6 @@ export default async function ProductDetailPage({
         {/* Grid Product Detail Utama */}
         <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-start">
           <div className="space-y-3">
-            {/* Rasio gambar responsif: 16/10 di mobile, 4/3 di sm ke atas */}
             <div className="relative aspect-[16/10] overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] sm:aspect-[4/3]">
               {product.images[0] ? (
                 <Image
@@ -168,11 +193,11 @@ export default async function ProductDetailPage({
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 55vw"
-                  className="object-cover"
+                  className="object-cover object-top"
                 />
               ) : (
                 <div className="flex h-full items-end p-6">
-                  <Badge tone="accent">Produk digital</Badge>
+                  <Badge tone="accent">{dict.productCard.digitalProduct}</Badge>
                 </div>
               )}
             </div>
@@ -206,13 +231,79 @@ export default async function ProductDetailPage({
               {product.title}
             </h1>
 
+            {/* Harga Produk Bilingual */}
             <p className="mt-6 text-2xl font-semibold text-[var(--color-ink)]">
-              {formatIdr(product.priceMinor)}
+              {formatIdr(product.priceMinor, locale)}
             </p>
 
+            {/* Metadata Pengiriman & Terakhir Diperbarui */}
+            <dl className="mt-6 grid gap-3 border-y border-[var(--color-line)] py-5 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-[var(--color-text-muted)]">
+                  {d.deliveryLabel}
+                </dt>
+                <dd className="mt-1 font-medium text-[var(--color-ink)]">
+                  {d.deliveryValue}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="text-[var(--color-text-muted)]">
+                  {d.lastUpdated}
+                </dt>
+                <dd className="mt-1 font-medium text-[var(--color-ink)]">
+                  {product.updatedAt.toLocaleDateString(
+                    locale === "en" ? "en-US" : "id-ID",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    },
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {/* Detail Spesifikasi File */}
+            {primaryAsset && (
+              <dl className="mt-4 grid gap-3 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5 text-sm sm:grid-cols-3">
+                <div>
+                  <dt className="text-[var(--color-text-muted)]">
+                    {d.specsFormat}
+                  </dt>
+                  <dd className="mt-1 font-medium text-[var(--color-ink)]">
+                    {primaryAsset.mimeType
+                      .replace("application/", "")
+                      .toUpperCase()}
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="text-[var(--color-text-muted)]">
+                    {d.specsFileSize}
+                  </dt>
+                  <dd className="mt-1 font-medium text-[var(--color-ink)]">
+                    {primaryAsset.fileSize >= 1024 * 1024
+                      ? `${(primaryAsset.fileSize / 1024 / 1024).toFixed(1)} MB`
+                      : `${Math.ceil(primaryAsset.fileSize / 1024)} KB`}
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="text-[var(--color-text-muted)]">
+                    {d.specsVersion}
+                  </dt>
+                  <dd className="mt-1 font-medium text-[var(--color-ink)]">
+                    {primaryAsset.version || "-"}
+                  </dd>
+                </div>
+              </dl>
+            )}
+
+            {/* Deskripsi Produk */}
             <div className="mt-8 border-t border-[var(--color-line)] pt-8">
               <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
-                Tentang produk ini
+                {d.aboutTitle}
               </h2>
 
               <p className="mt-4 whitespace-pre-line text-base leading-7 text-[var(--color-text)]">
@@ -222,15 +313,17 @@ export default async function ProductDetailPage({
 
             <div className="mt-8 grid gap-3 border-y border-[var(--color-line)] py-5 text-sm sm:grid-cols-3">
               <div>
-                <p className="text-xs text-[var(--color-text-muted)]">Jenis</p>
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  {d.specType}
+                </p>
                 <p className="mt-1 font-medium text-[var(--color-ink)]">
-                  Produk digital
+                  {dict.productCard.digitalProduct}
                 </p>
               </div>
 
               <div>
                 <p className="text-xs text-[var(--color-text-muted)]">
-                  Kategori
+                  {d.specCategory}
                 </p>
                 <p className="mt-1 font-medium text-[var(--color-ink)]">
                   {product.category.name}
@@ -238,9 +331,11 @@ export default async function ProductDetailPage({
               </div>
 
               <div>
-                <p className="text-xs text-[var(--color-text-muted)]">Akses</p>
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  {d.specAccess}
+                </p>
                 <p className="mt-1 font-medium text-[var(--color-ink)]">
-                  Setelah pembayaran
+                  {d.instantAccess}
                 </p>
               </div>
             </div>
@@ -254,27 +349,68 @@ export default async function ProductDetailPage({
 
             <div className="mt-8 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
               <p className="text-sm leading-6 text-[var(--color-text-muted)]">
-                Setelah pembayaran berhasil, file dapat diakses dari halaman
-                pesanan Anda.
+                {d.postPurchaseNotice}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Section Produk Terkait (Related Products) */}
+        {/* Section FAQ Bilingual */}
+        <section
+          aria-labelledby="product-faq-heading"
+          className="mt-10 border-t border-[var(--color-line)] pt-8"
+        >
+          <h2
+            id="product-faq-heading"
+            className="text-xl font-semibold tracking-[-0.02em] text-[var(--color-ink)]"
+          >
+            {d.faqTitle}
+          </h2>
+
+          <div className="mt-4 divide-y divide-[var(--color-line)] rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
+            <details className="group px-5 py-4">
+              <summary className="cursor-pointer list-none pr-8 font-medium text-[var(--color-ink)]">
+                {d.faqQ1}
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
+                {d.faqA1}
+              </p>
+            </details>
+
+            <details className="group px-5 py-4">
+              <summary className="cursor-pointer list-none pr-8 font-medium text-[var(--color-ink)]">
+                {d.faqQ2}
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
+                {d.faqA2}
+              </p>
+            </details>
+
+            <details className="group px-5 py-4">
+              <summary className="cursor-pointer list-none pr-8 font-medium text-[var(--color-ink)]">
+                {d.faqQ3}
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
+                {d.faqA3}
+              </p>
+            </details>
+          </div>
+        </section>
+
+        {/* Section Produk Terkait */}
         {relatedProducts.length > 0 && (
           <section className="mt-20 border-t border-[var(--color-line)] pt-12">
             <div className="max-w-2xl">
               <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-                Produk lainnya
+                {d.relatedBadge}
               </p>
 
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[var(--color-ink)]">
-                Produk terkait
+                {d.relatedTitle}
               </h2>
 
               <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
-                Temukan produk lain yang masih berada dalam kategori yang sama.
+                {d.relatedDesc}
               </p>
             </div>
 
@@ -286,6 +422,7 @@ export default async function ProductDetailPage({
                     ...relatedProduct,
                     image: relatedProduct.images[0] ?? null,
                   }}
+                  locale={locale}
                 />
               ))}
             </div>

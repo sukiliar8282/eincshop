@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { Container } from "@/components/ui/container";
 import { MidtransSnapPayment } from "@/components/payment/midtrans-snap-payment";
 import { DummyPaymentSimulator } from "@/components/payment/dummy-payment-simulator";
+import { getDictionary } from "@/lib/i18n/server";
 
 type PaymentPageProps = {
   params: Promise<{
@@ -18,8 +19,12 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentPage({ params }: PaymentPageProps) {
-  const user = await requireUser();
+  const [user, { locale }] = await Promise.all([
+    requireUser(),
+    getDictionary(),
+  ]);
   const { orderNumber } = await params;
+  const isEn = locale === "en";
 
   const order = await prisma.order.findFirst({
     where: {
@@ -57,13 +62,14 @@ export default async function PaymentPage({ params }: PaymentPageProps) {
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
-            Complete your payment
+            {isEn ? "Complete your payment" : "Selesaikan pembayaran Anda"}
           </h1>
 
           <div className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6">
             <p className="text-sm leading-6 text-[var(--color-text-muted)]">
-              Setelah pembayaran selesai, status order tetap akan diverifikasi
-              melalui webhook Midtrans.
+              {isEn
+                ? "Once payment is completed, the order status will be automatically verified via the Midtrans webhook."
+                : "Setelah pembayaran selesai, status order tetap akan diverifikasi melalui webhook Midtrans."}
             </p>
 
             <div className="mt-6">

@@ -8,10 +8,14 @@ import {
   createCategoryAction,
   type CatalogActionState,
 } from "@/modules/catalog/actions";
+import { useI18n } from "@/lib/i18n/client";
 
 const initialState: CatalogActionState = {};
 
 export function CategoryForm() {
+  const { locale } = useI18n();
+  const isEn = locale === "en";
+
   const [state, formAction, isPending] = useActionState(
     createCategoryAction,
     initialState,
@@ -23,20 +27,23 @@ export function CategoryForm() {
       className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6"
     >
       <h2 className="text-lg font-semibold text-[var(--color-ink)]">
-        Tambah kategori
+        {isEn ? "Add New Category" : "Tambah kategori"}
       </h2>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Nama
+            {isEn ? "Category Name" : "Nama"}
           </label>
           <input
             id="name"
             name="name"
             required
             maxLength={80}
-            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm"
+            placeholder={
+              isEn ? "e.g., Design Templates" : "contoh: Template Desain"
+            }
+            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm outline-none focus:border-[var(--color-ink)]"
           />
         </div>
 
@@ -48,9 +55,11 @@ export function CategoryForm() {
             id="slug"
             name="slug"
             required
-            placeholder="contoh: design-template"
+            placeholder={
+              isEn ? "e.g., design-templates" : "contoh: design-templates"
+            }
             maxLength={80}
-            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm"
+            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm outline-none focus:border-[var(--color-ink)]"
           />
         </div>
       </div>
@@ -69,7 +78,7 @@ export function CategoryForm() {
 
       <div className="mt-5">
         <LoadingButton type="submit" loading={isPending}>
-          Simpan kategori
+          {isEn ? "Save Category" : "Simpan kategori"}
         </LoadingButton>
       </div>
     </form>

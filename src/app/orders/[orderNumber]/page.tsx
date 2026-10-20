@@ -7,6 +7,7 @@ import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
 import { OrderStatus } from "@/components/order/order-status";
 import { PayOrderButton } from "@/components/payment/pay-order-button";
+import { getDictionary } from "@/lib/i18n/server";
 
 type OrderPageProps = {
   params: Promise<{
@@ -19,8 +20,12 @@ export const metadata: Metadata = {
 };
 
 export default async function OrderPage({ params }: OrderPageProps) {
-  const user = await requireUser();
+  const [user, { locale }] = await Promise.all([
+    requireUser(),
+    getDictionary(),
+  ]);
   const { orderNumber } = await params;
+  const isEn = locale === "en";
 
   const order = await prisma.order.findFirst({
     where: {
@@ -59,17 +64,17 @@ export default async function OrderPage({ params }: OrderPageProps) {
       <Container>
         <div className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Order
+            {isEn ? "Order Invoice" : "Nota Pesanan"}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
             {order.orderNumber}
           </h1>
 
-          {/* Waktu Pembuatan Order (Batch 3) */}
+          {/* Waktu Pembuatan Order */}
           <p className="mt-3 text-sm text-[var(--color-text-muted)]">
-            Dibuat pada{" "}
-            {order.createdAt.toLocaleString("id-ID", {
+            {isEn ? "Created on" : "Dibuat pada"}{" "}
+            {order.createdAt.toLocaleString(isEn ? "en-US" : "id-ID", {
               dateStyle: "long",
               timeStyle: "short",
             })}
@@ -79,27 +84,29 @@ export default async function OrderPage({ params }: OrderPageProps) {
             <dl className="grid gap-5 sm:grid-cols-2">
               <div>
                 <dt className="text-sm text-[var(--color-text-muted)]">
-                  Order status
+                  {isEn ? "Order status" : "Status pesanan"}
                 </dt>
-                {/* Status Badge (Batch 2) */}
+                {/* Status Badge */}
                 <dd className="mt-2">
-                  <OrderStatus status={order.status} />
+                  <OrderStatus status={order.status} locale={locale} />
                 </dd>
               </div>
 
               <div>
                 <dt className="text-sm text-[var(--color-text-muted)]">
-                  Payment status
+                  {isEn ? "Payment status" : "Status pembayaran"}
                 </dt>
-                {/* Payment Status Badge (Batch 2) */}
+                {/* Payment Status Badge */}
                 <dd className="mt-2">
-                  <OrderStatus status={order.paymentStatus} />
+                  <OrderStatus status={order.paymentStatus} locale={locale} />
                 </dd>
               </div>
             </dl>
 
             <div className="mt-8 border-t border-[var(--color-line)] pt-6">
-              <h2 className="font-semibold text-[var(--color-ink)]">Items</h2>
+              <h2 className="font-semibold text-[var(--color-ink)]">
+                {isEn ? "Purchased Items" : "Daftar Item"}
+              </h2>
 
               <div className="mt-4 divide-y divide-[var(--color-line)]">
                 {order.items.map((item) => (
@@ -111,12 +118,12 @@ export default async function OrderPage({ params }: OrderPageProps) {
                         </p>
 
                         <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                          Quantity: {item.quantity}
+                          {isEn ? "Quantity" : "Jumlah"}: {item.quantity}
                         </p>
                       </div>
 
                       <p className="font-medium text-[var(--color-ink)]">
-                        {formatIdr(item.lineTotalMinor)}
+                        {formatIdr(item.lineTotalMinor, locale)}
                       </p>
                     </div>
 
@@ -128,9 +135,10 @@ export default async function OrderPage({ params }: OrderPageProps) {
                             <a
                               key={grant.id}
                               href={`/api/downloads/${grant.id}`}
-                              className="inline-flex min-h-10 items-center rounded-[var(--radius-control)] bg-[var(--color-ink)] px-3 text-sm font-medium text-white!"
+                              className="inline-flex min-h-10 items-center rounded-[var(--radius-control)] bg-[var(--color-ink)] px-3 text-sm font-medium text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-95"
                             >
-                              Download {grant.digitalAsset.fileName}
+                              {isEn ? "Download" : "Unduh"}{" "}
+                              {grant.digitalAsset.fileName}
                             </a>
                           ))}
                         </div>
@@ -145,8 +153,9 @@ export default async function OrderPage({ params }: OrderPageProps) {
               order.items.every((item) => item.downloadGrants.length === 0) && (
                 <div className="mt-6 rounded-[var(--radius-control)] bg-[var(--color-warning-soft)] p-4">
                   <p className="text-sm leading-6 text-[var(--color-warning-strong)]">
-                    Pembayaran berhasil, tetapi digital asset belum tersedia
-                    untuk product ini.
+                    {isEn
+                      ? "Payment verified, but digital asset files are currently being provisioned for this item."
+                      : "Pembayaran berhasil, tetapi digital asset belum tersedia untuk product ini."}
                   </p>
                 </div>
               )}
@@ -157,7 +166,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
               </span>
 
               <span className="text-lg font-semibold text-[var(--color-ink)]">
-                {formatIdr(order.totalMinor)}
+                {formatIdr(order.totalMinor, locale)}
               </span>
             </div>
 
@@ -168,15 +177,21 @@ export default async function OrderPage({ params }: OrderPageProps) {
             )}
           </div>
 
-          {/* Contextual Payment Notice (Batch 4 - Final) */}
+          {/* Contextual Payment Notice */}
           <div className="mt-6 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
             <p className="text-sm leading-6 text-[var(--color-text-muted)]">
               {order.paymentStatus === "PAID"
-                ? "Pembayaran telah diverifikasi. File digital tersedia untuk diunduh pada daftar item di atas."
+                ? isEn
+                  ? "Payment has been verified. Digital files are ready for instant download in the list above."
+                  : "Pembayaran telah diverifikasi. File digital tersedia untuk diunduh pada daftar item di atas."
                 : order.paymentStatus === "FAILED" ||
                     order.paymentStatus === "EXPIRED"
-                  ? "Pembayaran tidak berhasil diselesaikan. Anda dapat membuat order baru dari keranjang."
-                  : "Pembayaran masih menunggu verifikasi. File digital tersedia setelah pembayaran berhasil."}
+                  ? isEn
+                    ? "Payment could not be completed. You can start a new order anytime from your cart."
+                    : "Pembayaran tidak berhasil diselesaikan. Anda dapat membuat order baru dari keranjang."
+                  : isEn
+                    ? "Payment verification is pending. Digital files will be unlocked as soon as payment is settled."
+                    : "Pembayaran masih menunggu verifikasi. File digital tersedia setelah pembayaran berhasil."}
             </p>
           </div>
         </div>

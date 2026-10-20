@@ -7,6 +7,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { StatusMessage } from "@/components/ui/status-message";
 import { useToast } from "@/components/ui/toast-provider";
 import { addToCartAction, type CartActionState } from "@/modules/cart/actions";
+import { useI18n } from "@/lib/i18n/client";
 
 type AddToCartFormProps = {
   productId: string;
@@ -19,6 +20,7 @@ export function AddToCartForm({
   productId,
   isAuthenticated,
 }: AddToCartFormProps) {
+  const { dict } = useI18n();
   const action = addToCartAction.bind(null, productId);
 
   const [state, formAction, isPending] = useActionState(action, initialState);
@@ -35,14 +37,16 @@ export function AddToCartForm({
   }, [state.success, state.error, showToast]);
 
   if (!isAuthenticated) {
-    return <ButtonLink href="/login">Masuk untuk membeli</ButtonLink>;
+    return (
+      <ButtonLink href="/login">{dict.productDetail.loginToBuy}</ButtonLink>
+    );
   }
 
   return (
     <div className="space-y-3">
       <form action={formAction}>
         <LoadingButton type="submit" loading={isPending}>
-          Tambah ke cart
+          {dict.productDetail.addToCart}
         </LoadingButton>
       </form>
 

@@ -7,6 +7,7 @@ import { getSellerMetrics } from "@/lib/admin/seller-metrics";
 import { getFinancialAnalytics } from "@/lib/admin/financial-analytics";
 import { FinancialChart } from "@/components/admin/financial-chart";
 import { Container } from "@/components/ui/container";
+import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: "Seller & Admin Dashboard",
@@ -15,13 +16,18 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const adminUser = await requireAdmin();
-
-  // Kueri metrik terisolasi & data analitik arus kas khusus seller yang login
-  const [metrics, financialData] = await Promise.all([
-    getSellerMetrics(adminUser.id),
-    getFinancialAnalytics(adminUser.id),
+  const [adminUser, { locale }] = await Promise.all([
+    requireAdmin(),
+    getDictionary(),
   ]);
+
+  // Kueri metrik terisolasi KETAT: SELLER hanya melihat produk miliknya sendiri
+  const [metrics, financialData] = await Promise.all([
+    getSellerMetrics(adminUser.id, adminUser.role),
+    getFinancialAnalytics(adminUser.id, adminUser.role),
+  ]);
+
+  const isEn = locale === "en";
 
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-canvas)] py-6 sm:py-12 safe-bottom">
@@ -32,17 +38,19 @@ export default async function AdminPage() {
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center rounded-full bg-[var(--color-accent-soft)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-accent-strong)]">
-                  Seller Dashboard
+                  {adminUser.role === "ADMIN"
+                    ? "Admin Dashboard"
+                    : "Seller Dashboard"}
                 </span>
                 <span className="text-xs text-[var(--color-text-muted)]">
-                  • Akses Terisolasi
+                  {isEn ? "• Isolated Access" : "• Akses Terisolasi"}
                 </span>
               </div>
               <h1 className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-ink)] sm:text-4xl">
-                Ringkasan Toko Anda
+                {isEn ? "Your Store Overview" : "Ringkasan Toko Anda"}
               </h1>
               <p className="mt-1 text-xs text-[var(--color-text-muted)] sm:text-sm">
-                Masuk sebagai{" "}
+                {isEn ? "Signed in as" : "Masuk sebagai"}{" "}
                 <span className="font-semibold text-[var(--color-ink)]">
                   {adminUser.name || adminUser.email}
                 </span>
@@ -63,68 +71,82 @@ export default async function AdminPage() {
                 >
                   <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                 </svg>
-                Tambah Produk
+                {isEn ? "Add Product" : "Tambah Produk"}
               </Link>
             </div>
           </div>
 
-          {/* KPI METRICS OVERVIEW GRID (Mobile-First / Android Optimized) */}
-          <section aria-label="Metrik Ringkasan Operasional Seller">
+          {/* KPI METRICS OVERVIEW GRID (Terisolasi per Seller) */}
+          <section
+            aria-label={
+              isEn
+                ? "Seller Operational Summary Metrics"
+                : "Metrik Ringkasan Operasional Seller"
+            }
+          >
             <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)] mb-3">
-              Performa Penjualan Anda
+              {isEn ? "Your Sales Performance" : "Performa Penjualan Anda"}
             </h2>
 
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
               {/* Metrik 1: Total Pendapatan Seller */}
               <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs">
                 <p className="text-xs font-medium text-[var(--color-text-muted)]">
-                  Total Pendapatan (Lunas)
+                  {isEn
+                    ? "Total Revenue (Settled)"
+                    : "Total Pendapatan (Lunas)"}
                 </p>
                 <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-ink)]">
-                  {formatIdr(metrics.totalRevenue)}
+                  {formatIdr(metrics.totalRevenue, locale)}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-success-strong)] flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success-strong)] shrink-0" />
-                  Omzet produk Anda
+                  {isEn ? "Your product turnover" : "Omzet produk Anda"}
                 </p>
               </div>
 
               {/* Metrik 2: Total Pesanan Terkait Produk Seller */}
               <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs">
                 <p className="text-xs font-medium text-[var(--color-text-muted)]">
-                  Pesanan Produk Anda
+                  {isEn ? "Your Product Orders" : "Pesanan Produk Anda"}
                 </p>
                 <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-ink)]">
                   {metrics.totalOrdersCount}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                  {metrics.pendingOrdersCount} pesanan menunggu pembayaran
+                  {isEn
+                    ? `${metrics.pendingOrdersCount} orders awaiting payment`
+                    : `${metrics.pendingOrdersCount} pesanan menunggu pembayaran`}
                 </p>
               </div>
 
               {/* Metrik 3: Total Produk Milik Seller */}
               <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs">
                 <p className="text-xs font-medium text-[var(--color-text-muted)]">
-                  Katalog Produk Anda
+                  {isEn ? "Your Product Catalog" : "Katalog Produk Anda"}
                 </p>
                 <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-ink)]">
                   {metrics.totalProductsCount}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                  Item milik akun Anda
+                  {isEn
+                    ? "Items owned by your account"
+                    : "Item milik akun Anda"}
                 </p>
               </div>
 
               {/* Metrik 4: Kategori yang Digunakan */}
               <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs">
                 <p className="text-xs font-medium text-[var(--color-text-muted)]">
-                  Kategori Digunakan
+                  {isEn ? "Categories Used" : "Kategori Digunakan"}
                 </p>
                 <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-ink)]">
                   {metrics.sellerCategoriesCount}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                  Kategori aktif produk Anda
+                  {isEn
+                    ? "Active categories for your products"
+                    : "Kategori aktif produk Anda"}
                 </p>
               </div>
             </div>
@@ -134,9 +156,15 @@ export default async function AdminPage() {
           <FinancialChart analytics={financialData} />
 
           {/* ADMIN ACTION MODULES GRID */}
-          <section aria-label="Modul Akses Operasional">
+          <section
+            aria-label={
+              isEn ? "Operational Access Modules" : "Modul Akses Operasional"
+            }
+          >
             <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)] mb-3">
-              Modul Manajemen & Navigasi Toko
+              {isEn
+                ? "Store Management & Navigation Modules"
+                : "Modul Manajemen & Navigasi Toko"}
             </h2>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -160,11 +188,12 @@ export default async function AdminPage() {
                     </svg>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Katalog Produk Saya
+                    {isEn ? "My Product Catalog" : "Katalog Produk Saya"}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Atur produk, pasang harga, unggah berkas digital, dan kelola
-                    status publikasi produk Anda.
+                    {isEn
+                      ? "Manage products, set pricing, upload digital files, and control your publication status."
+                      : "Atur produk, pasang harga, unggah berkas digital, dan kelola status publikasi produk Anda."}
                   </p>
                 </div>
 
@@ -173,7 +202,7 @@ export default async function AdminPage() {
                     href="/admin/products"
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
                   >
-                    Buka Manajemen Produk
+                    {isEn ? "Open Product Management" : "Buka Manajemen Produk"}
                   </Link>
                 </div>
               </div>
@@ -203,11 +232,12 @@ export default async function AdminPage() {
                     </svg>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Kategori Katalog
+                    {isEn ? "Catalog Categories" : "Kategori Katalog"}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Lihat daftar kategori produk yang tersedia di marketplace
-                    untuk pengelompokan produk Anda.
+                    {isEn
+                      ? "Browse available marketplace categories to organize and group your digital products."
+                      : "Lihat daftar kategori produk yang tersedia di marketplace untuk pengelompokan produk Anda."}
                   </p>
                 </div>
 
@@ -216,7 +246,7 @@ export default async function AdminPage() {
                     href="/admin/categories"
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
                   >
-                    Buka Daftar Kategori
+                    {isEn ? "Open Category List" : "Buka Daftar Kategori"}
                   </Link>
                 </div>
               </div>
@@ -241,11 +271,12 @@ export default async function AdminPage() {
                     </svg>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Pesanan & Penjualan
+                    {isEn ? "Orders & Sales" : "Pesanan & Penjualan"}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Pantau pesanan yang masuk khusus untuk produk Anda, status
-                    pembayaran, dan rincian transaksi.
+                    {isEn
+                      ? "Track incoming orders for your products, payment statuses, and transaction details."
+                      : "Pantau pesanan yang masuk khusus untuk produk Anda, status pembayaran, dan rincian transaksi."}
                   </p>
                 </div>
 
@@ -254,48 +285,51 @@ export default async function AdminPage() {
                     href="/admin/orders"
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
                   >
-                    Buka Riwayat Pesanan
+                    {isEn ? "Open Order History" : "Buka Riwayat Pesanan"}
                   </Link>
                 </div>
               </div>
 
-              {/* MODUL 4: AUDIT LOG & KEAMANAN */}
-              <div className="flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs sm:p-6">
-                <div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-surface-muted)] text-[var(--color-ink)]">
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      className="h-5 w-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-                      />
-                    </svg>
+              {/* MODUL 4: AUDIT LOG (Khusus SUPER ADMIN) */}
+              {adminUser.role === "ADMIN" && (
+                <div className="flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs sm:p-6">
+                  <div>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-surface-muted)] text-[var(--color-ink)]">
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
+                      {isEn ? "Audit Logs & Security" : "Audit Log & Keamanan"}
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
+                      {isEn
+                        ? "Inspect administrative audit trails for governance compliance and system security."
+                        : "Rekam jejak setiap aksi administratif untuk kepatuhan tata kelola dan keamanan sistem."}
+                    </p>
                   </div>
-                  <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Audit Log & Keamanan
-                  </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Rekam jejak setiap aksi administratif untuk kepatuhan tata
-                    kelola dan keamanan sistem.
-                  </p>
-                </div>
 
-                <div className="mt-5 pt-4 border-t border-[var(--color-line)]">
-                  <Link
-                    href="/admin/audit-logs"
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
-                  >
-                    Inspeksi Audit Log
-                  </Link>
+                  <div className="mt-5 pt-4 border-t border-[var(--color-line)]">
+                    <Link
+                      href="/admin/audit-logs"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
+                    >
+                      {isEn ? "Inspect Audit Logs" : "Inspeksi Audit Log"}
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* MODUL 5: PRATINJAU TOKO PUBLIK */}
               <div className="flex flex-col justify-between rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs sm:p-6">
@@ -317,11 +351,12 @@ export default async function AdminPage() {
                     </svg>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Tampilan Publik
+                    {isEn ? "Public Storefront" : "Tampilan Publik"}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Lihat etalase toko dari kacamata pembeli untuk memverifikasi
-                    produk yang sedang aktif.
+                    {isEn
+                      ? "View your storefront from a customer's perspective to verify active products."
+                      : "Lihat etalase toko dari kacamata pembeli untuk memverifikasi produk yang sedang aktif."}
                   </p>
                 </div>
 
@@ -330,7 +365,7 @@ export default async function AdminPage() {
                     href="/products"
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
                   >
-                    Kunjungi Toko
+                    {isEn ? "Visit Storefront" : "Kunjungi Toko"}
                   </Link>
                 </div>
               </div>
@@ -355,11 +390,12 @@ export default async function AdminPage() {
                     </svg>
                   </div>
                   <h3 className="mt-4 text-base font-semibold text-[var(--color-ink)] sm:text-lg">
-                    Profil Saya
+                    {isEn ? "My Profile" : "Profil Saya"}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                    Akses pengaturan profil akun personal dan pusat unduhan
-                    berkas Anda.
+                    {isEn
+                      ? "Manage personal profile settings and access your digital asset downloads."
+                      : "Akses pengaturan profil akun personal dan pusat unduhan berkas Anda."}
                   </p>
                 </div>
 
@@ -368,7 +404,7 @@ export default async function AdminPage() {
                     href="/account"
                     className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95"
                   >
-                    Buka Akun Saya
+                    {isEn ? "Open My Account" : "Buka Akun Saya"}
                   </Link>
                 </div>
               </div>

@@ -6,6 +6,7 @@ import type {
   CashflowPoint,
 } from "@/lib/admin/financial-analytics";
 import { formatIdr } from "@/lib/format/currency";
+import { useI18n } from "@/lib/i18n/client";
 
 type PeriodFilter = "daily" | "weekly" | "yearly";
 
@@ -14,6 +15,9 @@ interface FinancialChartProps {
 }
 
 export function FinancialChart({ analytics }: FinancialChartProps) {
+  const { locale } = useI18n();
+  const isEn = locale === "en";
+
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodFilter>("daily");
   const currentSummary = analytics[selectedPeriod];
 
@@ -31,7 +35,11 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
 
   return (
     <section
-      aria-label="Grafik Arus Kas dan Histori Keuangan"
+      aria-label={
+        isEn
+          ? "Cashflow and Financial History Chart"
+          : "Grafik Arus Kas dan Histori Keuangan"
+      }
       className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-xs sm:p-6"
     >
       {/* HEADER & FILTER PERIODE */}
@@ -40,12 +48,15 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
           <div className="flex items-center gap-2">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-[var(--color-accent-strong)]" />
             <h2 className="text-base font-bold text-[var(--color-ink)] sm:text-lg">
-              Arus Kas & Performa Keuangan Toko
+              {isEn
+                ? "Cashflow & Financial Store Analytics"
+                : "Arus Kas & Performa Keuangan Toko"}
             </h2>
           </div>
           <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-            Perbandingan omzet masuk terhadap potongan biaya otomatis platform (
-            {analytics.feeRatePercentage}%).
+            {isEn
+              ? `Comparison of gross inflow against automated platform fee deductions (${analytics.feeRatePercentage}%).`
+              : `Perbandingan omzet masuk terhadap potongan biaya otomatis platform (${analytics.feeRatePercentage}%).`}
           </p>
         </div>
 
@@ -63,7 +74,7 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
-            Harian (7 Hari)
+            {isEn ? "Daily (7 Days)" : "Harian (7 Hari)"}
           </button>
           <button
             type="button"
@@ -77,7 +88,7 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
-            Mingguan (8 Mgg)
+            {isEn ? "Weekly (8 Wks)" : "Mingguan (8 Mgg)"}
           </button>
           <button
             type="button"
@@ -91,7 +102,7 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
-            Tahunan (12 Bln)
+            {isEn ? "Yearly (12 Mos)" : "Tahunan (12 Bln)"}
           </button>
         </div>
       </div>
@@ -101,47 +112,53 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
         <div className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              Pemasukan (Kotor)
+              {isEn ? "Gross Inflow" : "Pemasukan (Kotor)"}
             </span>
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
           </div>
           <p className="mt-1.5 text-xl font-bold tracking-tight text-[var(--color-ink)]">
-            {formatIdr(currentSummary.totalRevenue)}
+            {formatIdr(currentSummary.totalRevenue, locale)}
           </p>
           <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
-            {currentSummary.totalOrders} item pesanan lunas
+            {isEn
+              ? `${currentSummary.totalOrders} settled order items`
+              : `${currentSummary.totalOrders} item pesanan lunas`}
           </p>
         </div>
 
         <div className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              Pengeluaran (Biaya Gateway)
+              {isEn ? "Gateway Expense" : "Pengeluaran (Biaya Gateway)"}
             </span>
             <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
           </div>
           <p className="mt-1.5 text-xl font-bold tracking-tight text-rose-600">
-            -{formatIdr(currentSummary.totalExpense)}
+            -{formatIdr(currentSummary.totalExpense, locale)}
           </p>
           <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
-            Biaya transaksi terhitung otomatis ({analytics.feeRatePercentage}%)
+            {isEn
+              ? `Automated transaction fee deduction (${analytics.feeRatePercentage}%)`
+              : `Biaya transaksi terhitung otomatis (${analytics.feeRatePercentage}%)`}
           </p>
         </div>
 
         <div className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              Estimasi Laba Bersih
+              {isEn ? "Estimated Net Profit" : "Estimasi Laba Bersih"}
             </span>
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
               {currentSummary.netMarginPct}% Net
             </span>
           </div>
           <p className="mt-1.5 text-xl font-bold tracking-tight text-emerald-700">
-            {formatIdr(currentSummary.totalNet)}
+            {formatIdr(currentSummary.totalNet, locale)}
           </p>
           <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
-            Pendapatan riil bersih toko Anda
+            {isEn
+              ? "Your store's real net earnings"
+              : "Pendapatan riil bersih toko Anda"}
           </p>
         </div>
       </div>
@@ -150,22 +167,28 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
       <div className="mt-6">
         <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] mb-3">
           <span className="font-semibold uppercase tracking-wider text-[11px]">
-            Visualisasi Grafik (
+            {isEn ? "Chart Visualization" : "Visualisasi Grafik"} (
             {selectedPeriod === "daily"
-              ? "7 Hari"
+              ? isEn
+                ? "7 Days"
+                : "7 Hari"
               : selectedPeriod === "weekly"
-                ? "8 Minggu"
-                : "12 Bulan"}
+                ? isEn
+                  ? "8 Weeks"
+                  : "8 Minggu"
+                : isEn
+                  ? "12 Months"
+                  : "12 Bulan"}
             )
           </span>
           <div className="flex items-center gap-4 text-[11px]">
             <span className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-xs bg-emerald-500" />{" "}
-              Pemasukan
+              {isEn ? "Inflow" : "Pemasukan"}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-xs bg-rose-400" /> Biaya
-              Potongan
+              <span className="h-2.5 w-2.5 rounded-xs bg-rose-400" />{" "}
+              {isEn ? "Platform Fee" : "Biaya Potongan"}
             </span>
           </div>
         </div>
@@ -257,16 +280,18 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="text-xs font-semibold text-[var(--color-accent-strong)] uppercase tracking-wider">
-                  Inspeksi Detail Titik Terpilih
+                  {isEn
+                    ? "Selected Point Inspection"
+                    : "Inspeksi Detail Titik Terpilih"}
                 </span>
                 <h3 className="text-base font-bold text-[var(--color-ink)]">
                   {activePoint.title} ({activePoint.subtitle})
                 </h3>
               </div>
               <div className="text-xs text-[var(--color-text-muted)]">
-                Volume:{" "}
+                {isEn ? "Volume:" : "Volume:"}{" "}
                 <span className="font-semibold text-[var(--color-ink)]">
-                  {activePoint.count} item pesanan
+                  {activePoint.count} {isEn ? "order items" : "item pesanan"}
                 </span>
               </div>
             </div>
@@ -274,26 +299,28 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
             <div className="mt-3 grid grid-cols-1 gap-2 border-t border-[var(--color-line)] pt-3 text-xs sm:grid-cols-3">
               <div>
                 <span className="text-[var(--color-text-muted)]">
-                  Pemasukan Kotor:
+                  {isEn ? "Gross Inflow:" : "Pemasukan Kotor:"}
                 </span>
                 <p className="font-bold text-emerald-600 text-sm">
-                  {formatIdr(activePoint.revenueMinor)}
+                  {formatIdr(activePoint.revenueMinor, locale)}
                 </p>
               </div>
               <div>
                 <span className="text-[var(--color-text-muted)]">
-                  Potongan Fee ({analytics.feeRatePercentage}%):
+                  {isEn
+                    ? `Fee Deduction (${analytics.feeRatePercentage}%):`
+                    : `Potongan Fee (${analytics.feeRatePercentage}%):`}
                 </span>
                 <p className="font-bold text-rose-600 text-sm">
-                  -{formatIdr(activePoint.expenseMinor)}
+                  -{formatIdr(activePoint.expenseMinor, locale)}
                 </p>
               </div>
               <div>
                 <span className="text-[var(--color-text-muted)]">
-                  Laba Bersih:
+                  {isEn ? "Net Profit:" : "Laba Bersih:"}
                 </span>
                 <p className="font-bold text-[var(--color-ink)] text-sm">
-                  {formatIdr(activePoint.netMinor)}
+                  {formatIdr(activePoint.netMinor, locale)}
                 </p>
               </div>
             </div>
@@ -304,18 +331,28 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
       {/* TABEL RINCIAN HISTORI BUKU KAS (AUDITABLE LEDGER) */}
       <div className="mt-6 border-t border-[var(--color-line)] pt-5">
         <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)] mb-3">
-          Histori Log Transaksi Periode Terpilih
+          {isEn
+            ? "Transaction Ledger History for Selected Period"
+            : "Histori Log Transaksi Periode Terpilih"}
         </h3>
 
         <div className="overflow-x-auto rounded-[var(--radius-control)] border border-[var(--color-line)]">
           <table className="w-full text-left text-xs">
             <thead className="bg-[var(--color-surface-muted)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold border-b border-[var(--color-line)]">
               <tr>
-                <th className="px-3.5 py-3">Periode</th>
-                <th className="px-3.5 py-3">Pesanan</th>
-                <th className="px-3.5 py-3">Pemasukan</th>
-                <th className="px-3.5 py-3">Potongan Fee (3%)</th>
-                <th className="px-3.5 py-3 text-right">Laba Bersih</th>
+                <th className="px-3.5 py-3">{isEn ? "Period" : "Periode"}</th>
+                <th className="px-3.5 py-3">{isEn ? "Orders" : "Pesanan"}</th>
+                <th className="px-3.5 py-3">
+                  {isEn ? "Revenue" : "Pemasukan"}
+                </th>
+                <th className="px-3.5 py-3">
+                  {isEn
+                    ? `Fee Deduction (${analytics.feeRatePercentage}%)`
+                    : `Potongan Fee (${analytics.feeRatePercentage}%)`}
+                </th>
+                <th className="px-3.5 py-3 text-right">
+                  {isEn ? "Net Profit" : "Laba Bersih"}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-line)] bg-white">
@@ -337,18 +374,20 @@ export function FinancialChart({ analytics }: FinancialChartProps) {
                     </span>
                   </td>
                   <td className="px-3.5 py-2.5 text-[var(--color-text-muted)] whitespace-nowrap">
-                    {pt.count} item
+                    {pt.count} {isEn ? "items" : "item"}
                   </td>
                   <td className="px-3.5 py-2.5 font-semibold text-emerald-600 whitespace-nowrap">
-                    {formatIdr(pt.revenueMinor)}
+                    {formatIdr(pt.revenueMinor, locale)}
                   </td>
                   <td className="px-3.5 py-2.5 font-semibold text-rose-500 whitespace-nowrap">
                     {pt.expenseMinor > 0
-                      ? `-${formatIdr(pt.expenseMinor)}`
-                      : "Rp 0"}
+                      ? `-${formatIdr(pt.expenseMinor, locale)}`
+                      : isEn
+                        ? "IDR 0"
+                        : "Rp 0"}
                   </td>
                   <td className="px-3.5 py-2.5 text-right font-bold text-[var(--color-ink)] whitespace-nowrap">
-                    {formatIdr(pt.netMinor)}
+                    {formatIdr(pt.netMinor, locale)}
                   </td>
                 </tr>
               ))}

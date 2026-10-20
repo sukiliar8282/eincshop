@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SkipLink } from "@/components/layout/skip-link";
 import { ToastProvider } from "@/components/ui/toast-provider";
+import { I18nProvider } from "@/lib/i18n/client";
+import { getDictionary } from "@/lib/i18n/server";
 import { siteConfig } from "@/config/site";
 
 import "./globals.css";
@@ -28,21 +30,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Ambil bahasa aktif dan kamus dari cookie secara aman di sisi server
+  const { locale, dict } = await getDictionary();
+
   return (
-    <html lang="id">
+    <html lang={locale}>
       <body>
         <ToastProvider>
-          <SkipLink />
-          <SiteHeader />
+          <I18nProvider initialLocale={locale} dictionary={dict}>
+            <SkipLink />
+            <SiteHeader />
 
-          <main id="main-content">{children}</main>
+            <main id="main-content">{children}</main>
 
-          <SiteFooter />
+            <SiteFooter />
+          </I18nProvider>
         </ToastProvider>
       </body>
     </html>

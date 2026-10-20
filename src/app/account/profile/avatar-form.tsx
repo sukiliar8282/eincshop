@@ -7,6 +7,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Modal } from "@/components/ui/modal";
 import { StatusMessage } from "@/components/ui/status-message";
 import { useToast } from "@/components/ui/toast-provider";
+import { useI18n } from "@/lib/i18n/client";
 import {
   updateProfileImageAction,
   type AvatarActionState,
@@ -27,6 +28,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
     initialState,
   );
   const { showToast } = useToast();
+  const { t } = useI18n();
 
   // State File & Live Preview
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
@@ -100,7 +102,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
     try {
       const objectUrl = URL.createObjectURL(file);
 
-      setSelectedFileName(file.name || "Foto profil");
+      setSelectedFileName(file.name || "avatar");
       setRawImageSrc(objectUrl);
       setPreviewUrl(objectUrl);
       setActiveFile(file);
@@ -201,7 +203,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
     const img = cropperImgRef.current;
 
     if (!img) {
-      showToast("error", "Foto belum siap diproses.");
+      showToast("error", t("cropper.notReadyError"));
       return;
     }
 
@@ -278,7 +280,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
       setActiveFile(cropped);
       setPreviewUrl(newPreview);
       setIsCropperOpen(false);
-      showToast("success", "Foto berhasil dipotong dan siap disimpan!");
+      showToast("success", t("cropper.processSuccess"));
     } catch (error) {
       console.error("[AvatarCropper] Gagal memproses foto:", error);
       showToast(
@@ -309,7 +311,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
         <div className="flex items-center gap-4 sm:gap-5">
           {/* Avatar Circle */}
           <div
-            title="Klik untuk memilih foto"
+            title={t("account.changePhoto")}
             className="group relative flex h-20 w-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-line)] bg-[var(--color-surface-muted)] shadow-inner transition-all hover:border-[var(--color-ink)] focus-within:ring-2 focus-within:ring-[var(--color-accent-strong)]"
           >
             <input
@@ -373,7 +375,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                 <circle cx="12" cy="13.5" r="3" />
               </svg>
               <span className="text-[10px] font-medium tracking-tight mt-0.5">
-                Ubah
+                {t("common.change")}
               </span>
             </div>
           </div>
@@ -381,19 +383,15 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
           {/* Keterangan & Panduan Dimensi */}
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-[var(--color-ink)]">
-              Foto profile
+              {t("profile.photoSectionTitle")}
             </h3>
             <p className="mt-1 text-xs text-[var(--color-text-muted)] leading-relaxed">
-              Format JPG, PNG, atau WebP. Minimal lebar{" "}
-              <span className="font-semibold text-[var(--color-ink)]">
-                300 × 300 px
-              </span>
-              , maksimal 2 MB.
+              {t("profile.photoSectionDesc")}
             </p>
             {activeFile && (
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-success-soft)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--color-success-strong)]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success-strong)]" />
-                Foto siap disimpan
+                {t("profile.photoReadyToSave")}
               </span>
             )}
           </div>
@@ -414,7 +412,9 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                 className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
               />
               <span className="block min-h-11 border border-[var(--color-line)] bg-[var(--color-surface-muted)] px-3 py-2 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-line)] active:scale-95 text-center flex items-center">
-                {activeFile ? "Ganti foto lain" : "Pilih foto"}
+                {activeFile
+                  ? t("profile.changeOtherPhoto")
+                  : t("profile.choosePhoto")}
               </span>
             </div>
 
@@ -424,7 +424,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                   {selectedFileName}
                 </span>
               ) : (
-                "Pilih foto dari perangkat Anda"
+                t("profile.placeholderSelect")
               )}
             </span>
 
@@ -434,7 +434,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                 onClick={() => setIsCropperOpen(true)}
                 className="text-xs font-medium text-[var(--color-accent-strong)] hover:underline focus:outline-none shrink-0"
               >
-                Atur posisi
+                {t("profile.adjustPosition")}
               </button>
             )}
           </div>
@@ -449,23 +449,21 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
         )}
 
         <LoadingButton type="submit" loading={isPending} disabled={!activeFile}>
-          Simpan foto
+          {isPending ? t("profile.savingPhotoBtn") : t("profile.savePhotoBtn")}
         </LoadingButton>
       </form>
 
       {/* Modern Modal Image Cropper */}
       <Modal
         open={isCropperOpen}
-        title="Sesuaikan Foto Profile"
-        description="Geser dan atur perbesaran foto agar pas di dalam lingkaran profil."
+        title={t("cropper.modalTitle")}
+        description={t("cropper.modalDesc")}
         onClose={() => setIsCropperOpen(false)}
       >
         <div className="space-y-6">
           {isSmallResolution && (
             <div className="rounded-[var(--radius-control)] border border-[var(--color-warning-strong)]/30 bg-[var(--color-warning-soft)] p-3 text-xs text-[var(--color-warning-strong)]">
-              ⚠️ Resolusi foto ({imageMeta.nw} × {imageMeta.nh} px) di bawah
-              rekomendasi minimal 300 × 300 px. Foto mungkin terlihat buram saat
-              disimpan.
+              {t("cropper.lowResWarning", { w: imageMeta.nw, h: imageMeta.nh })}
             </div>
           )}
 
@@ -500,7 +498,9 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
           {/* Slider Zoom & Tombol Reset Posisi */}
           <div className="space-y-2 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
             <div className="flex items-center justify-between text-xs font-medium text-[var(--color-ink)]">
-              <span>Perbesaran ({Math.round(zoom * 100)}%)</span>
+              <span>
+                {t("cropper.zoomLabel", { zoom: Math.round(zoom * 100) })}
+              </span>
               <button
                 type="button"
                 onClick={() => {
@@ -509,7 +509,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                 }}
                 className="text-[var(--color-accent-strong)] hover:underline"
               >
-                Pusatkan kembali
+                {t("cropper.recenter")}
               </button>
             </div>
 
@@ -524,7 +524,7 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
                 step="0.02"
                 value={zoom}
                 onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
-                aria-label="Perbesaran foto profil"
+                aria-label={t("cropper.zoomSliderAria")}
                 className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-[var(--color-line-strong)] accent-[var(--color-ink)]"
               />
               <span className="text-xs font-semibold text-[var(--color-text-muted)]">
@@ -540,14 +540,14 @@ export function AvatarForm({ currentImage }: AvatarFormProps) {
               onClick={() => setIsCropperOpen(false)}
               className="min-h-12 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-5 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)] sm:w-auto"
             >
-              Batal
+              {t("cropper.cancelBtn")}
             </button>
             <button
               type="button"
               onClick={handleApplyCrop}
               className="min-h-12 w-full rounded-[var(--radius-control)] bg-[var(--color-ink)] px-6 text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm sm:w-auto"
             >
-              Gunakan foto ini
+              {t("cropper.applyBtn")}
             </button>
           </div>
         </div>

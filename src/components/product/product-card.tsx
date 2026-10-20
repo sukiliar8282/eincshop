@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatIdr } from "@/lib/format/currency";
+import type { Locale } from "@/lib/i18n/config";
 
 type ProductCardProps = {
   product: {
@@ -17,16 +18,29 @@ type ProductCardProps = {
       altText: string;
     } | null;
   };
+  locale?: Locale | string;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
-  const title = product.title || "Produk digital";
+export function ProductCard({ product, locale = "id" }: ProductCardProps) {
+  const isEn = locale === "en" || locale === "en-US";
+  const defaultTitle = isEn ? "Digital product" : "Produk digital";
+  const title = product.title || defaultTitle;
+
+  const labels = {
+    viewDetailAria: isEn
+      ? `View details for ${title}`
+      : `Lihat detail ${title}`,
+    preview: isEn ? "Product preview" : "Preview produk",
+    typeBadge: isEn ? "Digital product" : "Produk digital",
+    price: isEn ? "Price" : "Harga",
+    viewDetail: isEn ? "View details →" : "Lihat detail →",
+  };
 
   return (
     <article className="motion-enter surface-interactive group flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
       <Link
         href={`/products/${product.slug}`}
-        aria-label={`Lihat detail ${title}`}
+        aria-label={labels.viewDetailAria}
         className="relative block aspect-[4/3] overflow-hidden bg-[var(--color-surface-muted)]"
       >
         {product.image ? (
@@ -40,7 +54,7 @@ export function ProductCard({ product }: ProductCardProps) {
         ) : (
           <div className="flex h-full items-end p-5">
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-              Preview produk
+              {labels.preview}
             </span>
           </div>
         )}
@@ -52,7 +66,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.category.name}
           </span>
           <span className="text-[11px] text-[var(--color-text-muted)]">
-            Produk digital
+            {labels.typeBadge}
           </span>
         </div>
 
@@ -71,10 +85,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-auto flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-5">
           <div>
-            <p className="text-[11px] text-[var(--color-text-muted)]">Harga</p>
+            <p className="text-[11px] text-[var(--color-text-muted)]">
+              {labels.price}
+            </p>
 
             <p className="mt-1 font-semibold text-[var(--color-ink)]">
-              {formatIdr(product.priceMinor)}
+              {formatIdr(product.priceMinor, locale)}
             </p>
           </div>
 
@@ -82,7 +98,7 @@ export function ProductCard({ product }: ProductCardProps) {
             href={`/products/${product.slug}`}
             className="text-sm font-medium text-[var(--color-accent-strong)] transition-colors hover:text-[var(--color-ink)]"
           >
-            Lihat detail →
+            {labels.viewDetail}
           </Link>
         </div>
       </div>

@@ -4,50 +4,52 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/components/product/product-card";
 import { prisma } from "@/lib/db";
-import { siteConfig } from "@/config/site";
-
-function formatRupiah(amountMinor: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(amountMinor);
-}
+import { getDictionary } from "@/lib/i18n/server";
+import { formatIdr } from "@/lib/format/currency";
+import { localizeProduct } from "@/lib/i18n/catalog";
 
 export default async function HomePage() {
-  const featuredProducts = await prisma.product.findMany({
-    where: {
-      status: "PUBLISHED",
-      productType: "DIGITAL",
-    },
-    select: {
-      title: true,
-      slug: true,
-      description: true,
-      priceMinor: true,
-      category: {
-        select: {
-          name: true,
+  const [{ dict, locale }, rawFeaturedProducts] = await Promise.all([
+    getDictionary(),
+    prisma.product.findMany({
+      where: {
+        status: "PUBLISHED",
+        productType: "DIGITAL",
+      },
+      select: {
+        title: true,
+        slug: true,
+        description: true,
+        priceMinor: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        images: {
+          orderBy: {
+            sortOrder: "asc",
+          },
+          take: 1,
+          select: {
+            url: true,
+            altText: true,
+          },
         },
       },
-      images: {
-        orderBy: {
-          sortOrder: "asc",
-        },
-        take: 1,
-        select: {
-          url: true,
-          altText: true,
-        },
+      orderBy: {
+        publishedAt: "desc",
       },
-    },
-    orderBy: {
-      publishedAt: "desc",
-    },
-    take: 3,
-  });
+      take: 3,
+    }),
+  ]);
 
+  const featuredProducts = rawFeaturedProducts.map((p) =>
+    localizeProduct(p, locale),
+  );
   const spotlightProduct = featuredProducts[0];
+  const h = dict.home;
 
   return (
     <>
@@ -56,16 +58,15 @@ export default async function HomePage() {
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div className="pt-2 lg:pt-6">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-strong)]">
-                EINCSHOP / DIGITAL GOODS
+                {h.badge}
               </p>
 
               <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.04] tracking-[-0.05em] text-[var(--color-ink)] sm:text-5xl lg:text-6xl">
-                Temukan aset digital yang langsung bisa dipakai.
+                {h.heroTitle}
               </h1>
 
               <p className="mt-6 max-w-xl text-base leading-7 text-[var(--color-text-muted)]">
-                Template, sistem desain, dan modul kode praktis untuk membantu
-                pekerjaan kreatif berjalan lebih cepat dan terarah.
+                {h.heroSubtitle}
               </p>
 
               <form
@@ -74,19 +75,19 @@ export default async function HomePage() {
                 className="mt-8 flex max-w-lg flex-col gap-2 sm:flex-row"
               >
                 <label className="sr-only" htmlFor="homepage-search">
-                  Cari produk
+                  {h.searchBtn}
                 </label>
 
                 <input
                   id="homepage-search"
                   type="search"
                   name="q"
-                  placeholder="Cari template, UI kit, atau kode..."
+                  placeholder={h.searchPlaceholder}
                   className="min-h-11 flex-1 rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-4 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-ink)] focus:outline-none"
                 />
 
                 <Button type="submit" size="md">
-                  Cari produk
+                  {h.searchBtn}
                 </Button>
               </form>
 
@@ -95,41 +96,42 @@ export default async function HomePage() {
                   href="/products"
                   className="rounded-full border border-[var(--color-line-strong)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] transition-transform duration-150 hover:border-[var(--color-ink)] active:scale-95"
                 >
-                  Semua produk
+                  {h.categories.all}
                 </Link>
 
                 <Link
                   href="/products?category=templates"
                   className="rounded-full border border-[var(--color-line)] bg-white/60 px-3 py-1.5 text-xs text-[var(--color-text-muted)] transition-all duration-150 hover:border-[var(--color-line-strong)] hover:text-[var(--color-ink)] active:scale-95"
                 >
-                  Template
+                  {h.categories.templates}
                 </Link>
 
                 <Link
                   href="/products?category=ui-kit"
                   className="rounded-full border border-[var(--color-line)] bg-white/60 px-3 py-1.5 text-xs text-[var(--color-text-muted)] transition-all duration-150 hover:border-[var(--color-line-strong)] hover:text-[var(--color-ink)] active:scale-95"
                 >
-                  UI kit
+                  {h.categories.uiKit}
                 </Link>
 
                 <Link
                   href="/products?category=code"
                   className="rounded-full border border-[var(--color-line)] bg-white/60 px-3 py-1.5 text-xs text-[var(--color-text-muted)] transition-all duration-150 hover:border-[var(--color-line-strong)] hover:text-[var(--color-ink)] active:scale-95"
                 >
-                  Kode
+                  {h.categories.code}
                 </Link>
               </div>
             </div>
 
+            {/* Spotlight Card */}
             <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-5 shadow-[var(--shadow-soft)] sm:p-6">
               <div className="flex items-center justify-between border-b border-[var(--color-line)] pb-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-                    Pilihan terbaru
+                    {h.spotlight.badge}
                   </p>
 
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">
-                    Dipilih dari katalog minggu ini
+                    {h.spotlight.subtitle}
                   </p>
                 </div>
 
@@ -141,7 +143,6 @@ export default async function HomePage() {
               {spotlightProduct ? (
                 <div className="pt-5">
                   {spotlightProduct.images[0]?.url ? (
-                    /* FIX: Menggunakan aspect-[4/3] dan object-top agar judul foto tidak terpotong */
                     <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-image)] bg-[var(--color-surface-muted)]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -156,14 +157,17 @@ export default async function HomePage() {
                   ) : (
                     <div className="flex aspect-[4/3] items-end rounded-[var(--radius-image)] bg-[var(--color-surface-muted)] p-5">
                       <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
-                        Preview produk
+                        {h.spotlight.preview}
                       </span>
                     </div>
                   )}
 
                   <div className="mt-5">
                     <p className="text-xs text-[var(--color-text-muted)]">
-                      {spotlightProduct.category?.name ?? "Produk digital"}
+                      {spotlightProduct.category?.name ??
+                        (locale === "en"
+                          ? "Digital product"
+                          : "Produk digital")}
                     </p>
 
                     <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[var(--color-ink)]">
@@ -177,11 +181,11 @@ export default async function HomePage() {
                     <div className="mt-5 flex items-center justify-between gap-4 border-t border-[var(--color-line)] pt-4">
                       <div>
                         <p className="text-xs text-[var(--color-text-muted)]">
-                          Mulai dari
+                          {dict.common.startingFrom}
                         </p>
 
                         <p className="mt-1 font-semibold text-[var(--color-ink)]">
-                          {formatRupiah(spotlightProduct.priceMinor)}
+                          {formatIdr(spotlightProduct.priceMinor, locale)}
                         </p>
                       </div>
 
@@ -190,14 +194,14 @@ export default async function HomePage() {
                         size="sm"
                         className="text-white! hover:text-white"
                       >
-                        Lihat produk
+                        {dict.common.viewProduct}
                       </ButtonLink>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="py-16 text-center text-sm text-[var(--color-text-muted)]">
-                  Produk akan tampil setelah diterbitkan.
+                  {h.spotlight.empty}
                 </div>
               )}
             </div>
@@ -205,55 +209,53 @@ export default async function HomePage() {
         </Container>
       </section>
 
+      {/* 3 Value Propositions */}
       <section className="border-b border-[var(--color-line)] bg-white">
         <Container className="grid gap-6 py-7 sm:grid-cols-3 sm:gap-8">
           <div>
             <p className="text-sm font-semibold text-[var(--color-ink)]">
-              Siap digunakan
+              {h.features.f1Title}
             </p>
-
             <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">
-              File dan template dibuat untuk langsung masuk ke alur kerja Anda.
+              {h.features.f1Desc}
             </p>
           </div>
 
           <div>
             <p className="text-sm font-semibold text-[var(--color-ink)]">
-              Pembelian sederhana
+              {h.features.f2Title}
             </p>
-
             <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">
-              Pilih produk, selesaikan pembayaran, lalu akses file Anda.
+              {h.features.f2Desc}
             </p>
           </div>
 
           <div>
             <p className="text-sm font-semibold text-[var(--color-ink)]">
-              Koleksi terkurasi
+              {h.features.f3Title}
             </p>
-
             <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">
-              Fokus pada produk yang berguna, bukan sekadar memenuhi katalog.
+              {h.features.f3Desc}
             </p>
           </div>
         </Container>
       </section>
 
+      {/* Featured Catalog Section */}
       <section id="featured" className="py-14 sm:py-20">
         <Container>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent-strong)]">
-                Katalog pilihan
+                {h.featured.badge}
               </p>
 
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[var(--color-ink)] sm:text-4xl">
-                Produk terbaru
+                {h.featured.title}
               </h2>
 
               <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--color-text-muted)]">
-                Jelajahi aset digital yang dibuat untuk mempercepat pekerjaan
-                tanpa menambah kerumitan.
+                {h.featured.desc}
               </p>
             </div>
 
@@ -261,7 +263,7 @@ export default async function HomePage() {
               href="/products"
               className="text-sm font-medium text-[var(--color-accent-strong)] hover:underline"
             >
-              Lihat seluruh katalog →
+              {h.featured.viewAll}
             </Link>
           </div>
 
@@ -274,13 +276,14 @@ export default async function HomePage() {
                     ...product,
                     image: product.images[0] ?? null,
                   }}
+                  locale={locale}
                 />
               ))}
             </div>
           ) : (
             <div className="mt-8 rounded-[var(--radius-card)] border border-dashed border-[var(--color-line-strong)] p-10 text-center">
               <p className="text-sm text-[var(--color-text-muted)]">
-                Produk akan tampil di sini setelah diterbitkan.
+                {h.featured.empty}
               </p>
             </div>
           )}
