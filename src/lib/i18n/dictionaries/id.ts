@@ -37,7 +37,7 @@ export const idDict = {
   },
   home: {
     badge: "EINCSHOP / DIGITAL GOODS",
-    heroTitle: "Temukan aset digital yang langsung bisa dipakai.",
+    heroTitle: "Temukan yang tepat untuk Anda.",
     heroSubtitle:
       "Template, sistem desain, dan modul kode praktis untuk membantu pekerjaan kreatif berjalan lebih cepat dan terarah.",
     searchPlaceholder: "Cari template, UI kit, atau kode...",

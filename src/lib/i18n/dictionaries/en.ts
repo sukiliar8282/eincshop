@@ -39,7 +39,7 @@ export const enDict: Dictionary = {
   },
   home: {
     badge: "EINCSHOP / DIGITAL GOODS",
-    heroTitle: "Discover production-ready digital assets.",
+    heroTitle: "Find what works for you.",
     heroSubtitle:
       "Handcrafted templates, robust design systems, and modular code snippets engineered to accelerate modern workflows.",
     searchPlaceholder: "Search templates, UI kits, or code...",
