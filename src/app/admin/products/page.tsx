@@ -53,7 +53,7 @@ export default async function AdminProductsPage({
       ? { OR: [{ sellerId: admin.id }, { sellerId: null }] }
       : { sellerId: admin.id };
 
-  // 2. Filter Search & Status (Batch 1)
+  // 2. Filter Search & Status
   const filterWhere = {
     ...(query
       ? {
@@ -103,12 +103,18 @@ export default async function AdminProductsPage({
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-canvas)] py-8 sm:py-16 safe-bottom">
       <Container>
-        {/* Breadcrumb Navigasi Android Friendly */}
+        {/* Breadcrumb Navigasi Dinamis Sesuai Role (Seller vs Admin) */}
         <Link
           href="/admin"
           className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[var(--color-accent-strong)] hover:underline"
         >
-          {isEn ? "← Back to Admin Dashboard" : "← Kembali ke Dashboard Admin"}
+          {admin.role === "ADMIN"
+            ? isEn
+              ? "← Back to Admin Dashboard"
+              : "← Kembali ke Dashboard Admin"
+            : isEn
+              ? "← Back to Seller Dashboard"
+              : "← Kembali ke Dashboard Penjual"}
         </Link>
 
         <div className="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -134,7 +140,7 @@ export default async function AdminProductsPage({
           </Link>
         </div>
 
-        {/* Form Filter & Search (Batch 1) */}
+        {/* Form Filter & Search */}
         <form
           method="get"
           className="mt-8 grid gap-3 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-4 sm:grid-cols-[1fr_220px_auto]"

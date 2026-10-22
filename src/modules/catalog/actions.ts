@@ -5,13 +5,15 @@ import { revalidatePath } from "next/cache";
 import { writeAuditLog } from "@/lib/security/audit";
 import { getRequestIp } from "@/lib/security/request";
 import { prisma } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth/require-user";
+import { requireAdmin, requireSuperAdmin } from "@/lib/auth/require-user";
 import { categorySchema, productSchema } from "@/modules/catalog/validation";
+import { getLocale } from "@/lib/i18n/server";
 import {
   deletePrivateDigitalAsset,
   uploadPrivateDigitalAsset,
   validateDigitalAsset,
 } from "@/lib/storage/blob";
+import { uploadProductImage } from "@/lib/storage/product-image";
 
 export type CatalogActionState = {
   error?: string;
@@ -28,7 +30,11 @@ export async function createCategoryAction(
   _previousState: CatalogActionState,
   formData: FormData,
 ): Promise<CatalogActionState> {
-  const admin = await requireAdmin();
+  // Hanya Super Admin yang berhak membuat kategori katalog global
+  const admin = await requireSuperAdmin();
+
+  const userLocale = (formData.get("locale") as string) || (await getLocale());
+  const isEn = userLocale === "en" || userLocale === "en-US";
 
   const parsed = categorySchema.safeParse({
     name: formData.get("name"),
@@ -37,7 +43,9 @@ export async function createCategoryAction(
 
   if (!parsed.success) {
     return {
-      error: "Nama atau slug kategori belum sesuai.",
+      error: isEn
+        ? "Category name or slug is invalid."
+        : "Nama atau slug kategori belum sesuai.",
     };
   }
 
@@ -52,7 +60,9 @@ export async function createCategoryAction(
 
   if (existingCategory) {
     return {
-      error: "Kategori dengan nama atau slug tersebut sudah ada.",
+      error: isEn
+        ? "A category with that name or slug already exists."
+        : "Kategori dengan nama atau slug tersebut sudah ada.",
     };
   }
 
@@ -63,7 +73,6 @@ export async function createCategoryAction(
     },
   });
 
-  // Audit Log untuk Kategori
   await writeAuditLog({
     actorUserId: admin.id,
     action: "CATEGORY_CREATED",
@@ -80,7 +89,9 @@ export async function createCategoryAction(
   revalidatePath("/admin/products/new");
 
   return {
-    success: "Kategori berhasil dibuat.",
+    success: isEn
+      ? "Category successfully created."
+      : "Kategori berhasil dibuat.",
   };
 }
 
@@ -90,8 +101,81 @@ export async function createProductAction(
 ): Promise<CatalogActionState> {
   const admin = await requireAdmin();
 
+  // Deteksi Bahasa Pengguna
+  const userLocale = (formData.get("locale") as string) || (await getLocale());
+  const isEn = userLocale === "en" || userLocale === "en-US";
+
+  // 1. Resolusi Kategori Fleksibel: Kategori Bawaan vs Kustom Sendiri
+  const isCustomCategory = formData.get("isCustomCategory") === "true";
+  const newCategoryName = formData.get("newCategoryName");
+  let resolvedCategoryId = formData.get("categoryId") as string;
+
+  if (isCustomCategory) {
+    if (
+      !newCategoryName ||
+      typeof newCategoryName !== "string" ||
+      newCategoryName.trim().length < 2
+    ) {
+      return {
+        error: isEn
+          ? "Custom category name must be at least 2 characters."
+          : "Nama kategori kustom minimal 2 karakter.",
+      };
+    }
+
+    const trimmedName = newCategoryName.trim();
+    const generatedSlug =
+      trimmedName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || `cat-${Date.now()}`;
+
+    let targetCategory = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: trimmedName, mode: "insensitive" } },
+          { slug: generatedSlug },
+        ],
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!targetCategory) {
+      targetCategory = await prisma.category.create({
+        data: {
+          name: trimmedName,
+          slug: generatedSlug,
+          isActive: true,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await writeAuditLog({
+        actorUserId: admin.id,
+        action: "CATEGORY_CREATED",
+        entityType: "Category",
+        entityId: targetCategory.id,
+        ipAddress: await getRequestIp(),
+        metadata: {
+          name: trimmedName,
+          slug: generatedSlug,
+          source: "ON_THE_FLY_PRODUCT_FORM",
+        },
+      });
+
+      revalidatePath("/admin/categories");
+    }
+
+    resolvedCategoryId = targetCategory.id;
+  }
+
+  // 2. Validasi Skema Produk
   const parsed = productSchema.safeParse({
-    categoryId: formData.get("categoryId"),
+    categoryId: resolvedCategoryId,
     title: formData.get("title"),
     slug: formData.get("slug"),
     description: formData.get("description"),
@@ -101,8 +185,39 @@ export async function createProductAction(
   });
 
   if (!parsed.success) {
+    const firstIssue = parsed.error.issues[0];
+    let customError = isEn
+      ? "Product data is incomplete or invalid."
+      : "Data produk belum sesuai.";
+
+    if (firstIssue) {
+      if (firstIssue.path.includes("description")) {
+        customError = isEn
+          ? "Product description must be at least 20 characters."
+          : "Deskripsi produk wajib diisi minimal 20 karakter.";
+      } else if (firstIssue.path.includes("title")) {
+        customError = isEn
+          ? "Product title must be between 3 and 160 characters."
+          : "Nama produk harus diisi antara 3 sampai 160 karakter.";
+      } else if (firstIssue.path.includes("slug")) {
+        customError = isEn
+          ? "Invalid URL slug format (use lowercase letters, numbers, and hyphens without spaces)."
+          : "Format slug URL tidak valid (gunakan huruf kecil, angka, dan tanda strip tanpa spasi).";
+      } else if (firstIssue.path.includes("priceIdr")) {
+        customError = isEn
+          ? "Product price in IDR must be a valid positive number."
+          : "Harga produk dalam IDR harus berupa angka positif.";
+      } else if (firstIssue.path.includes("categoryId")) {
+        customError = isEn
+          ? "Please select or create a product category."
+          : "Kategori produk wajib dipilih atau dibuat.";
+      } else {
+        customError = firstIssue.message;
+      }
+    }
+
     return {
-      error: "Data product belum sesuai.",
+      error: customError,
     };
   }
 
@@ -118,7 +233,9 @@ export async function createProductAction(
 
   if (!category || !category.isActive) {
     return {
-      error: "Kategori tidak tersedia.",
+      error: isEn
+        ? "Selected category is not available."
+        : "Kategori tidak tersedia.",
     };
   }
 
@@ -129,7 +246,9 @@ export async function createProductAction(
 
   if (parsed.data.status === "PUBLISHED" && !file) {
     return {
-      error: "File digital wajib diisi untuk product Published.",
+      error: isEn
+        ? "Digital file is required when publishing a product."
+        : "File digital wajib diisi jika status produk Published.",
     };
   }
 
@@ -142,6 +261,12 @@ export async function createProductAction(
       };
     }
   }
+
+  // Tangkap seluruh berkas foto hasil crop
+  const rawImages = formData.getAll("images");
+  const imageFiles = rawImages.filter(
+    (item): item is File => item instanceof File && item.size > 0,
+  );
 
   const existingProduct = await prisma.product.findFirst({
     where: {
@@ -159,12 +284,15 @@ export async function createProductAction(
 
   if (existingProduct) {
     return {
-      error: "Slug atau SKU product sudah digunakan.",
+      error: isEn
+        ? "Product slug URL or SKU is already used by another product."
+        : "Slug URL atau SKU produk sudah digunakan oleh produk lain.",
     };
   }
 
   let createdProductId: string | undefined;
   let uploadedStorageKey: string | undefined;
+  const uploadedImageKeys: string[] = [];
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -198,6 +326,43 @@ export async function createProductAction(
 
     createdProductId = createdProduct.id;
 
+    // 3. Simpan Koleksi Foto Produk (Carousel Strip) ke Storage & PostgreSQL
+    for (let index = 0; index < imageFiles.length; index++) {
+      const imgFile = imageFiles[index];
+      const imageId = crypto.randomUUID();
+      const uploadedImage = await uploadProductImage(
+        createdProduct.id,
+        imgFile,
+      );
+      uploadedImageKeys.push(uploadedImage.storageKey);
+
+      await prisma.productImage.create({
+        data: {
+          id: imageId,
+          productId: createdProduct.id,
+          storageKey: uploadedImage.storageKey,
+          url: `/api/product-images/${imageId}`,
+          altText: `${createdProduct.title} - ${index + 1}`,
+          sortOrder: index,
+        },
+      });
+
+      await writeAuditLog({
+        actorUserId: admin.id,
+        action: "PRODUCT_IMAGE_UPLOADED",
+        entityType: "ProductImage",
+        entityId: imageId,
+        ipAddress: await getRequestIp(),
+        metadata: {
+          productId: createdProduct.id,
+          mimeType: uploadedImage.mimeType,
+          fileSize: uploadedImage.fileSize,
+          sortOrder: index,
+        },
+      });
+    }
+
+    // 4. Simpan Berkas Digital Downloadable
     if (file) {
       const uploadedAsset = await uploadPrivateDigitalAsset(
         createdProduct.id,
@@ -217,7 +382,6 @@ export async function createProductAction(
         },
       });
 
-      // Audit Log untuk Digital Asset Upload
       await writeAuditLog({
         actorUserId: admin.id,
         action: "DIGITAL_ASSET_UPLOADED",
@@ -234,19 +398,30 @@ export async function createProductAction(
     console.error("Product creation failed:", error);
 
     if (uploadedStorageKey) {
-      await deletePrivateDigitalAsset(uploadedStorageKey);
+      await deletePrivateDigitalAsset(uploadedStorageKey).catch(() => {});
+    }
+
+    for (const key of uploadedImageKeys) {
+      await deletePrivateDigitalAsset(key).catch(() => {});
     }
 
     if (createdProductId) {
-      await prisma.product.delete({
-        where: {
-          id: createdProductId,
-        },
-      });
+      await prisma.product
+        .delete({
+          where: {
+            id: createdProductId,
+          },
+        })
+        .catch(() => {});
     }
 
     return {
-      error: "Product atau file digital gagal disimpan.",
+      error:
+        error instanceof Error
+          ? error.message
+          : isEn
+            ? "Failed to save product or files."
+            : "Product atau berkas gagal disimpan.",
     };
   }
 
@@ -254,7 +429,9 @@ export async function createProductAction(
   revalidatePath("/products");
 
   return {
-    success: "Product berhasil dibuat.",
+    success: isEn
+      ? "Product successfully created."
+      : "Product berhasil dibuat.",
   };
 }
 
@@ -265,8 +442,80 @@ export async function updateProductAction(
 ): Promise<CatalogActionState> {
   const admin = await requireAdmin();
 
+  const userLocale = (formData.get("locale") as string) || (await getLocale());
+  const isEn = userLocale === "en" || userLocale === "en-US";
+
+  // 1. Resolusi Kategori Fleksibel: Kategori Bawaan vs Kustom Sendiri
+  const isCustomCategory = formData.get("isCustomCategory") === "true";
+  const newCategoryName = formData.get("newCategoryName");
+  let resolvedCategoryId = formData.get("categoryId") as string;
+
+  if (isCustomCategory) {
+    if (
+      !newCategoryName ||
+      typeof newCategoryName !== "string" ||
+      newCategoryName.trim().length < 2
+    ) {
+      return {
+        error: isEn
+          ? "Custom category name must be at least 2 characters."
+          : "Nama kategori kustom minimal 2 karakter.",
+      };
+    }
+
+    const trimmedName = newCategoryName.trim();
+    const generatedSlug =
+      trimmedName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || `cat-${Date.now()}`;
+
+    let targetCategory = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: trimmedName, mode: "insensitive" } },
+          { slug: generatedSlug },
+        ],
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!targetCategory) {
+      targetCategory = await prisma.category.create({
+        data: {
+          name: trimmedName,
+          slug: generatedSlug,
+          isActive: true,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await writeAuditLog({
+        actorUserId: admin.id,
+        action: "CATEGORY_CREATED",
+        entityType: "Category",
+        entityId: targetCategory.id,
+        ipAddress: await getRequestIp(),
+        metadata: {
+          name: trimmedName,
+          slug: generatedSlug,
+          source: "ON_THE_FLY_PRODUCT_EDIT",
+        },
+      });
+
+      revalidatePath("/admin/categories");
+    }
+
+    resolvedCategoryId = targetCategory.id;
+  }
+
+  // 2. Validasi Skema Produk
   const parsed = productSchema.safeParse({
-    categoryId: formData.get("categoryId"),
+    categoryId: resolvedCategoryId,
     title: formData.get("title"),
     slug: formData.get("slug"),
     description: formData.get("description"),
@@ -276,14 +525,47 @@ export async function updateProductAction(
   });
 
   if (!parsed.success) {
+    const firstIssue = parsed.error.issues[0];
+    let customError = isEn
+      ? "Product data is incomplete or invalid."
+      : "Data produk belum sesuai.";
+
+    if (firstIssue) {
+      if (firstIssue.path.includes("description")) {
+        customError = isEn
+          ? "Product description must be at least 20 characters."
+          : "Deskripsi produk wajib diisi minimal 20 karakter.";
+      } else if (firstIssue.path.includes("title")) {
+        customError = isEn
+          ? "Product title must be between 3 and 160 characters."
+          : "Nama produk harus diisi antara 3 sampai 160 karakter.";
+      } else if (firstIssue.path.includes("slug")) {
+        customError = isEn
+          ? "Invalid URL slug format (use lowercase letters, numbers, and hyphens without spaces)."
+          : "Format slug URL tidak valid (gunakan huruf kecil, angka, dan tanda strip tanpa spasi).";
+      } else if (firstIssue.path.includes("priceIdr")) {
+        customError = isEn
+          ? "Product price in IDR must be a valid positive number."
+          : "Harga produk dalam IDR harus berupa angka positif.";
+      } else if (firstIssue.path.includes("categoryId")) {
+        customError = isEn
+          ? "Please select or create a product category."
+          : "Kategori produk wajib dipilih atau dibuat.";
+      } else {
+        customError = firstIssue.message;
+      }
+    }
+
     return {
-      error: "Data product belum sesuai.",
+      error: customError,
     };
   }
 
-  const currentProduct = await prisma.product.findUnique({
+  // IDOR & Tenant Isolation Check: Seller hanya boleh mengedit produk miliknya sendiri
+  const currentProduct = await prisma.product.findFirst({
     where: {
       id: productId,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
     },
     select: {
       id: true,
@@ -299,7 +581,9 @@ export async function updateProductAction(
 
   if (!currentProduct) {
     return {
-      error: "Product tidak ditemukan.",
+      error: isEn
+        ? "Product not found or you do not have permission to edit it."
+        : "Product tidak ditemukan atau Anda tidak memiliki izin untuk mengedit produk ini.",
     };
   }
 
@@ -315,7 +599,9 @@ export async function updateProductAction(
 
   if (!category || !category.isActive) {
     return {
-      error: "Kategori tidak tersedia.",
+      error: isEn
+        ? "Selected category is not available."
+        : "Kategori tidak tersedia.",
     };
   }
 
@@ -328,7 +614,9 @@ export async function updateProductAction(
 
   if (parsed.data.status === "PUBLISHED" && !file && !existingAsset) {
     return {
-      error: "File digital wajib diisi untuk product Published.",
+      error: isEn
+        ? "Digital file is required when publishing a product."
+        : "File digital wajib diisi jika status produk Published.",
     };
   }
 
@@ -363,8 +651,79 @@ export async function updateProductAction(
 
   if (duplicateProduct) {
     return {
-      error: "Slug atau SKU product sudah digunakan.",
+      error: isEn
+        ? "Product slug URL or SKU is already used by another product."
+        : "Slug URL atau SKU produk sudah digunakan oleh produk lain.",
     };
+  }
+
+  // 3. Proses Penghapusan Foto yang Ditandai Pengguna (Deleted Images)
+  const deletedImageIds = formData
+    .getAll("deletedImageIds")
+    .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+  if (deletedImageIds.length > 0) {
+    const imagesToDelete = await prisma.productImage.findMany({
+      where: {
+        id: { in: deletedImageIds },
+        productId,
+      },
+      select: {
+        id: true,
+        storageKey: true,
+      },
+    });
+
+    for (const img of imagesToDelete) {
+      await deletePrivateDigitalAsset(img.storageKey).catch(() => {});
+    }
+
+    await prisma.productImage.deleteMany({
+      where: {
+        id: { in: imagesToDelete.map((img) => img.id) },
+      },
+    });
+  }
+
+  // 4. Proses Penambahan Foto Baru Hasil Crop (New Images)
+  const rawImages = formData.getAll("images");
+  const imageFiles = rawImages.filter(
+    (item): item is File => item instanceof File && item.size > 0,
+  );
+
+  const existingImageCount = await prisma.productImage.count({
+    where: { productId },
+  });
+
+  for (let index = 0; index < imageFiles.length; index++) {
+    const imgFile = imageFiles[index];
+    const imageId = crypto.randomUUID();
+    const uploadedImage = await uploadProductImage(productId, imgFile);
+
+    await prisma.productImage.create({
+      data: {
+        id: imageId,
+        productId,
+        storageKey: uploadedImage.storageKey,
+        url: `/api/product-images/${imageId}`,
+        altText: `${parsed.data.title} - ${existingImageCount + index + 1}`,
+        sortOrder: existingImageCount + index,
+      },
+    });
+
+    await writeAuditLog({
+      actorUserId: admin.id,
+      action: "PRODUCT_IMAGE_UPLOADED",
+      entityType: "ProductImage",
+      entityId: imageId,
+      ipAddress: await getRequestIp(),
+      metadata: {
+        productId,
+        mimeType: uploadedImage.mimeType,
+        fileSize: uploadedImage.fileSize,
+        sortOrder: existingImageCount + index,
+      },
+    });
   }
 
   const publishedAt =
@@ -431,11 +790,12 @@ export async function updateProductAction(
     }
 
     return {
-      error: "Product atau file digital gagal diperbarui.",
+      error: isEn
+        ? "Failed to update product or files."
+        : "Product atau file digital gagal diperbarui.",
     };
   }
 
-  // Hapus file lama dari storage setelah database berhasil diperbarui
   if (uploaded && existingAsset) {
     try {
       await deletePrivateDigitalAsset(existingAsset.storageKey);
@@ -473,12 +833,15 @@ export async function updateProductAction(
   }
 
   revalidatePath("/admin/products");
+  revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath("/products");
   revalidatePath(`/products/${parsed.data.slug}`);
   revalidatePath(`/admin/products/${productId}/assets`);
 
   return {
-    success: "Product berhasil diperbarui.",
+    success: isEn
+      ? "Product successfully updated."
+      : "Product berhasil diperbarui.",
   };
 }
 
@@ -491,9 +854,10 @@ export async function archiveProductAction(formData: FormData): Promise<void> {
     throw new Error("Product ID tidak valid.");
   }
 
-  const product = await prisma.product.findUnique({
+  const product = await prisma.product.findFirst({
     where: {
       id: productId,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
     },
     select: {
       id: true,
@@ -502,7 +866,9 @@ export async function archiveProductAction(formData: FormData): Promise<void> {
   });
 
   if (!product) {
-    throw new Error("Product tidak ditemukan.");
+    throw new Error(
+      "Product tidak ditemukan atau Anda tidak memiliki izin untuk mengarsipkan produk ini.",
+    );
   }
 
   await prisma.product.update({
@@ -515,7 +881,6 @@ export async function archiveProductAction(formData: FormData): Promise<void> {
     },
   });
 
-  // Audit Log untuk Archive Product
   await writeAuditLog({
     actorUserId: admin.id,
     action: "PRODUCT_ARCHIVED",

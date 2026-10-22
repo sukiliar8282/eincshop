@@ -84,12 +84,18 @@ export default async function AdminOrdersPage() {
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-canvas)] py-8 sm:py-16 safe-bottom">
       <Container>
-        {/* Breadcrumb Navigasi */}
+        {/* Breadcrumb Navigasi Dinamis Sesuai Role (Seller vs Admin) */}
         <Link
           href="/admin"
           className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[var(--color-accent-strong)] hover:underline"
         >
-          {isEn ? "← Back to Admin Dashboard" : "← Kembali ke Dashboard Admin"}
+          {admin.role === "ADMIN"
+            ? isEn
+              ? "← Back to Admin Dashboard"
+              : "← Kembali ke Dashboard Admin"
+            : isEn
+              ? "← Back to Seller Dashboard"
+              : "← Kembali ke Dashboard Penjual"}
         </Link>
 
         <div className="mt-4">

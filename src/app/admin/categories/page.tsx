@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Prisma } from "@/generated/prisma";
 
-import { requireAdmin } from "@/lib/auth/require-user";
+import { requireSuperAdmin } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { Container } from "@/components/ui/container";
 import { CategoryForm } from "./category-form";
@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   title: "Categories",
 };
 
-// Helper type otomatis dari query Prisma
 type CategoryWithCount = Prisma.PromiseReturnType<typeof getCategories>[number];
 
 async function getCategories() {
@@ -31,7 +30,11 @@ async function getCategories() {
 }
 
 export default async function AdminCategoriesPage() {
-  const [, { locale }] = await Promise.all([requireAdmin(), getDictionary()]);
+  // Hanya role ADMIN (Super Admin) yang diizinkan mengakses halaman ini
+  const [, { locale }] = await Promise.all([
+    requireSuperAdmin(),
+    getDictionary(),
+  ]);
 
   const isEn = locale === "en";
   const categories = await getCategories();
@@ -40,7 +43,7 @@ export default async function AdminCategoriesPage() {
     <main className="py-16 sm:py-24">
       <Container>
         <div className="max-w-4xl">
-          {/* Breadcrumb Navigasi */}
+          {/* Breadcrumb Navigasi Khusus Super Admin */}
           <Link
             href="/admin"
             className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[var(--color-accent-strong)] hover:underline mb-2"
