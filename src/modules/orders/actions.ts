@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { requireUser } from "@/lib/auth/require-user";
+import { getCurrentUserOrGuest } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 
 export type OrderActionState = {
@@ -19,7 +19,8 @@ export async function createOrderAction(
   _previousState: OrderActionState,
   _formData: FormData,
 ): Promise<OrderActionState> {
-  const user = await requireUser();
+  // Bekerja untuk pembeli tamu maupun pengguna terdaftar
+  const user = await getCurrentUserOrGuest();
 
   const cart = await prisma.cart.findFirst({
     where: {
@@ -66,7 +67,7 @@ export async function createOrderAction(
     validProductsMap.has(item.productId),
   );
 
-  // 2. Bersihin otomatis ID hantu/lama dari tabel CartItem DB
+  // 2. Bersihkan otomatis ID lama/usang dari tabel CartItem DB
   const invalidCartItems = cart.items.filter(
     (item) => !validProductsMap.has(item.productId),
   );
@@ -107,7 +108,8 @@ export async function createOrderAction(
 
   try {
     order = await prisma.$transaction(async (transaction) => {
-      return transaction.order.create({
+      // 1. Buat pesanan baru beserta detail item dan catatan pembayaran
+      const createdOrder = await transaction.order.create({
         data: {
           userId: user.id,
           orderNumber,
@@ -148,6 +150,18 @@ export async function createOrderAction(
           },
         },
       });
+
+      // 2. Kunci dan ubah status cart menjadi CONVERTED secara atomik
+      await transaction.cart.update({
+        where: {
+          id: cart.id,
+        },
+        data: {
+          status: "CONVERTED",
+        },
+      });
+
+      return createdOrder;
     });
   } catch (error) {
     console.error("Order creation failed:", error);
@@ -157,7 +171,9 @@ export async function createOrderAction(
     };
   }
 
+  // Revalidasi halaman cart, akun, dan layout root (badge header)
   revalidatePath("/cart");
+  revalidatePath("/", "layout");
   revalidatePath("/account");
 
   redirect(`/orders/${order.orderNumber}`);

@@ -20,8 +20,12 @@ export async function uploadProductImageAction(
 ): Promise<ProductImageActionState> {
   const admin = await requireAdmin();
 
-  const product = await prisma.product.findUnique({
-    where: { id: productId },
+  // F-01 Tenant Isolation: Validasi hak kepemilikan produk sebelum unggah foto
+  const product = await prisma.product.findFirst({
+    where: {
+      id: productId,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
+    },
     select: {
       id: true,
       slug: true,
@@ -31,7 +35,8 @@ export async function uploadProductImageAction(
 
   if (!product) {
     return {
-      error: "Product tidak ditemukan.",
+      error:
+        "Product tidak ditemukan atau Anda tidak memiliki izin untuk mengelolanya.",
     };
   }
 

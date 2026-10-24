@@ -42,9 +42,6 @@ export default async function BecomeSellerPage() {
         <div className="mx-auto max-w-xl">
           {/* Header Info Onboarding */}
           <div className="text-center">
-            <span className="inline-flex items-center rounded-full bg-[var(--color-accent-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-strong)]">
-              Seller Onboarding
-            </span>
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-[var(--color-ink)] sm:text-4xl">
               {isEn ? "Open Your Digital Store" : "Buka Toko Digital Anda"}
             </h1>

@@ -1,7 +1,9 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/db";
+import { createDownloadGrantsForPaidOrder } from "@/modules/digital-delivery/service";
 
 type MidtransNotification = {
   order_id?: string;
@@ -46,7 +48,6 @@ function verifySignature(notification: MidtransNotification): boolean {
 
 function getPaymentStatus(notification: MidtransNotification) {
   const transactionStatus = notification.transaction_status?.toLowerCase();
-
   const fraudStatus = notification.fraud_status?.toLowerCase();
 
   const isSuccessful =
@@ -151,6 +152,7 @@ export async function POST(request: Request) {
 
   try {
     await prisma.$transaction(async (transaction) => {
+      // 1. Catat Audit Jejak Log Event Pembayaran
       await transaction.paymentEvent.create({
         data: {
           paymentId: payment.id,
@@ -162,6 +164,7 @@ export async function POST(request: Request) {
         },
       });
 
+      // 2. Perbarui Status Payment Record
       await transaction.payment.update({
         where: {
           id: payment.id,
@@ -173,6 +176,7 @@ export async function POST(request: Request) {
         },
       });
 
+      // 3. Perbarui Status Order
       await transaction.order.update({
         where: {
           id: order.id,
@@ -182,7 +186,30 @@ export async function POST(request: Request) {
           status: nextStatus.orderStatus,
         },
       });
+
+      // 4. Konversi Keranjang Belanja Pembeli Jika Sukses Dibayar
+      if (nextStatus.paymentStatus === "PAID") {
+        await transaction.cart.updateMany({
+          where: {
+            userId: order.userId,
+            status: "ACTIVE",
+          },
+          data: {
+            status: "CONVERTED",
+          },
+        });
+      }
     });
+
+    // 5. Terbitkan Hak Akses Unduh (Download Grants) & Revalidasi Halaman
+    if (nextStatus.paymentStatus === "PAID") {
+      await createDownloadGrantsForPaidOrder(order.id);
+
+      revalidatePath(`/orders/${order.orderNumber}`);
+      revalidatePath(`/orders/${order.orderNumber}/pay`);
+      revalidatePath("/cart");
+      revalidatePath("/account");
+    }
   } catch (error) {
     if (
       error &&

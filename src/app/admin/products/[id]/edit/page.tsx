@@ -112,6 +112,7 @@ export default async function EditProductPage({
               product={product}
               categories={categories}
               currentAsset={product.digitalAssets[0] ?? null}
+              isSuperAdmin={admin.role === "ADMIN"}
             />
           </div>
         </div>

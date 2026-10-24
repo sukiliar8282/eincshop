@@ -52,6 +52,14 @@ export async function createMidtransPaymentAction(
     };
   }
 
+  // F-13 Guard: Tolak pembuatan pembayaran pada pesanan yang sudah dibatalkan atau dikembalikan
+  if (order.status === "CANCELLED" || order.status === "REFUNDED") {
+    return {
+      error:
+        "Pesanan ini sudah dibatalkan atau dikembalikan dan tidak dapat dibayar.",
+    };
+  }
+
   const payment = order.payments[0];
 
   if (!payment) {
@@ -150,6 +158,11 @@ export async function simulateDummyPaymentAction(
 
   if (!order) {
     throw new Error("Order tidak ditemukan.");
+  }
+
+  // F-13 Guard: Tolak simulasi pada order yang sudah berstatus batal atau refund
+  if (order.status === "CANCELLED" || order.status === "REFUNDED") {
+    throw new Error("Pesanan ini sudah dibatalkan atau dikembalikan.");
   }
 
   const payment = order.payments[0];

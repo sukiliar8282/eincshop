@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
 import { archiveProductAction } from "@/modules/catalog/actions";
+import { DeleteProductButton } from "@/components/admin/delete-product-button";
 import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
@@ -47,11 +48,8 @@ export default async function AdminProductsPage({
       ? requestedStatus
       : "";
 
-  // 1. Isolasi Ketat: Seller hanya melihat produk miliknya sendiri
-  const isolationWhere =
-    admin.role === "ADMIN"
-      ? { OR: [{ sellerId: admin.id }, { sellerId: null }] }
-      : { sellerId: admin.id };
+  // 1. Isolasi Ketat: Seller hanya melihat produk miliknya, Super Admin melihat seluruh etalase
+  const isolationWhere = admin.role === "ADMIN" ? {} : { sellerId: admin.id };
 
   // 2. Filter Search & Status
   const filterWhere = {
@@ -176,7 +174,7 @@ export default async function AdminProductsPage({
           </button>
         </form>
 
-        {/* Tabel / Card Grid Produk Terisolasi */}
+        {/* Tabel Produk Terisolasi */}
         <div className="mt-6 overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
           {products.length > 0 ? (
             <div className="overflow-x-auto">
@@ -244,12 +242,16 @@ export default async function AdminProductsPage({
                               />
                               <button
                                 type="submit"
-                                className="inline-flex min-h-9 items-center justify-center rounded-[var(--radius-control)] border border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 transition-colors hover:bg-rose-100 cursor-pointer"
+                                className="inline-flex min-h-9 items-center justify-center rounded-[var(--radius-control)] border border-amber-200 bg-amber-50 px-3 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-100 cursor-pointer"
                               >
                                 {isEn ? "Archive" : "Arsipkan"}
                               </button>
                             </form>
                           )}
+                          <DeleteProductButton
+                            productId={product.id}
+                            isEn={isEn}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -264,53 +266,24 @@ export default async function AdminProductsPage({
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
                   />
                 </svg>
               </div>
-              <h3 className="mt-4 text-sm font-semibold text-[var(--color-ink)]">
-                {query || status
-                  ? isEn
-                    ? "No products match your filter"
-                    : "Tidak ada produk yang cocok dengan pencarian"
-                  : isEn
-                    ? "No products in your store yet"
-                    : "Belum ada produk di toko Anda"}
+              <h3 className="mt-2 text-sm font-semibold text-[var(--color-ink)]">
+                {isEn ? "No products found" : "Belum ada produk"}
               </h3>
-              <p className="mt-1 text-xs text-[var(--color-text-muted)] max-w-sm mx-auto">
-                {query || status
-                  ? isEn
-                    ? "Try clearing the search query or status filter to see other products."
-                    : "Coba kosongkan kata kunci pencarian atau ubah filter status untuk melihat produk lainnya."
-                  : isEn
-                    ? "Your store catalog is currently empty. Start adding your first digital product to begin selling."
-                    : "Katalog toko Anda saat ini masih kosong. Mulailah menambahkan produk digital pertama Anda untuk mulai berjualan."}
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                {isEn
+                  ? "Get started by adding your first digital product."
+                  : "Mulai berjualan dengan menambahkan produk digital pertama Anda."}
               </p>
-              <div className="mt-6 flex justify-center gap-3">
-                {query || status ? (
-                  <Link
-                    href="/admin/products"
-                    className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line)] bg-white px-4 text-sm font-semibold text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)]"
-                  >
-                    {isEn ? "Reset Filter" : "Reset Filter"}
-                  </Link>
-                ) : (
-                  <Link
-                    href="/admin/products/new"
-                    className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-ink)] px-5 text-sm font-semibold text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-95"
-                  >
-                    {isEn
-                      ? "Add Your First Product"
-                      : "Tambah Produk Pertama Anda"}
-                  </Link>
-                )}
-              </div>
             </div>
           )}
         </div>

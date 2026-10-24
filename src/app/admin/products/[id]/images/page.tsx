@@ -20,13 +20,15 @@ export const metadata: Metadata = {
 export default async function ProductImagesPage({
   params,
 }: ProductImagesPageProps) {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
   const { id } = await params;
 
-  const product = await prisma.product.findUnique({
+  // F-01 Tenant Isolation: Cegah penjual melihat atau mengunggah foto ke produk penjual lain
+  const product = await prisma.product.findFirst({
     where: {
       id,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
     },
     select: {
       id: true,

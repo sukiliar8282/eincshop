@@ -154,6 +154,7 @@ model Product {
   status      ProductStatus @default(DRAFT)
   priceMinor  Int
   currency    String        @default("IDR")
+  techStack   String[]      @default([])
   sku         String?       @unique
   publishedAt DateTime?
   createdAt   DateTime      @default(now())

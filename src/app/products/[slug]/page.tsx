@@ -10,8 +10,12 @@ import { Container } from "@/components/ui/container";
 import { Badge } from "@/components/ui/badge";
 import { AddToCartForm } from "@/components/cart/add-to-cart-form";
 import { ProductCard } from "@/components/product/product-card";
+import { ShareProductButton } from "@/components/product/share-product-button";
+import { MicroTrustBadges } from "@/components/product/micro-trust-badges";
+import { LivePreviewButton } from "@/components/product/live-preview-button";
 import { getDictionary } from "@/lib/i18n/server";
 import { localizeProduct } from "@/lib/i18n/catalog";
+import { getProductTechStack } from "@/lib/catalog/tech-stack";
 
 type ProductDetailPageProps = {
   params: Promise<{
@@ -101,6 +105,13 @@ export default async function ProductDetailPage({
 
   const product = localizeProduct(rawProduct, locale);
   const primaryAsset = product.digitalAssets[0];
+  const isEn = locale === "en";
+
+  const techStack = getProductTechStack(
+    product.slug,
+    product.description,
+    product.title,
+  );
 
   const rawRelatedProducts = await prisma.product.findMany({
     where: {
@@ -223,9 +234,13 @@ export default async function ProductDetailPage({
           </div>
 
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-              {product.category.name}
-            </p>
+            {/* Header Kategori & Tombol Share / Salin Tautan */}
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
+                {product.category.name}
+              </p>
+              <ShareProductButton title={product.title} />
+            </div>
 
             <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)] sm:text-5xl">
               {product.title}
@@ -311,7 +326,8 @@ export default async function ProductDetailPage({
               </p>
             </div>
 
-            <div className="mt-8 grid gap-3 border-y border-[var(--color-line)] py-5 text-sm sm:grid-cols-3">
+            {/* Grid 4 Spesifikasi Kunci: Type, Category, Access, dan License */}
+            <div className="mt-8 grid grid-cols-2 gap-3 border-y border-[var(--color-line)] py-5 text-sm sm:grid-cols-4">
               <div>
                 <p className="text-xs text-[var(--color-text-muted)]">
                   {d.specType}
@@ -338,16 +354,63 @@ export default async function ProductDetailPage({
                   {d.instantAccess}
                 </p>
               </div>
+
+              <div>
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  {isEn ? "License" : "Lisensi"}
+                </p>
+                <p className="mt-1 font-medium text-emerald-800">
+                  {isEn ? "Commercial Use" : "Komersial"}
+                </p>
+              </div>
             </div>
 
-            <div className="mt-8">
+            {/* Stack Teknologi & Dependensi Developer (Batch 3.2) */}
+            {techStack.length > 0 && (
+              <div className="mt-6 border-b border-[var(--color-line)] pb-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-2.5">
+                  {isEn
+                    ? "Technologies & Dependencies"
+                    : "Teknologi & Dependensi"}
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  {techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-2.5 py-1 font-mono text-xs font-medium text-neutral-800"
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      <span>{tech}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AREA PEMBELIAN & LIVE DEMO INTERAKTIF (BESPOKE UX) */}
+            <div className="mt-8" id="product-purchase-action">
+              {/* Tombol Live Demo Interaktif dengan Dukungan i18n & Tanpa Emojis */}
+              <LivePreviewButton
+                slug={product.slug}
+                title={product.title}
+                description={product.description}
+              />
+
+              {/* Formulir Tombol Tambah ke Keranjang & Beli Langsung (Guest Checkout Ready) */}
               <AddToCartForm
                 productId={product.id}
+                slug={product.slug}
                 isAuthenticated={Boolean(session?.user?.id)}
               />
             </div>
 
-            <div className="mt-8 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
+            {/* Micro-Trust Badges */}
+            <div className="mt-5">
+              <MicroTrustBadges locale={locale} />
+            </div>
+
+            {/* Catatan Pasca Pembelian */}
+            <div className="mt-6 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
               <p className="text-sm leading-6 text-[var(--color-text-muted)]">
                 {d.postPurchaseNotice}
               </p>

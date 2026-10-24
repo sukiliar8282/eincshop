@@ -10,6 +10,7 @@ import {
 } from "@/modules/catalog/actions";
 import { useI18n } from "@/lib/i18n/client";
 import { ImageCropUploader } from "@/components/ui/image-crop-uploader";
+import { TechStackInput } from "@/components/admin/tech-stack-input";
 
 type CategoryOption = {
   id: string;
@@ -18,11 +19,15 @@ type CategoryOption = {
 
 type ProductFormProps = {
   categories: CategoryOption[];
+  isSuperAdmin?: boolean;
 };
 
 const initialState: CatalogActionState = {};
 
-export function ProductForm({ categories }: ProductFormProps) {
+export function ProductForm({
+  categories,
+  isSuperAdmin = false,
+}: ProductFormProps) {
   const { locale } = useI18n();
   const isEn = locale === "en";
 
@@ -146,47 +151,49 @@ export function ProductForm({ categories }: ProductFormProps) {
             {isEn ? "Product Category" : "Kategori Produk"}
           </label>
 
-          <div className="flex items-center rounded-lg border border-[var(--color-line-strong)] bg-white p-0.5 text-xs">
-            <button
-              type="button"
-              onClick={() => setCategoryMode("existing")}
-              className={`rounded-md px-3 py-1.5 font-medium transition ${
-                categoryMode === "existing"
-                  ? "bg-[var(--color-ink)] text-white shadow-xs"
-                  : "text-gray-600 hover:text-[var(--color-ink)]"
-              }`}
-            >
-              {isEn ? "Available Categories" : "Kategori Bawaan"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setCategoryMode("custom")}
-              className={`rounded-md px-3 py-1.5 font-medium transition ${
-                categoryMode === "custom"
-                  ? "bg-[var(--color-ink)] text-white shadow-xs"
-                  : "text-gray-600 hover:text-[var(--color-ink)]"
-              }`}
-            >
-              {isEn ? "+ Custom Category" : "+ Buat Kategori Sendiri"}
-            </button>
-          </div>
+          {isSuperAdmin && (
+            <div className="flex items-center rounded-lg border border-[var(--color-line-strong)] bg-white p-0.5 text-xs">
+              <button
+                type="button"
+                onClick={() => setCategoryMode("existing")}
+                className={`rounded-md px-3 py-1.5 font-medium transition ${
+                  categoryMode === "existing"
+                    ? "bg-[var(--color-ink)] !text-white text-white! shadow-xs"
+                    : "text-gray-600 hover:text-[var(--color-ink)]"
+                }`}
+              >
+                {isEn ? "Available Categories" : "Kategori Bawaan"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategoryMode("custom")}
+                className={`rounded-md px-3 py-1.5 font-medium transition ${
+                  categoryMode === "custom"
+                    ? "bg-[var(--color-ink)] !text-white text-white! shadow-xs"
+                    : "text-gray-600 hover:text-[var(--color-ink)]"
+                }`}
+              >
+                {isEn ? "+ Custom Category" : "+ Buat Kategori Sendiri"}
+              </button>
+            </div>
+          )}
         </div>
 
         <input
           type="hidden"
           name="isCustomCategory"
-          value={categoryMode === "custom" ? "true" : "false"}
+          value={isSuperAdmin && categoryMode === "custom" ? "true" : "false"}
         />
 
-        {categoryMode === "existing" ? (
+        {categoryMode === "existing" || !isSuperAdmin ? (
           <div>
             <select
               id="categoryId"
               name="categoryId"
-              required={categoryMode === "existing"}
+              required
               value={selectedCategoryId}
               onChange={(e) => {
-                if (e.target.value === "__CREATE_NEW__") {
+                if (isSuperAdmin && e.target.value === "__CREATE_NEW__") {
                   setCategoryMode("custom");
                 } else {
                   setSelectedCategoryId(e.target.value);
@@ -204,14 +211,16 @@ export function ProductForm({ categories }: ProductFormProps) {
                   {category.name}
                 </option>
               ))}
-              <option
-                value="__CREATE_NEW__"
-                className="font-semibold text-[var(--color-accent-strong)]"
-              >
-                {isEn
-                  ? "+ Create new custom category..."
-                  : "+ Buat kategori kustom baru..."}
-              </option>
+              {isSuperAdmin && (
+                <option
+                  value="__CREATE_NEW__"
+                  className="font-semibold text-[var(--color-accent-strong)]"
+                >
+                  {isEn
+                    ? "+ Create new custom category..."
+                    : "+ Buat kategori kustom baru..."}
+                </option>
+              )}
             </select>
           </div>
         ) : (
@@ -235,7 +244,10 @@ export function ProductForm({ categories }: ProductFormProps) {
         )}
       </div>
 
-      {/* 4. DESKRIPSI PRODUK */}
+      {/* 4. TECH STACK & FRAMEWORKS (SINKRON KE KATALOG) */}
+      <TechStackInput isEn={isEn} />
+
+      {/* 5. DESKRIPSI PRODUK */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label
@@ -245,177 +257,200 @@ export function ProductForm({ categories }: ProductFormProps) {
             {isEn ? "Description" : "Deskripsi Lengkap"}
           </label>
           <span className="text-[11px] text-[var(--color-text-muted)]">
-            {description.length}/5000{" "}
-            {isEn ? "(min. 20 chars)" : "(min. 20 karakter)"}
+            {isEn ? "Min. 20 characters" : "Min. 20 karakter"}
           </span>
         </div>
         <textarea
           id="description"
           name="description"
           required
-          minLength={20}
-          maxLength={5000}
-          rows={7}
+          rows={5}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder={
             isEn
-              ? "Describe your product features, prerequisites, and contents (at least 20 characters)..."
-              : "Jelaskan fitur, isi produk, petunjuk penggunaan, dan spesifikasinya (minimal 20 karakter)..."
+              ? "Describe features, technical architecture, and included items..."
+              : "Jelaskan fitur utama, teknologi yang digunakan, serta apa saja yang didapatkan pembeli..."
           }
-          className="w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 py-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
+          className="w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] p-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
         />
       </div>
 
-      {/* 5. HARGA & SKU */}
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="priceIdr"
-            className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
-          >
-            {isEn ? "Price in IDR (Rupiah)" : "Harga dalam Rupiah (IDR)"}
-          </label>
+      {/* 6. HARGA PRODUK (IDR) */}
+      <div>
+        <label
+          htmlFor="priceIdr"
+          className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
+        >
+          {isEn ? "Price (IDR)" : "Harga Jual (Rupiah)"}
+        </label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[var(--color-text-muted)]">
+            Rp
+          </span>
           <input
             id="priceIdr"
             name="priceIdr"
             type="number"
             min="0"
-            step="1"
+            step="1000"
             required
             value={priceIdr}
             onChange={(e) => setPriceIdr(e.target.value)}
-            placeholder="150000"
-            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="sku"
-            className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
-          >
-            {isEn ? "Product Code / SKU " : "Kode Produk / SKU "}
-            <span className="font-normal text-[var(--color-text-muted)]">
-              {isEn ? "(optional)" : "(opsional)"}
-            </span>
-          </label>
-          <input
-            id="sku"
-            name="sku"
-            value={sku}
-            onChange={(e) => setSku(e.target.value)}
-            placeholder={isEn ? "e.g. EBK-NEXTJS-01" : "Contoh: EBK-NEXTJS-01"}
-            maxLength={80}
-            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
+            placeholder="50000"
+            className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] pl-10 pr-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
           />
         </div>
       </div>
 
-      {/* 6. UPLOADER FOTO PRODUK (CROP & SLIDE 4:3) */}
-      <div className="rounded-xl border border-gray-100 bg-neutral-50/50 p-4 sm:p-5">
-        <ImageCropUploader
-          maxImages={5}
-          maxSizeBytes={5 * 1024 * 1024}
-          inputName="images"
+      {/* 7. SKU / KODE IDENTIFIKASI (OPSIONAL) */}
+      <div>
+        <label
+          htmlFor="sku"
+          className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
+        >
+          {isEn
+            ? "SKU / Product Code (Optional)"
+            : "SKU / Kode Unik (Opsional)"}
+        </label>
+        <input
+          id="sku"
+          name="sku"
+          maxLength={64}
+          value={sku}
+          onChange={(e) => setSku(e.target.value)}
+          placeholder={
+            isEn ? "e.g. TEMPLATE-NEXTJS-01" : "contoh: TEMPLATE-NEXTJS-01"
+          }
+          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
         />
       </div>
 
-      {/* 7. FILE DIGITAL PRODUK (DOWNLOADABLE ASSET) */}
-      <div>
+      {/* 8. FOTO PRODUK DENGAN CROPPER */}
+      <ImageCropUploader />
+
+      {/* 9. BERKAS DIGITAL DOWNLOADABLE */}
+      <div className="rounded-xl border border-[var(--color-line-strong)] bg-neutral-50/50 p-4 sm:p-5">
         <label
           htmlFor="file"
-          className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
+          className="mb-1 block text-sm font-semibold text-[var(--color-ink)]"
         >
           {isEn
-            ? "Digital Product Asset (Downloadable)"
-            : "Berkas Digital Produk (Dapat Diunduh)"}
+            ? "Downloadable Digital File (.zip or .pdf)"
+            : "Berkas Digital Downloadable (.zip atau .pdf)"}
         </label>
-        <div className="flex min-h-11 items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white p-1 pr-3">
+        <p className="mb-3 text-xs text-[var(--color-text-muted)]">
+          {isEn
+            ? "This file will be automatically protected and accessible to customers after purchase."
+            : "Berkas ini akan otomatis dilindungi sistem dan dapat diunduh pembeli setelah pembayaran berhasil."}
+        </p>
+
+        <input
+          ref={fileInputRef}
+          id="file"
+          name="file"
+          type="file"
+          accept=".zip,.pdf"
+          className="sr-only"
+        />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <label
+            htmlFor="file-proxy"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-[var(--color-line-strong)] bg-white px-4 py-2.5 text-xs font-semibold text-[var(--color-ink)] shadow-2xs hover:bg-neutral-50 transition"
+          >
+            <svg
+              className="w-4 h-4 text-[var(--color-text-muted)]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+            <span>
+              {digitalFile
+                ? isEn
+                  ? "Change File"
+                  : "Ganti Berkas"
+                : isEn
+                  ? "Choose File"
+                  : "Pilih Berkas"}
+            </span>
+          </label>
           <input
-            ref={fileInputRef}
-            id="file"
-            name="file"
+            id="file-proxy"
             type="file"
-            accept=".pdf,.zip,application/pdf,application/zip"
-            className="peer sr-only"
-            onChange={(event) => {
-              const selected = event.target.files?.[0] ?? null;
-              setDigitalFile(selected);
+            accept=".zip,.pdf"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              setDigitalFile(file);
             }}
           />
-          <label
-            htmlFor="file"
-            className="inline-flex min-h-9 shrink-0 cursor-pointer items-center rounded-[calc(var(--radius-control)-2px)] bg-[var(--color-ink)] px-4 text-xs font-semibold text-white transition hover:opacity-90 active:scale-95"
-          >
-            {isEn ? "Choose File" : "Pilih Berkas"}
-          </label>
-          <span className="min-w-0 flex-1 truncate text-xs text-[var(--color-text-muted)]">
+
+          <span className="text-xs text-[var(--color-text-muted)] truncate max-w-xs">
             {digitalFile
-              ? digitalFile.name
+              ? `${digitalFile.name} (${(digitalFile.size / 1024 / 1024).toFixed(2)} MB)`
               : isEn
-                ? "No file chosen"
-                : "Belum ada berkas dipilih"}
+                ? "No file selected (Max. 4 MB)"
+                : "Belum ada berkas dipilih (Maks. 4 MB)"}
           </span>
-          {digitalFile && (
-            <button
-              type="button"
-              onClick={() => {
-                setDigitalFile(null);
-                if (fileInputRef.current) fileInputRef.current.value = "";
-              }}
-              className="shrink-0 text-xs font-semibold text-red-600 hover:underline"
-            >
-              {isEn ? "Remove" : "Batal"}
-            </button>
-          )}
         </div>
-        <p className="mt-2 text-xs leading-5 text-[var(--color-text-muted)]">
-          {isEn
-            ? "PDF or ZIP format, max 4 MB. Required if status is set to Published."
-            : "Format PDF atau ZIP, maksimal 4 MB. Wajib diisi jika status produk Published."}
-        </p>
       </div>
 
-      {/* 8. STATUS PUBLIKASI */}
+      {/* 10. STATUS PRODUK */}
       <div>
-        <label
-          htmlFor="status"
-          className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
-        >
-          {isEn ? "Publication Status" : "Status Publikasi"}
+        <label className="mb-2 block text-sm font-medium text-[var(--color-ink)]">
+          {isEn ? "Product Status" : "Status Publikasi"}
         </label>
-        <select
-          id="status"
-          name="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
-        >
-          <option value="DRAFT">
-            {isEn ? "Draft (Hidden from Catalog)" : "Draf (Belum Ditampilkan)"}
-          </option>
-          <option value="PUBLISHED">
-            {isEn
-              ? "Published (Live on Catalog)"
-              : "Dipublikasikan (Aktif di Katalog)"}
-          </option>
-        </select>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => setStatus("DRAFT")}
+            className={`min-h-11 rounded-[var(--radius-control)] border px-4 text-sm font-semibold transition ${
+              status === "DRAFT"
+                ? "border-[var(--color-ink)] bg-[var(--color-ink)] !text-white text-white!"
+                : "border-[var(--color-line-strong)] bg-white text-[var(--color-text-muted)] hover:bg-neutral-50"
+            }`}
+          >
+            Draft
+          </button>
+          <button
+            type="button"
+            onClick={() => setStatus("PUBLISHED")}
+            className={`min-h-11 rounded-[var(--radius-control)] border px-4 text-sm font-semibold transition ${
+              status === "PUBLISHED"
+                ? "border-[var(--color-ink)] bg-[var(--color-ink)] !text-white text-white!"
+                : "border-[var(--color-line-strong)] bg-white text-[var(--color-text-muted)] hover:bg-neutral-50"
+            }`}
+          >
+            Published
+          </button>
+        </div>
+        <input type="hidden" name="status" value={status} />
       </div>
 
-      {/* STATUS PESAN ERROR / SUKSES */}
+      {/* NOTIFIKASI ERROR / SUKSES */}
       {state.error && <StatusMessage tone="error">{state.error}</StatusMessage>}
       {state.success && (
         <StatusMessage tone="success">{state.success}</StatusMessage>
       )}
 
-      {/* TOMBOL SIMPAN */}
-      <LoadingButton
-        type="submit"
-        loading={isPending}
-        disabled={categoryMode === "existing" && categories.length === 0}
-      >
-        {isEn ? "Save Product" : "Simpan Produk"}
-      </LoadingButton>
+      {/* TOMBOL SIMPAN / SUBMIT */}
+      <div className="pt-2">
+        <LoadingButton
+          type="submit"
+          loading={isPending}
+          className="min-h-12 w-full rounded-[var(--radius-control)] bg-[var(--color-ink)] px-6 text-sm font-semibold !text-white text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-98 shadow-xs"
+        >
+          {isEn ? "Create Product" : "Buat Produk Sekarang"}
+        </LoadingButton>
+      </div>
     </form>
   );
 }

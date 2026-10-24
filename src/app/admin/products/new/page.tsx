@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function NewProductPage() {
-  const [, { locale }] = await Promise.all([requireAdmin(), getDictionary()]);
+  const [admin, { locale }] = await Promise.all([
+    requireAdmin(),
+    getDictionary(),
+  ]);
 
   const isEn = locale === "en";
 
@@ -56,7 +59,10 @@ export default async function NewProductPage() {
           </p>
 
           <div className="mt-8">
-            <ProductForm categories={categories} />
+            <ProductForm
+              categories={categories}
+              isSuperAdmin={admin.role === "ADMIN"}
+            />
           </div>
         </div>
       </Container>

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { formatIdr } from "@/lib/format/currency";
 import type { Locale } from "@/lib/i18n/config";
+import { getProductTechStack } from "@/lib/catalog/tech-stack";
 
 type ProductCardProps = {
   product: {
@@ -26,18 +27,24 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
   const defaultTitle = isEn ? "Digital product" : "Produk digital";
   const title = product.title || defaultTitle;
 
+  const techStack = getProductTechStack(
+    product.slug,
+    product.description,
+    product.title,
+  );
+
   const labels = {
     viewDetailAria: isEn
       ? `View details for ${title}`
       : `Lihat detail ${title}`,
     preview: isEn ? "Product preview" : "Preview produk",
-    typeBadge: isEn ? "Digital product" : "Produk digital",
+    typeBadge: isEn ? "Digital Asset" : "Aset Digital",
     price: isEn ? "Price" : "Harga",
     viewDetail: isEn ? "View details →" : "Lihat detail →",
   };
 
   return (
-    <article className="motion-enter surface-interactive group flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
+    <article className="motion-enter surface-interactive group flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
       <Link
         href={`/products/${product.slug}`}
         aria-label={labels.viewDetailAria}
@@ -70,7 +77,7 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
           </span>
         </div>
 
-        <h2 className="mt-4 text-xl font-semibold leading-tight tracking-[-0.025em] text-[var(--color-ink)]">
+        <h2 className="mt-3.5 text-lg font-bold leading-tight tracking-[-0.02em] text-[var(--color-ink)]">
           <Link
             href={`/products/${product.slug}`}
             className="transition-colors group-hover:text-[var(--color-accent-strong)]"
@@ -79,24 +86,38 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
           </Link>
         </h2>
 
-        <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--color-text-muted)]">
+        <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
           {product.description}
         </p>
 
-        <div className="mt-auto flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-5">
+        {/* Tech Stack Badges Monokrom Presisi */}
+        {techStack.length > 0 && (
+          <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
+            {techStack.map((tech) => (
+              <span
+                key={tech}
+                className="inline-flex items-center rounded-md border border-neutral-200 bg-neutral-50 px-2 py-0.5 font-mono text-[10px] font-medium text-neutral-700 transition-colors group-hover:border-neutral-300"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-auto flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-4 mt-4">
           <div>
             <p className="text-[11px] text-[var(--color-text-muted)]">
               {labels.price}
             </p>
 
-            <p className="mt-1 font-semibold text-[var(--color-ink)]">
+            <p className="mt-0.5 font-bold text-sm text-[var(--color-ink)]">
               {formatIdr(product.priceMinor, locale)}
             </p>
           </div>
 
           <Link
             href={`/products/${product.slug}`}
-            className="text-sm font-medium text-[var(--color-accent-strong)] transition-colors hover:text-[var(--color-ink)]"
+            className="text-xs font-semibold text-[var(--color-accent-strong)] transition-colors hover:text-[var(--color-ink)]"
           >
             {labels.viewDetail}
           </Link>

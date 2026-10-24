@@ -9,6 +9,7 @@ import { requireAdmin } from "@/lib/auth/require-user";
 import {
   deletePrivateDigitalAsset,
   uploadPrivateDigitalAsset,
+  validateDigitalAsset,
 } from "@/lib/storage/blob";
 
 export type AssetActionState = {
@@ -23,9 +24,11 @@ export async function uploadDigitalAssetAction(
 ): Promise<AssetActionState> {
   const admin = await requireAdmin();
 
+  // F-01 Tenant Isolation: Pastikan penjual hanya dapat mengunggah ke produk miliknya sendiri
   const product = await prisma.product.findFirst({
     where: {
       id: productId,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
     },
     select: {
       id: true,
@@ -35,7 +38,8 @@ export async function uploadDigitalAssetAction(
 
   if (!product) {
     return {
-      error: "Product tidak ditemukan.",
+      error:
+        "Product tidak ditemukan atau Anda tidak memiliki izin untuk mengelolanya.",
     };
   }
 
@@ -53,49 +57,57 @@ export async function uploadDigitalAssetAction(
     };
   }
 
- let uploadedPathname: string | null = null;
+  // F-06: Validasi ketat format & ukuran aset digital (cegah malware / berkas raksasa)
+  const validation = await validateDigitalAsset(file);
+  if (!validation.valid) {
+    return {
+      error: validation.error,
+    };
+  }
 
- try {
-   const uploaded = await uploadPrivateDigitalAsset(product.id, file);
-   uploadedPathname = uploaded.pathname;
+  let uploadedPathname: string | null = null;
 
-   const asset = await prisma.digitalAsset.create({
-     data: {
-       productId: product.id,
-       storageKey: uploaded.pathname,
-       fileName: uploaded.fileName ?? file.name,
-       mimeType: uploaded.mimeType,
-       fileSize: uploaded.fileSize,
-       status: "ACTIVE",
-     },
-   });
+  try {
+    const uploaded = await uploadPrivateDigitalAsset(product.id, file);
+    uploadedPathname = uploaded.pathname;
 
-   await writeAuditLog({
-     actorUserId: admin.id,
-     action: "DIGITAL_ASSET_UPLOADED",
-     entityType: "DigitalAsset",
-     entityId: asset.id,
-     ipAddress: await getRequestIp(),
-     metadata: {
-       mimeType: uploaded.mimeType,
-       fileSize: uploaded.fileSize,
-     },
-   });
- } catch (error) {
-   if (uploadedPathname) {
-     try {
-       await deletePrivateDigitalAsset(uploadedPathname);
-     } catch (cleanupError) {
-       console.error("Blob cleanup failed:", cleanupError);
-     }
-   }
-   console.error("Digital asset upload failed:", error);
+    const asset = await prisma.digitalAsset.create({
+      data: {
+        productId: product.id,
+        storageKey: uploaded.pathname,
+        fileName: uploaded.fileName ?? file.name,
+        mimeType: uploaded.mimeType,
+        fileSize: uploaded.fileSize,
+        status: "ACTIVE",
+      },
+    });
 
-   return {
-     error:
-       error instanceof Error ? error.message : "Upload digital asset gagal.",
-   };
- }
+    await writeAuditLog({
+      actorUserId: admin.id,
+      action: "DIGITAL_ASSET_UPLOADED",
+      entityType: "DigitalAsset",
+      entityId: asset.id,
+      ipAddress: await getRequestIp(),
+      metadata: {
+        mimeType: uploaded.mimeType,
+        fileSize: uploaded.fileSize,
+      },
+    });
+  } catch (error) {
+    if (uploadedPathname) {
+      try {
+        await deletePrivateDigitalAsset(uploadedPathname);
+      } catch (cleanupError) {
+        console.error("Blob cleanup failed:", cleanupError);
+      }
+    }
+    console.error("Digital asset upload failed:", error);
+
+    return {
+      error:
+        error instanceof Error ? error.message : "Upload digital asset gagal.",
+    };
+  }
 
   revalidatePath(`/admin/products/${productId}/assets`);
 

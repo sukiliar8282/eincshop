@@ -8542,6 +8542,7 @@ export namespace Prisma {
     status: number
     priceMinor: number
     currency: number
+    techStack: number
     sku: number
     publishedAt: number
     createdAt: number
@@ -8603,6 +8604,7 @@ export namespace Prisma {
     status?: true
     priceMinor?: true
     currency?: true
+    techStack?: true
     sku?: true
     publishedAt?: true
     createdAt?: true
@@ -8707,6 +8709,7 @@ export namespace Prisma {
     status: $Enums.ProductStatus
     priceMinor: number
     currency: string
+    techStack: string[]
     sku: string | null
     publishedAt: Date | null
     createdAt: Date
@@ -8743,6 +8746,7 @@ export namespace Prisma {
     status?: boolean
     priceMinor?: boolean
     currency?: boolean
+    techStack?: boolean
     sku?: boolean
     publishedAt?: boolean
     createdAt?: boolean
@@ -8767,6 +8771,7 @@ export namespace Prisma {
     status?: boolean
     priceMinor?: boolean
     currency?: boolean
+    techStack?: boolean
     sku?: boolean
     publishedAt?: boolean
     createdAt?: boolean
@@ -8786,6 +8791,7 @@ export namespace Prisma {
     status?: boolean
     priceMinor?: boolean
     currency?: boolean
+    techStack?: boolean
     sku?: boolean
     publishedAt?: boolean
     createdAt?: boolean
@@ -8805,13 +8811,14 @@ export namespace Prisma {
     status?: boolean
     priceMinor?: boolean
     currency?: boolean
+    techStack?: boolean
     sku?: boolean
     publishedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sellerId" | "categoryId" | "title" | "slug" | "description" | "productType" | "status" | "priceMinor" | "currency" | "sku" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sellerId" | "categoryId" | "title" | "slug" | "description" | "productType" | "status" | "priceMinor" | "currency" | "techStack" | "sku" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     seller?: boolean | Product$sellerArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -8851,6 +8858,7 @@ export namespace Prisma {
       status: $Enums.ProductStatus
       priceMinor: number
       currency: string
+      techStack: string[]
       sku: string | null
       publishedAt: Date | null
       createdAt: Date
@@ -9294,6 +9302,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Product", 'ProductStatus'>
     readonly priceMinor: FieldRef<"Product", 'Int'>
     readonly currency: FieldRef<"Product", 'String'>
+    readonly techStack: FieldRef<"Product", 'String[]'>
     readonly sku: FieldRef<"Product", 'String'>
     readonly publishedAt: FieldRef<"Product", 'DateTime'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
@@ -23702,6 +23711,7 @@ export namespace Prisma {
     status: 'status',
     priceMinor: 'priceMinor',
     currency: 'currency',
+    techStack: 'techStack',
     sku: 'sku',
     publishedAt: 'publishedAt',
     createdAt: 'createdAt',
@@ -24483,6 +24493,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     priceMinor?: IntFilter<"Product"> | number
     currency?: StringFilter<"Product"> | string
+    techStack?: StringNullableListFilter<"Product">
     sku?: StringNullableFilter<"Product"> | string | null
     publishedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -24506,6 +24517,7 @@ export namespace Prisma {
     status?: SortOrder
     priceMinor?: SortOrder
     currency?: SortOrder
+    techStack?: SortOrder
     sku?: SortOrderInput | SortOrder
     publishedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -24533,6 +24545,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     priceMinor?: IntFilter<"Product"> | number
     currency?: StringFilter<"Product"> | string
+    techStack?: StringNullableListFilter<"Product">
     publishedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -24555,6 +24568,7 @@ export namespace Prisma {
     status?: SortOrder
     priceMinor?: SortOrder
     currency?: SortOrder
+    techStack?: SortOrder
     sku?: SortOrderInput | SortOrder
     publishedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -24580,6 +24594,7 @@ export namespace Prisma {
     status?: EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
     priceMinor?: IntWithAggregatesFilter<"Product"> | number
     currency?: StringWithAggregatesFilter<"Product"> | string
+    techStack?: StringNullableListFilter<"Product">
     sku?: StringNullableWithAggregatesFilter<"Product"> | string | null
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -25865,6 +25880,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -25888,6 +25904,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -25907,6 +25924,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25930,6 +25948,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25951,6 +25970,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -25966,6 +25986,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25983,6 +26004,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27389,6 +27411,14 @@ export namespace Prisma {
     not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -27451,6 +27481,7 @@ export namespace Prisma {
     status?: SortOrder
     priceMinor?: SortOrder
     currency?: SortOrder
+    techStack?: SortOrder
     sku?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
@@ -28487,6 +28518,10 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type ProductCreatetechStackInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutProductsInput = {
     create?: XOR<UserCreateWithoutProductsInput, UserUncheckedCreateWithoutProductsInput>
     connectOrCreate?: UserCreateOrConnectWithoutProductsInput
@@ -28561,6 +28596,11 @@ export namespace Prisma {
 
   export type EnumProductStatusFieldUpdateOperationsInput = {
     set?: $Enums.ProductStatus
+  }
+
+  export type ProductUpdatetechStackInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -30306,6 +30346,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30327,6 +30368,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30377,6 +30419,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     priceMinor?: IntFilter<"Product"> | number
     currency?: StringFilter<"Product"> | string
+    techStack?: StringNullableListFilter<"Product">
     sku?: StringNullableFilter<"Product"> | string | null
     publishedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -30775,6 +30818,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30797,6 +30841,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30831,6 +30876,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30853,6 +30899,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30871,6 +30918,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30893,6 +30941,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -30961,6 +31010,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30983,6 +31033,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31176,6 +31227,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31198,6 +31250,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31259,6 +31312,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31281,6 +31335,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31423,6 +31478,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31444,6 +31500,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31754,6 +31811,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31776,6 +31834,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -31887,6 +31946,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31909,6 +31969,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32834,6 +32895,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -32849,6 +32911,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32870,6 +32933,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32890,6 +32954,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33192,6 +33257,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     priceMinor: number
     currency?: string
+    techStack?: ProductCreatetechStackInput | string[]
     sku?: string | null
     publishedAt?: Date | string | null
     createdAt?: Date | string
@@ -33351,6 +33417,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33372,6 +33439,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33392,6 +33460,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     priceMinor?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
+    techStack?: ProductUpdatetechStackInput | string[]
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

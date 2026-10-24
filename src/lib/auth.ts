@@ -28,6 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   pages: {
     signIn: "/login",
+    error: "/login",
   },
 
   providers: [
@@ -35,7 +36,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      allowDangerousEmailAccountLinking: true,
+      // Mitigasi F-02: Dinonaktifkan untuk mencegah silent account takeover antar-metode login
+      allowDangerousEmailAccountLinking: false,
     }),
 
     // 2. Email & Password Credentials (Wajib @gmail.com)
@@ -77,17 +79,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           email: user.email,
           image: user.image,
-          role: user.role,
+          role: user.role as UserRole,
         };
       },
     }),
   ],
 
   callbacks: {
-    // Kunci keamanan: Tolak jika email dari Google bukan @gmail.com
+    // Kunci keamanan: Validasi domain, email_verified, dan status akun aktif
     async signIn({ account, profile }) {
       if (account?.provider === "google") {
-        return profile?.email?.endsWith("@gmail.com") ?? false;
+        const email = profile?.email?.toLowerCase();
+        if (!email || !email.endsWith("@gmail.com")) {
+          return false;
+        }
+
+        // Verifikasi kepemilikan email dari Google
+        if ("email_verified" in profile && profile.email_verified === false) {
+          return false;
+        }
+
+        // Pastikan akun di database tidak dalam status SUSPENDED
+        const existingUser = await prisma.user.findUnique({
+          where: { email },
+          select: { status: true },
+        });
+
+        if (existingUser && existingUser.status !== "ACTIVE") {
+          return false;
+        }
+
+        return true;
       }
       return true;
     },

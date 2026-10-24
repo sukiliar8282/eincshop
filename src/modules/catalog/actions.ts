@@ -30,9 +30,9 @@ export async function createCategoryAction(
   _previousState: CatalogActionState,
   formData: FormData,
 ): Promise<CatalogActionState> {
-  // Hanya Super Admin yang berhak membuat kategori katalog global
-  const admin = await requireSuperAdmin();
+  const superAdmin = await requireSuperAdmin();
 
+  // Deteksi Bahasa Pengguna
   const userLocale = (formData.get("locale") as string) || (await getLocale());
   const isEn = userLocale === "en" || userLocale === "en-US";
 
@@ -42,10 +42,27 @@ export async function createCategoryAction(
   });
 
   if (!parsed.success) {
+    const firstIssue = parsed.error.issues[0];
+    let customError = isEn
+      ? "Category data is invalid."
+      : "Data kategori belum valid.";
+
+    if (firstIssue) {
+      if (firstIssue.path.includes("name")) {
+        customError = isEn
+          ? "Category name must be between 2 and 60 characters."
+          : "Nama kategori harus antara 2 sampai 60 karakter.";
+      } else if (firstIssue.path.includes("slug")) {
+        customError = isEn
+          ? "Invalid slug format (use lowercase letters, numbers, and hyphens)."
+          : "Format slug tidak valid (gunakan huruf kecil, angka, dan tanda strip).";
+      } else {
+        customError = firstIssue.message;
+      }
+    }
+
     return {
-      error: isEn
-        ? "Category name or slug is invalid."
-        : "Nama atau slug kategori belum sesuai.",
+      error: customError,
     };
   }
 
@@ -61,8 +78,8 @@ export async function createCategoryAction(
   if (existingCategory) {
     return {
       error: isEn
-        ? "A category with that name or slug already exists."
-        : "Kategori dengan nama atau slug tersebut sudah ada.",
+        ? "Category name or slug is already used."
+        : "Nama atau slug kategori sudah digunakan.",
     };
   }
 
@@ -70,23 +87,27 @@ export async function createCategoryAction(
     data: {
       name: parsed.data.name,
       slug: parsed.data.slug,
+      description: normalizeOptionalValue(
+        formData.get("description") as string | undefined,
+      ),
     },
   });
 
   await writeAuditLog({
-    actorUserId: admin.id,
+    actorUserId: superAdmin.id,
     action: "CATEGORY_CREATED",
     entityType: "Category",
     entityId: newCategory.id,
     ipAddress: await getRequestIp(),
     metadata: {
-      name: newCategory.name,
-      slug: newCategory.slug,
+      name: parsed.data.name,
+      slug: parsed.data.slug,
     },
   });
 
   revalidatePath("/admin/categories");
   revalidatePath("/admin/products/new");
+  revalidatePath("/");
 
   return {
     success: isEn
@@ -105,12 +126,21 @@ export async function createProductAction(
   const userLocale = (formData.get("locale") as string) || (await getLocale());
   const isEn = userLocale === "en" || userLocale === "en-US";
 
-  // 1. Resolusi Kategori Fleksibel: Kategori Bawaan vs Kustom Sendiri
+  // 1. Resolusi Kategori: Validasi & Otorisasi Kategori Baru (F-05 Fix)
   const isCustomCategory = formData.get("isCustomCategory") === "true";
   const newCategoryName = formData.get("newCategoryName");
   let resolvedCategoryId = formData.get("categoryId") as string;
 
   if (isCustomCategory) {
+    // F-05: Kunci pembuatan kategori global hanya untuk Platform Super Admin
+    if (admin.role !== "ADMIN") {
+      return {
+        error: isEn
+          ? "Unauthorized: Only platform administrators can create new global categories. Please select an existing category."
+          : "Akses Ditolak: Hanya Admin Platform yang dapat menambahkan kategori baru. Silakan pilih kategori yang tersedia.",
+      };
+    }
+
     if (
       !newCategoryName ||
       typeof newCategoryName !== "string" ||
@@ -173,7 +203,12 @@ export async function createProductAction(
     resolvedCategoryId = targetCategory.id;
   }
 
-  // 2. Validasi Skema Produk
+  // 2. Tangkap Tech Stack & Validasi Skema Produk
+  const rawTechStack = formData.getAll("techStack");
+  const techStack = rawTechStack
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
+    .filter((item) => item.length > 0);
+
   const parsed = productSchema.safeParse({
     categoryId: resolvedCategoryId,
     title: formData.get("title"),
@@ -182,6 +217,7 @@ export async function createProductAction(
     priceIdr: formData.get("priceIdr"),
     sku: formData.get("sku"),
     status: formData.get("status"),
+    techStack,
   });
 
   if (!parsed.success) {
@@ -262,7 +298,7 @@ export async function createProductAction(
     }
   }
 
-  // Tangkap seluruh berkas foto hasil crop
+  // 3. Tangkap Semua Berkas Gambar Hasil Crop
   const rawImages = formData.getAll("images");
   const imageFiles = rawImages.filter(
     (item): item is File => item instanceof File && item.size > 0,
@@ -272,9 +308,7 @@ export async function createProductAction(
     where: {
       OR: [
         { slug: parsed.data.slug },
-        parsed.data.sku
-          ? { sku: parsed.data.sku }
-          : { id: "__unused_product_id__" },
+        ...(parsed.data.sku ? [{ sku: parsed.data.sku }] : []),
       ],
     },
     select: {
@@ -295,8 +329,7 @@ export async function createProductAction(
   const uploadedImageKeys: string[] = [];
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const createdProduct = await (prisma.product as any).create({
+    const createdProduct = await prisma.product.create({
       data: {
         sellerId: admin.id,
         categoryId: parsed.data.categoryId,
@@ -307,6 +340,7 @@ export async function createProductAction(
         status: parsed.data.status,
         priceMinor: parsed.data.priceIdr,
         currency: "IDR",
+        techStack: parsed.data.techStack,
         sku: normalizeOptionalValue(parsed.data.sku),
         publishedAt: parsed.data.status === "PUBLISHED" ? new Date() : null,
       },
@@ -326,14 +360,16 @@ export async function createProductAction(
 
     createdProductId = createdProduct.id;
 
-    // 3. Simpan Koleksi Foto Produk (Carousel Strip) ke Storage & PostgreSQL
+    // Simpan Seluruh Gambar Produk Hasil Cropper
     for (let index = 0; index < imageFiles.length; index++) {
       const imgFile = imageFiles[index];
       const imageId = crypto.randomUUID();
+
       const uploadedImage = await uploadProductImage(
         createdProduct.id,
         imgFile,
       );
+
       uploadedImageKeys.push(uploadedImage.storageKey);
 
       await prisma.productImage.create({
@@ -341,7 +377,7 @@ export async function createProductAction(
           id: imageId,
           productId: createdProduct.id,
           storageKey: uploadedImage.storageKey,
-          url: `/api/product-images/${imageId}`,
+          url: uploadedImage.url,
           altText: `${createdProduct.title} - ${index + 1}`,
           sortOrder: index,
         },
@@ -389,49 +425,65 @@ export async function createProductAction(
         entityId: digitalAsset.id,
         ipAddress: await getRequestIp(),
         metadata: {
+          productId: createdProduct.id,
           mimeType: uploadedAsset.mimeType,
           fileSize: uploadedAsset.fileSize,
         },
       });
     }
-  } catch (error) {
-    console.error("Product creation failed:", error);
 
-    if (uploadedStorageKey) {
-      await deletePrivateDigitalAsset(uploadedStorageKey).catch(() => {});
-    }
-
-    for (const key of uploadedImageKeys) {
-      await deletePrivateDigitalAsset(key).catch(() => {});
-    }
-
-    if (createdProductId) {
+    if (parsed.data.status === "PUBLISHED") {
       await prisma.product
-        .delete({
+        .updateMany({
           where: {
-            id: createdProductId,
+            id: createdProduct.id,
+            publishedAt: null,
+          },
+          data: {
+            publishedAt: new Date(),
           },
         })
         .catch(() => {});
     }
+  } catch (error) {
+    if (uploadedStorageKey) {
+      try {
+        await deletePrivateDigitalAsset(uploadedStorageKey);
+      } catch (cleanupError) {
+        console.error("Cleanup digital asset failed:", cleanupError);
+      }
+    }
+
+    if (createdProductId) {
+      try {
+        await prisma.product.delete({
+          where: {
+            id: createdProductId,
+          },
+        });
+      } catch (cleanupError) {
+        console.error("Rollback created product failed:", cleanupError);
+      }
+    }
+
+    console.error("Create product failed:", error);
 
     return {
       error:
         error instanceof Error
           ? error.message
           : isEn
-            ? "Failed to save product or files."
-            : "Product atau berkas gagal disimpan.",
+            ? "Failed to create product."
+            : "Gagal membuat produk baru.",
     };
   }
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath("/");
 
   return {
-    success: isEn
-      ? "Product successfully created."
-      : "Product berhasil dibuat.",
+    success: isEn ? "Product successfully created." : "Produk berhasil dibuat.",
   };
 }
 
@@ -442,15 +494,25 @@ export async function updateProductAction(
 ): Promise<CatalogActionState> {
   const admin = await requireAdmin();
 
+  // Deteksi Bahasa Pengguna
   const userLocale = (formData.get("locale") as string) || (await getLocale());
   const isEn = userLocale === "en" || userLocale === "en-US";
 
-  // 1. Resolusi Kategori Fleksibel: Kategori Bawaan vs Kustom Sendiri
+  // 1. Resolusi Kategori: Validasi & Otorisasi Kategori Baru (F-05 Fix)
   const isCustomCategory = formData.get("isCustomCategory") === "true";
   const newCategoryName = formData.get("newCategoryName");
   let resolvedCategoryId = formData.get("categoryId") as string;
 
   if (isCustomCategory) {
+    // F-05: Kunci pembuatan kategori global hanya untuk Platform Super Admin
+    if (admin.role !== "ADMIN") {
+      return {
+        error: isEn
+          ? "Unauthorized: Only platform administrators can create new global categories. Please select an existing category."
+          : "Akses Ditolak: Hanya Admin Platform yang dapat menambahkan kategori baru. Silakan pilih kategori yang tersedia.",
+      };
+    }
+
     if (
       !newCategoryName ||
       typeof newCategoryName !== "string" ||
@@ -513,7 +575,12 @@ export async function updateProductAction(
     resolvedCategoryId = targetCategory.id;
   }
 
-  // 2. Validasi Skema Produk
+  // 2. Tangkap Tech Stack & Validasi Skema Produk
+  const rawTechStack = formData.getAll("techStack");
+  const techStack = rawTechStack
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
+    .filter((item) => item.length > 0);
+
   const parsed = productSchema.safeParse({
     categoryId: resolvedCategoryId,
     title: formData.get("title"),
@@ -522,6 +589,7 @@ export async function updateProductAction(
     priceIdr: formData.get("priceIdr"),
     sku: formData.get("sku"),
     status: formData.get("status"),
+    techStack,
   });
 
   if (!parsed.success) {
@@ -605,12 +673,12 @@ export async function updateProductAction(
     };
   }
 
-  const existingAsset = currentProduct.digitalAssets[0] ?? null;
-
   const fileValue = formData.get("file");
 
   const file =
     fileValue instanceof File && fileValue.size > 0 ? fileValue : null;
+
+  const existingAsset = currentProduct.digitalAssets[0];
 
   if (parsed.data.status === "PUBLISHED" && !file && !existingAsset) {
     return {
@@ -634,13 +702,9 @@ export async function updateProductAction(
 
   const duplicateProduct = await prisma.product.findFirst({
     where: {
-      id: {
-        not: productId,
-      },
+      id: { not: productId },
       OR: [
-        {
-          slug: parsed.data.slug,
-        },
+        { slug: parsed.data.slug },
         ...(normalizedSku ? [{ sku: normalizedSku }] : []),
       ],
     },
@@ -657,15 +721,18 @@ export async function updateProductAction(
     };
   }
 
-  // 3. Proses Penghapusan Foto yang Ditandai Pengguna (Deleted Images)
-  const deletedImageIds = formData
-    .getAll("deletedImageIds")
-    .filter((id): id is string => typeof id === "string" && id.length > 0);
+  // Tangkap Penghapusan Foto Lama
+  const deleteImageIds = [
+    ...formData.getAll("deleteImageIds"),
+    ...formData.getAll("deletedImageIds"),
+  ].filter(
+    (item): item is string => typeof item === "string" && item.length > 0,
+  );
 
-  if (deletedImageIds.length > 0) {
+  if (deleteImageIds.length > 0) {
     const imagesToDelete = await prisma.productImage.findMany({
       where: {
-        id: { in: deletedImageIds },
+        id: { in: deleteImageIds },
         productId,
       },
       select: {
@@ -674,18 +741,23 @@ export async function updateProductAction(
       },
     });
 
-    for (const img of imagesToDelete) {
-      await deletePrivateDigitalAsset(img.storageKey).catch(() => {});
+    for (const image of imagesToDelete) {
+      try {
+        await deletePrivateDigitalAsset(image.storageKey);
+      } catch (err) {
+        console.error("Gagal menghapus file gambar fisik:", err);
+      }
     }
 
     await prisma.productImage.deleteMany({
       where: {
-        id: { in: imagesToDelete.map((img) => img.id) },
+        id: { in: deleteImageIds },
+        productId,
       },
     });
   }
 
-  // 4. Proses Penambahan Foto Baru Hasil Crop (New Images)
+  // Tangkap Penambahan Foto Baru
   const rawImages = formData.getAll("images");
   const imageFiles = rawImages.filter(
     (item): item is File => item instanceof File && item.size > 0,
@@ -698,6 +770,8 @@ export async function updateProductAction(
   for (let index = 0; index < imageFiles.length; index++) {
     const imgFile = imageFiles[index];
     const imageId = crypto.randomUUID();
+    const sortOrder = existingImageCount + index;
+
     const uploadedImage = await uploadProductImage(productId, imgFile);
 
     await prisma.productImage.create({
@@ -705,9 +779,9 @@ export async function updateProductAction(
         id: imageId,
         productId,
         storageKey: uploadedImage.storageKey,
-        url: `/api/product-images/${imageId}`,
-        altText: `${parsed.data.title} - ${existingImageCount + index + 1}`,
-        sortOrder: existingImageCount + index,
+        url: uploadedImage.url,
+        altText: `${parsed.data.title} - ${sortOrder + 1}`,
+        sortOrder,
       },
     });
 
@@ -721,7 +795,7 @@ export async function updateProductAction(
         productId,
         mimeType: uploadedImage.mimeType,
         fileSize: uploadedImage.fileSize,
-        sortOrder: existingImageCount + index,
+        sortOrder,
       },
     });
   }
@@ -755,6 +829,7 @@ export async function updateProductAction(
           sku: normalizedSku,
           status: parsed.data.status,
           publishedAt,
+          techStack: parsed.data.techStack,
         },
       });
 
@@ -774,86 +849,94 @@ export async function updateProductAction(
           : await transaction.digitalAsset.create({
               data: {
                 productId,
-                status: "ACTIVE",
                 ...assetData,
+                status: "ACTIVE",
               },
             });
 
         assetId = asset.id;
       }
     });
-  } catch (error) {
-    console.error("Product update failed:", error);
 
-    if (uploaded) {
-      await deletePrivateDigitalAsset(uploaded.pathname).catch(() => {});
-    }
-
-    return {
-      error: isEn
-        ? "Failed to update product or files."
-        : "Product atau file digital gagal diperbarui.",
-    };
-  }
-
-  if (uploaded && existingAsset) {
-    try {
-      await deletePrivateDigitalAsset(existingAsset.storageKey);
-    } catch (error) {
-      console.error("Old digital asset cleanup failed:", error);
-    }
-  }
-
-  await writeAuditLog({
-    actorUserId: admin.id,
-    action: "PRODUCT_UPDATED",
-    entityType: "Product",
-    entityId: productId,
-    ipAddress: await getRequestIp(),
-    metadata: {
-      title: parsed.data.title,
-      status: parsed.data.status,
-    },
-  });
-
-  if (uploaded && assetId) {
     await writeAuditLog({
       actorUserId: admin.id,
-      action: existingAsset
-        ? "DIGITAL_ASSET_REPLACED"
-        : "DIGITAL_ASSET_UPLOADED",
-      entityType: "DigitalAsset",
-      entityId: assetId,
+      action: "PRODUCT_UPDATED",
+      entityType: "Product",
+      entityId: productId,
       ipAddress: await getRequestIp(),
       metadata: {
-        mimeType: uploaded.mimeType,
-        fileSize: uploaded.fileSize,
+        status: parsed.data.status,
+        productType: "DIGITAL",
       },
     });
+
+    if (assetId) {
+      await writeAuditLog({
+        actorUserId: admin.id,
+        action: "DIGITAL_ASSET_UPLOADED",
+        entityType: "DigitalAsset",
+        entityId: assetId,
+        ipAddress: await getRequestIp(),
+        metadata: {
+          productId,
+          mimeType: uploaded?.mimeType,
+          fileSize: uploaded?.fileSize,
+        },
+      });
+    }
+
+    if (existingAsset && uploaded) {
+      try {
+        await deletePrivateDigitalAsset(existingAsset.storageKey);
+      } catch (cleanupError) {
+        console.error("Cleanup old asset failed:", cleanupError);
+      }
+    }
+  } catch (error) {
+    if (uploaded?.pathname) {
+      try {
+        await deletePrivateDigitalAsset(uploaded.pathname);
+      } catch (cleanupError) {
+        console.error("Cleanup digital asset failed:", cleanupError);
+      }
+    }
+
+    console.error("Update product failed:", error);
+
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : isEn
+            ? "Failed to update product."
+            : "Gagal memperbarui produk.",
+    };
   }
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath("/products");
   revalidatePath(`/products/${parsed.data.slug}`);
-  revalidatePath(`/admin/products/${productId}/assets`);
+  revalidatePath("/");
 
   return {
     success: isEn
       ? "Product successfully updated."
-      : "Product berhasil diperbarui.",
+      : "Produk berhasil diperbarui.",
   };
 }
 
 export async function archiveProductAction(formData: FormData): Promise<void> {
   const admin = await requireAdmin();
 
-  const productId = formData.get("productId");
-
-  if (typeof productId !== "string") {
+  const rawId = formData.get("productId");
+  if (typeof rawId !== "string" || !rawId) {
     throw new Error("Product ID tidak valid.");
   }
 
+  const productId = rawId;
+
+  // Tenant Isolation: Validasi sellerId jika bukan super admin
   const product = await prisma.product.findFirst({
     where: {
       id: productId,
@@ -892,4 +975,159 @@ export async function archiveProductAction(formData: FormData): Promise<void> {
   revalidatePath("/admin/products");
   revalidatePath("/products");
   revalidatePath(`/products/${product.slug}`);
+}
+
+/**
+ * Hapus Permanen Produk (Multi-Tenant Isolated)
+ * - Seller hanya dapat menghapus produk miliknya sendiri (sellerId: admin.id).
+ * - Admin Platform (Super Admin) memiliki otoritas penuh menghapus produk mana pun.
+ * - Seller dibatasi tidak dapat menghapus produk jika sudah dibeli pelanggan (orderItems > 0) demi integritas pesanan.
+ */
+export async function deleteProductAction(
+  formData: FormData,
+): Promise<CatalogActionState> {
+  const admin = await requireAdmin();
+
+  const userLocale = (formData.get("locale") as string) || (await getLocale());
+  const isEn = userLocale === "en" || userLocale === "en-US";
+
+  const rawId = formData.get("productId");
+  if (typeof rawId !== "string" || !rawId) {
+    return {
+      error: isEn ? "Invalid Product ID." : "ID Produk tidak valid.",
+    };
+  }
+
+  const productId = rawId;
+
+  // 1. Tenant Isolation & IDOR Guard:
+  // Seller biasa (role !== "ADMIN") HANYA dapat menghapus produk miliknya sendiri
+  const product = await prisma.product.findFirst({
+    where: {
+      id: productId,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
+    },
+    include: {
+      _count: {
+        select: { orderItems: true },
+      },
+      orderItems: {
+        select: { id: true },
+      },
+      images: {
+        select: { id: true, storageKey: true },
+      },
+      digitalAssets: {
+        select: { id: true, storageKey: true },
+      },
+    },
+  });
+
+  if (!product) {
+    return {
+      error: isEn
+        ? "Product not found or you do not have permission to delete it."
+        : "Produk tidak ditemukan atau Anda tidak memiliki izin untuk menghapus produk ini.",
+    };
+  }
+
+  // 2. Proteksi Hak Akses Pembeli:
+  // Seller biasa tidak boleh menghapus produk yang sudah memiliki transaksi pembeli
+  if (admin.role !== "ADMIN" && product._count.orderItems > 0) {
+    return {
+      error: isEn
+        ? "Products with existing customer orders cannot be permanently deleted by sellers. Please archive the product instead."
+        : "Produk yang sudah pernah memiliki transaksi pesanan tidak dapat dihapus permanen oleh penjual demi menjaga akses unduh pembeli. Silakan gunakan fitur Arsipkan.",
+    };
+  }
+
+  try {
+    // 3. Bersihkan file fisik di blob/storage
+    for (const img of product.images) {
+      try {
+        await deletePrivateDigitalAsset(img.storageKey);
+      } catch (err) {
+        console.error("Cleanup image file failed:", err);
+      }
+    }
+
+    for (const asset of product.digitalAssets) {
+      try {
+        await deletePrivateDigitalAsset(asset.storageKey);
+      } catch (err) {
+        console.error("Cleanup digital asset file failed:", err);
+      }
+    }
+
+    // 4. Jika Super Admin menghapus produk yang memiliki riwayat pesanan (contoh: produk test)
+    if (admin.role === "ADMIN" && product.orderItems.length > 0) {
+      const orderItemIds = product.orderItems.map((oi) => oi.id);
+      const digitalAssetIds = product.digitalAssets.map((da) => da.id);
+
+      await prisma.downloadGrant.deleteMany({
+        where: {
+          OR: [
+            ...(orderItemIds.length > 0
+              ? [{ orderItemId: { in: orderItemIds } }]
+              : []),
+            ...(digitalAssetIds.length > 0
+              ? [{ digitalAssetId: { in: digitalAssetIds } }]
+              : []),
+          ],
+        },
+      });
+
+      await prisma.orderItem.deleteMany({
+        where: { productId },
+      });
+    }
+
+    // 5. Hapus relasi keranjang belanja (cart items)
+    await prisma.cartItem.deleteMany({
+      where: { productId },
+    });
+
+    // 6. Hapus gambar & berkas aset dari database
+    await prisma.productImage.deleteMany({
+      where: { productId },
+    });
+    await prisma.digitalAsset.deleteMany({
+      where: { productId },
+    });
+
+    // 7. Hapus data produk dari database
+    await prisma.product.delete({
+      where: { id: productId },
+    });
+
+    // 8. Catat Audit Log
+    await writeAuditLog({
+      actorUserId: admin.id,
+      action: "PRODUCT_DELETED",
+      entityType: "Product",
+      entityId: productId,
+      ipAddress: await getRequestIp(),
+      metadata: {
+        title: product.title,
+        slug: product.slug,
+      },
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath("/products");
+    revalidatePath("/");
+
+    return {
+      success: isEn
+        ? "Product has been permanently deleted."
+        : "Produk berhasil dihapus secara permanen.",
+    };
+  } catch (error) {
+    console.error("Delete product failed:", error);
+    return {
+      error: isEn
+        ? "Failed to permanently delete product."
+        : "Gagal menghapus produk secara permanen.",
+    };
+  }
 }

@@ -12,7 +12,7 @@ export const categorySchema = z.object({
 });
 
 export const productSchema = z.object({
-  categoryId: z.string().cuid(),
+  categoryId: z.string().trim().min(1, "Kategori produk wajib dipilih."),
   title: z.string().trim().min(3).max(160),
   slug: z
     .string()
@@ -25,6 +25,7 @@ export const productSchema = z.object({
   priceIdr: z.coerce.number().int().min(0).max(2_000_000_000),
   sku: z.string().trim().max(80).optional().or(z.literal("")),
   status: z.enum(["DRAFT", "PUBLISHED"]),
+  techStack: z.array(z.string().trim()).default([]),
 });
 
 export type CategoryInput = z.infer<typeof categorySchema>;

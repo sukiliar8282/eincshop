@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/lib/auth/require-user";
+import { getCurrentUserOrGuest } from "@/lib/auth/require-user";
 import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
 import { getCartForUser } from "@/modules/cart/service";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CheckoutPage() {
-  const user = await requireUser();
+  const user = await getCurrentUserOrGuest();
   const cart = await getCartForUser(user.id);
 
   const items =
@@ -55,66 +55,43 @@ export default async function CheckoutPage() {
   return (
     <main className="py-16 sm:py-24">
       <Container>
-        <div className="max-w-2xl">
+        <div className="max-w-xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Order review
+            Pembayaran Instan
           </p>
 
-          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)] sm:text-5xl">
             Checkout
           </h1>
 
-          <Link
-            href="/cart"
-            className="mt-5 inline-flex text-sm font-medium text-[var(--color-accent-strong)] hover:underline"
-          >
-            ← Kembali ke keranjang
-          </Link>
-
-          <div className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
-            <div className="divide-y divide-[var(--color-line)]">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col gap-3 p-5 sm:flex-row sm:items-start sm:justify-between"
-                >
-                  <div className="min-w-0">
-                    <p className="break-words font-medium text-[var(--color-ink)]">
-                      {item.product.title}
-                    </p>
-
-                    <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                      Produk digital · Jumlah {item.quantity}
-                    </p>
-                  </div>
-
-                  <p className="shrink-0 font-semibold text-[var(--color-ink)]">
-                    {formatIdr(item.product.priceMinor * item.quantity)}
+          <div className="mt-10 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between py-4 text-sm"
+              >
+                <div>
+                  <p className="font-medium text-[var(--color-ink)]">
+                    {item.product.title}
+                  </p>
+                  <p className="mt-1 text-[var(--color-text-muted)]">
+                    Jumlah: {item.quantity}
                   </p>
                 </div>
-              ))}
-            </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-line)] p-5">
-              <span className="text-sm text-[var(--color-text-muted)]">
-                Total
-              </span>
-
-              <span className="text-lg font-semibold text-[var(--color-ink)]">
-                {formatIdr(subtotal)}
-              </span>
-            </div>
+                <p className="font-semibold text-[var(--color-ink)]">
+                  {formatIdr(item.product.priceMinor * item.quantity)}
+                </p>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-6 rounded-[var(--radius-card)] bg-[var(--color-surface-muted)] p-5">
-            <p className="text-sm leading-6 text-[var(--color-text-muted)]">
-              Pembayaran sedang berada dalam mode pengujian. Setelah pesanan
-              dibuat, status pembayaran akan ditampilkan di halaman pesanan
-              Anda.
-            </p>
+          <div className="mt-8 flex items-center justify-between text-base font-semibold text-[var(--color-ink)]">
+            <span>Total Pembayaran</span>
+            <span>{formatIdr(subtotal)}</span>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <CheckoutForm />
           </div>
         </div>

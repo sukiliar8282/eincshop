@@ -7,6 +7,8 @@ export async function createDownloadGrantsForPaidOrder(orderId: string) {
     },
     select: {
       userId: true,
+      paymentStatus: true,
+      status: true,
       items: {
         include: {
           product: {
@@ -25,6 +27,13 @@ export async function createDownloadGrantsForPaidOrder(orderId: string) {
 
   if (!order) {
     throw new Error("Order tidak ditemukan.");
+  }
+
+  // F-12 Defense-in-depth Guard: Pastikan pesanan benar-benar PAID sebelum hak unduh diterbitkan
+  if (order.paymentStatus !== "PAID") {
+    throw new Error(
+      "Download grants hanya dapat diterbitkan untuk pesanan yang sudah berstatus PAID.",
+    );
   }
 
   const grants = [];

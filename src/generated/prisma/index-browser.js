@@ -181,6 +181,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   status: 'status',
   priceMinor: 'priceMinor',
   currency: 'currency',
+  techStack: 'techStack',
   sku: 'sku',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',

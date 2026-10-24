@@ -27,13 +27,15 @@ function formatFileSize(bytes: number): string {
 export default async function ProductAssetsPage({
   params,
 }: ProductAssetsPageProps) {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
   const { id } = await params;
 
-  const product = await prisma.product.findUnique({
+  // F-01 Tenant Isolation: Cegah penjual melihat metadata aset produk penjual lain
+  const product = await prisma.product.findFirst({
     where: {
       id,
+      ...(admin.role !== "ADMIN" ? { sellerId: admin.id } : {}),
     },
     select: {
       id: true,
