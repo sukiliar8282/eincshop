@@ -89,13 +89,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // Kunci keamanan: Validasi domain, email_verified, dan status akun aktif
     async signIn({ account, profile }) {
       if (account?.provider === "google") {
-        const email = profile?.email?.toLowerCase();
-        if (!email || !email.endsWith("@gmail.com")) {
+        if (!profile?.email) {
           return false;
         }
 
-        // Verifikasi kepemilikan email dari Google
-        if ("email_verified" in profile && profile.email_verified === false) {
+        const email = profile.email.toLowerCase();
+        if (!email.endsWith("@gmail.com")) {
+          return false;
+        }
+
+        // Verifikasi kepemilikan email dari Google jika field tersedia
+        const emailVerified = (profile as { email_verified?: boolean })
+          ?.email_verified;
+        if (emailVerified === false) {
           return false;
         }
 
