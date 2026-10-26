@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/dictionaries/id";
 import { POPULAR_TECH_FILTERS } from "@/lib/catalog/tech-stack";
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
 
 type CatalogControlsProps = {
   categories: {
@@ -114,40 +115,42 @@ export function CatalogControls({
           {dict.allCategories}
         </label>
 
-        <select
+        {/* Dropdown Kategori Kustom (Bebas Dialog Radio Android) */}
+        <CustomDropdown
           id="category"
           name="category"
           defaultValue={currentCategory}
-          className="min-h-11 min-w-0 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-sm outline-none transition-colors focus:border-[var(--color-ink)] cursor-pointer"
-        >
-          <option value="">{dict.allCategories}</option>
-
-          {categories.map((cat) => (
-            <option key={cat.slug} value={cat.slug}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+          options={[
+            { value: "", label: dict.allCategories },
+            ...categories.map((cat) => ({
+              value: cat.slug,
+              label: cat.name,
+            })),
+          ]}
+          ariaLabel={dict.allCategories}
+        />
 
         <label className="sr-only" htmlFor="sort">
           {dict.sortLabel}
         </label>
 
-        <select
+        {/* Dropdown Urutan Kustom */}
+        <CustomDropdown
           id="sort"
           name="sort"
           defaultValue={currentSort}
-          className="min-h-11 min-w-0 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-sm outline-none transition-colors focus:border-[var(--color-ink)] cursor-pointer"
-        >
-          <option value="newest">{dict.sortNewest}</option>
-          <option value="oldest">{dict.sortOldest}</option>
-          <option value="price_asc">{dict.sortPriceAsc}</option>
-          <option value="price_desc">{dict.sortPriceDesc}</option>
-        </select>
+          options={[
+            { value: "newest", label: dict.sortNewest },
+            { value: "oldest", label: dict.sortOldest },
+            { value: "price_asc", label: dict.sortPriceAsc },
+            { value: "price_desc", label: dict.sortPriceDesc },
+          ]}
+          ariaLabel={dict.sortLabel}
+        />
 
         <button
           type="submit"
-          className="min-h-11 w-full rounded-[var(--radius-control)] bg-[var(--color-ink)] px-5 text-sm font-semibold text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-98 shadow-xs"
+          className="min-h-11 w-full rounded-[var(--radius-control)] bg-[var(--color-ink)] px-5 text-sm font-semibold text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-98 shadow-xs cursor-pointer"
         >
           {dict.searchBtn}
         </button>
@@ -219,15 +222,15 @@ export function CatalogControls({
               </span>
             )}
 
-            {/* Chip Urutan Sort */}
+            {/* Chip Urutan */}
             {currentSort && currentSort !== "newest" && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line)] bg-white px-2.5 py-1 text-xs text-[var(--color-ink)]">
                 <span>
-                  {currentSort === "oldest"
-                    ? dict.sortOldest
-                    : currentSort === "price_asc"
-                      ? dict.sortPriceAsc
-                      : dict.sortPriceDesc}
+                  {currentSort === "price_asc"
+                    ? dict.sortPriceAsc
+                    : currentSort === "price_desc"
+                      ? dict.sortPriceDesc
+                      : dict.sortOldest}
                 </span>
                 <Link
                   href={`/products?${new URLSearchParams({
@@ -258,7 +261,7 @@ export function CatalogControls({
           {/* Tombol 1-Klik Reset Semua Filter */}
           <Link
             href="/products"
-            className="inline-flex items-center gap-1 font-semibold text-[var(--color-accent-strong)] hover:underline"
+            className="font-medium text-[var(--color-accent-strong)] hover:underline inline-flex items-center gap-1 transition-colors"
           >
             <svg
               className="h-3.5 w-3.5"
@@ -273,7 +276,7 @@ export function CatalogControls({
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            <span>{isEn ? "Reset all filters" : "Reset semua filter"}</span>
+            <span>{isEn ? "Reset All" : "Reset Semua"}</span>
           </Link>
         </div>
       )}

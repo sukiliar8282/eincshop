@@ -5,16 +5,34 @@ export const credentialsSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email("Format email tidak valid.")
+    .email("Invalid email format.")
     .max(254)
     .refine((val) => val.endsWith("@gmail.com"), {
-      message: "Hanya email resmi @gmail.com yang diizinkan untuk mendaftar.",
+      message: "Only official @gmail.com addresses are allowed.",
     }),
-  password: z.string().min(8, "Password minimal 8 karakter.").max(128),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .max(128),
 });
 
-export const registrationSchema = credentialsSchema.extend({
-  name: z.string().trim().min(2, "Nama minimal 2 karakter.").max(80),
+export const registrationSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters.").max(80),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email("Invalid email format.")
+    .max(254)
+    .refine((val) => val.endsWith("@gmail.com"), {
+      message: "Only official @gmail.com addresses are allowed.",
+    }),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .max(128)
+    .regex(/[A-Za-z]/, "Password must contain at least one letter.")
+    .regex(/[0-9]/, "Password must contain at least one number."),
 });
 
 export type CredentialsInput = z.infer<typeof credentialsSchema>;

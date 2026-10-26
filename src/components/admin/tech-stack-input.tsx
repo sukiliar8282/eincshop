@@ -89,7 +89,7 @@ export function TechStackInput({
                 key={tech}
                 type="button"
                 onClick={() => toggleStack(tech)}
-                className={`rounded-full border px-3 py-1 font-mono text-xs transition-all ${
+                className={`rounded-full border px-3 py-1 font-mono text-xs transition-all cursor-pointer ${
                   isSelected
                     ? "border-[var(--color-ink)] bg-[var(--color-ink)] !text-white text-white! font-semibold shadow-xs"
                     : "border-[var(--color-line-strong)] bg-white text-neutral-700 hover:border-neutral-900 hover:text-[var(--color-ink)]"
@@ -103,9 +103,9 @@ export function TechStackInput({
         </div>
       </div>
 
-      {/* Input Custom Tag */}
+      {/* Input Custom Tag (Responsif & Rapi di Mobile) */}
       <div className="space-y-3">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <input
             type="text"
             value={customInput}
@@ -113,16 +113,16 @@ export function TechStackInput({
             onKeyDown={handleKeyDown}
             placeholder={
               isEn
-                ? "e.g. Astro, Vue 3, Docker, Laravel, Python (press Enter)"
-                : "contoh: Astro, Vue 3, Docker, Laravel, Python (tekan Enter)"
+                ? "e.g. Astro, Vue 3, Docker, Laravel (Enter)"
+                : "contoh: Astro, Vue 3, Docker, Laravel (Enter)"
             }
             maxLength={40}
-            className="min-h-10 flex-1 rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-xs focus:border-[var(--color-ink)] focus:outline-none"
+            className="min-h-10 min-w-0 flex-1 rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-xs focus:border-[var(--color-ink)] focus:outline-none"
           />
           <button
             type="button"
             onClick={handleAddCustom}
-            className="min-h-10 rounded-[var(--radius-control)] bg-[var(--color-ink)] px-4 text-xs font-semibold !text-white text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-95"
+            className="min-h-10 shrink-0 whitespace-nowrap rounded-[var(--radius-control)] bg-[var(--color-ink)] px-3.5 sm:px-4 text-xs font-semibold !text-white text-white! transition-all hover:bg-[var(--color-ink-soft)] active:scale-95 cursor-pointer"
           >
             {isEn ? "+ Add" : "+ Tambah"}
           </button>
@@ -147,7 +147,7 @@ export function TechStackInput({
                     type="button"
                     onClick={() => removeStack(tech)}
                     aria-label={`Hapus ${tech}`}
-                    className="text-neutral-400 hover:text-neutral-900 transition-colors"
+                    className="text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer"
                   >
                     <svg
                       className="h-3 w-3"

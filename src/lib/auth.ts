@@ -7,6 +7,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db";
 import { verifyPassword } from "@/lib/security/password";
 import { credentialsSchema } from "@/lib/validation/auth";
+import { writeAuditLog } from "@/lib/security/audit";
+import { generateEmailOtp } from "@/lib/security/otp";
+import { sendOtpEmail } from "@/lib/email/sender";
 
 // NO SILENT FAILURES: Validasi keras keberadaan AUTH_SECRET
 if (!process.env.AUTH_SECRET) {
@@ -16,11 +19,27 @@ if (!process.env.AUTH_SECRET) {
   );
 }
 
+const baseAdapter = PrismaAdapter(
+  prisma as unknown as Parameters<typeof PrismaAdapter>[0],
+);
+
+const authAdapter = {
+  ...baseAdapter,
+  async createUser(
+    data: Parameters<NonNullable<typeof baseAdapter.createUser>>[0],
+  ) {
+    // Pengguna baru (termasuk pendaftaran melalui Google OAuth) wajib memverifikasi OTP:
+    // Pastikan emailVerified bernilai null secara eksplisit saat akun pertama kali dibuat
+    return baseAdapter.createUser!({
+      ...data,
+      emailVerified: null,
+    });
+  },
+};
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
-  adapter: PrismaAdapter(
-    prisma as unknown as Parameters<typeof PrismaAdapter>[0],
-  ),
+  adapter: authAdapter as unknown as ReturnType<typeof PrismaAdapter>,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 hari
@@ -29,6 +48,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
     error: "/login",
+  },
+
+  events: {
+    async signIn({ user, account }) {
+      if (user?.id) {
+        await writeAuditLog({
+          actorUserId: user.id,
+          action:
+            account?.provider === "google"
+              ? "AUTH_GOOGLE_LOGIN_SUCCESS"
+              : "AUTH_LOGIN_SUCCESS",
+          entityType: "User",
+          entityId: user.id,
+        });
+
+        // Verifikasi Email OTP Otomatis untuk Pengguna Baru Google OAuth
+        if (account?.provider === "google" && user.email) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { emailVerified: true },
+          });
+
+          if (!dbUser?.emailVerified) {
+            const otp = await generateEmailOtp(user.email);
+            await sendOtpEmail({ email: user.email, otp });
+          }
+        }
+      }
+    },
   },
 
   providers: [

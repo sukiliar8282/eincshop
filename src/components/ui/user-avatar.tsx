@@ -70,6 +70,7 @@ export function UserAvatar({
           height={currentSize.dimension}
           unoptimized
           priority={priority}
+          loading={priority ? "eager" : undefined}
           onError={() => setHasError(true)}
           className="h-full w-full object-cover transition-transform duration-300"
         />

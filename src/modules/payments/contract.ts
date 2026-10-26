@@ -1,4 +1,4 @@
-export type PaymentProviderName = "UNSELECTED";
+export type PaymentProviderName = "MIDTRANS" | "DUMMY";
 
 export type CreatePaymentInput = {
   orderId: string;
@@ -15,9 +15,7 @@ export type PaymentCreationResult = {
 };
 
 export interface PaymentProviderAdapter {
-  createPayment(
-    input: CreatePaymentInput,
-  ): Promise<PaymentCreationResult>;
+  createPayment(input: CreatePaymentInput): Promise<PaymentCreationResult>;
 
   verifyWebhook(
     payload: string,
