@@ -1,4 +1,4 @@
-export type PaymentProviderName = "MIDTRANS" | "DUMMY";
+export type PaymentProviderName = "MIDTRANS" | "DUMMY" | "UNSELECTED";
 
 export type CreatePaymentInput = {
   orderId: string;
