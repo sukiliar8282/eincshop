@@ -17,8 +17,10 @@ export async function sendOtpEmail({
   isEn = true,
 }: SendOtpEmailOptions): Promise<boolean> {
   const normalizedEmail = email.trim().toLowerCase();
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
+  const smtpUser = process.env.SMTP_USER?.trim();
+  const rawPass = process.env.SMTP_PASS?.trim();
+  // Hapus seluruh spasi pada App Password Gmail (wkjj ipel rqit gija -> wkjjipelrqitgija)
+  const smtpPass = rawPass ? rawPass.replace(/\s+/g, "") : undefined;
 
   const subject = `${otp} is your EINCSHOP verification code`;
 
@@ -57,11 +59,13 @@ export async function sendOtpEmail({
     </html>
   `;
 
-  // 1. Pengiriman Email Nyata via SMTP Gmail
+  // 1. Pengiriman Email Nyata via SMTP Gmail Langsung (Port 465 SSL)
   if (smtpUser && smtpPass) {
     try {
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
         auth: {
           user: smtpUser,
           pass: smtpPass,
@@ -82,6 +86,10 @@ export async function sendOtpEmail({
     } catch (error) {
       console.error("[EmailSender SMTP Error]:", error);
     }
+  } else {
+    console.warn(
+      `[EmailSender]: SMTP credentials missing in Vercel. SMTP_USER: ${smtpUser ? "SET" : "MISSING"}, SMTP_PASS: ${smtpPass ? "SET" : "MISSING"}.`,
+    );
   }
 
   // 2. Mode Pengembangan / Fallback Terminal Konsol
