@@ -3,18 +3,11 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
 import { siteConfig } from "@/config/site";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await prisma.product.findMany({
-    where: {
-      status: "PUBLISHED",
-      productType: "DIGITAL",
-    },
-    select: {
-      slug: true,
-      updatedAt: true,
-    },
-  });
+// Nonaktifkan pra-render statis saat build Vercel agar tidak gagal jika database belum terhubung
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache selama 1 jam di sisi edge/CDN
 
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: siteConfig.url,
@@ -30,12 +23,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${siteConfig.url}/products/${product.slug}`,
-    lastModified: product.updatedAt,
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        status: "PUBLISHED",
+        productType: "DIGITAL",
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    });
 
-  return [...staticRoutes, ...productRoutes];
+    const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
+      url: `${siteConfig.url}/products/${product.slug}`,
+      lastModified: product.updatedAt,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...productRoutes];
+  } catch (error) {
+    console.warn(
+      "[sitemap] Gagal mengambil daftar produk dinamis, menggunakan fallback rute statis:",
+      error,
+    );
+    return staticRoutes;
+  }
 }
