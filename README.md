@@ -1,8 +1,8 @@
-# EINCSHOP -- Enterprise Multi-Seller Digital Marketplace
+# EINCSHOP — Enterprise Multi-Seller Digital Marketplace
 
-A modern, production-grade digital assets marketplace built with Next.js 16.4.3 (App Router), React 19.2.8, TypeScript 5, Tailwind CSS v4, Prisma ORM 7.10.1, PostgreSQL (Supabase), Auth.js v5 Beta, Cloudflare Turnstile, and Midtrans Payment Gateway.
+EINCSHOP is a digital marketplace built with Next.js 16.4.3 (App Router), React 19.2.8, TypeScript 5, Tailwind CSS v4, Prisma ORM 7.10.1, PostgreSQL (Supabase), Auth.js v5 Beta, Cloudflare Turnstile, and Midtrans Payment Gateway.
 
-Think of it like a digital version of a shopping mall. Every seller gets their own locked storefront. Buyers browse the mall, pick items, pay at a secure automated cashier, and instantly receive a special ticket that unlocks their purchased digital files. No seller can peek into another seller's cash register or inventory -- everything is isolated, tamper-proof, and secure by design.
+The platform works much like an online shopping mall. Each seller manages a separate storefront, while buyers can browse products, place orders, and pay through an automated checkout. Once payment is confirmed, buyers receive controlled access to the digital files they purchased. Sellers cannot access another seller's inventory or sales records through the platform's intended access boundaries.
 
 ---
 
@@ -30,18 +30,18 @@ Think of it like a digital version of a shopping mall. Every seller gets their o
 |---|---|---|---|
 | **Framework** | Next.js (App Router, Turbopack) | `16.4.3` | Server Components, Server Actions, Route Handlers |
 | **UI Library** | React & React DOM | `19.2.8` | Client hydration, optimistic UI, reactive state hooks |
-| **Language** | TypeScript | `^5.0.0` | End-to-end static type safety |
-| **Styling** | Tailwind CSS & PostCSS Plugin | `^4.0.0` | Modern design token system, CSS custom properties |
-| **Database & ORM** | Prisma Client & CLI | `^7.10.1` | Object-Relational Mapping & migration engine |
-| **DB Driver** | PostgreSQL (`pg` + `@prisma/adapter-pg`) | `^8.23.0` | Connection pooling engine with Supabase |
-| **Cloud Storage** | `@vercel/blob` | `^2.8.0` | Private cloud storage for digital downloads & image assets |
-| **Authentication** | Auth.js (`next-auth`) | `^5.0.0-beta.32` | JWT session management & Google OAuth integration |
-| **Password Hashing** | `bcryptjs` | `^3.0.3` | Cost factor 12 cryptographic password salting & hashing |
-| **Mailing Service** | `nodemailer` | `^8.0.11` | Automated 6-digit email OTP dispatching via secure SMTP |
-| **Bot Defense** | Cloudflare Turnstile | Server API | Smart managed CAPTCHA on registration and authentication |
-| **Payment Gateway** | Midtrans Core Snap API | Sandbox / Prod | Snap embedded checkout & SHA-512 signed webhooks |
-| **Schema Validation** | Zod | `^4.6.5` | Type-safe form validation & strict sanitization |
-| **Hosting & CI/CD** | Vercel Serverless Platform | Production | Automated continuous integration & zero-downtime deploys |
+| **Language** | TypeScript | `^5.0.0` | Static type safety across the application |
+| **Styling** | Tailwind CSS & PostCSS Plugin | `^4.0.0` | Design tokens and CSS custom properties |
+| **Database & ORM** | Prisma Client & CLI | `^7.10.1` | Object-relational mapping and schema migration |
+| **DB Driver** | PostgreSQL (`pg` + `@prisma/adapter-pg`) | `^8.23.0` | Connection pooling with Supabase |
+| **Cloud Storage** | `@vercel/blob` | `^2.8.0` | Private storage for digital downloads and product images |
+| **Authentication** | Auth.js (`next-auth`) | `^5.0.0-beta.32` | JWT session management and Google OAuth |
+| **Password Hashing** | `bcryptjs` | `^3.0.3` | Password salting and hashing with cost factor 12 |
+| **Mailing Service** | `nodemailer` | `^8.0.11` | Automated delivery of 6-digit email OTPs through SMTP |
+| **Bot Defense** | Cloudflare Turnstile | Server API | Managed CAPTCHA for registration and authentication |
+| **Payment Gateway** | Midtrans Core Snap API | Sandbox / Prod | Embedded Snap checkout and SHA-512-signed webhooks |
+| **Schema Validation** | Zod | `^4.6.5` | Type-safe form validation and input sanitization |
+| **Hosting & CI/CD** | Vercel Serverless Platform | Production | Automated integration and deployments |
 
 ---
 
@@ -49,62 +49,62 @@ Think of it like a digital version of a shopping mall. Every seller gets their o
 
 ### For Buyers (Customers)
 
-- **Product Catalog** -- Browse and search digital assets with category filtering, price/date sorting, search queries, and grid/list view toggles.
-- **Guest-Friendly Cart** -- Persistent shopping cart that survives page refreshes via secure `einc_guest_id` cookies, without forcing upfront login.
-- **Dedicated Checkout Flow** -- Dedicated `/checkout` screen validating product availability and locking prices against live database records.
-- **Automated Cashier** -- Native integration with Midtrans Snap supporting Virtual Accounts, QRIS (GoPay, OVO, ShopeePay), Credit Cards, and Convenience Stores.
-- **Expiring & Quota-Protected Downloads** -- Purchased digital assets are unlocked via cryptographic `DownloadGrant` records. Links automatically expire in **48 hours** and are hard-capped at **5 downloads** per asset.
-- **Order History & Invoices** -- Real-time order tracking (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`) with itemized invoices.
-- **User Profile Management** -- Manage account profile, change names, and update profile avatars.
-- **Bilingual Storefront** -- Native support for English and Indonesian with automatic browser locale detection.
+- **Product Catalog** — Browse and search digital products using category filters, keyword search, price or date sorting, and grid or list views.
+- **Guest-Friendly Cart** — Keep shopping items in a persistent cart across page refreshes through the `einc_guest_id` cookie, without requiring an account at the start.
+- **Dedicated Checkout** — Review an order on `/checkout`. Product availability is checked, and prices are retrieved from current database records.
+- **Automated Payments** — Midtrans Snap supports Virtual Accounts, QRIS (GoPay, OVO, ShopeePay), credit cards, and convenience-store payments.
+- **Expiring, Quota-Limited Downloads** — Paid purchases receive cryptographic `DownloadGrant` records. Each download grant expires after **48 hours** and allows a maximum of **5 downloads** per asset.
+- **Order History and Invoices** — Track order statuses (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`) and view itemized invoices.
+- **Profile Management** — Update account details, change names, and upload profile avatars.
+- **Bilingual Storefront** — Use the marketplace in English or Indonesian, with automatic browser-locale detection.
 
 ### For Sellers
 
-- **Seller Onboarding Flow** -- Customer accounts seamlessly apply to become verified storefront operators via `/become-seller`.
-- **Product Lifecycle Management** -- Create, edit, publish, and archive digital items. Upload image previews (validated with magic byte signatures), define integer IDR prices, assign categories, and attach downloadable payload files.
-- **Financial Analytics & Cashflow Charts** -- Interactive sales dashboard featuring cashflow visualizations (Revenue, Platform Expense, Net Profit), key performance indicators, and automated 3% platform commission calculations (`AUTO_FEE_RATE = 0.03`).
-- **Store Order Tracking** -- View incoming orders filtered strictly by products owned by the authenticated seller.
-- **Category Control** -- Create and structure store categories.
+- **Seller Onboarding** — Existing customer accounts can apply to manage a storefront through `/become-seller`.
+- **Product Management** — Create, edit, publish, or archive digital products. Sellers can upload preview images validated through magic-byte signatures, set integer IDR prices, assign categories, and attach downloadable files.
+- **Financial Analytics** — Review sales performance through an interactive dashboard showing Revenue, Platform Expense, and Net Profit, along with key performance indicators and the automatic 3% platform commission (`AUTO_FEE_RATE = 0.03`).
+- **Store Order Tracking** — View incoming orders associated with products owned by the authenticated seller.
+- **Category Management** — Create and organize product categories for the storefront.
 
 ### For Administrators
 
-- **Full Platform Oversight** -- Centralized control over all platform products, categories, transactions, and store operations.
-- **Immutable Security Audit Trail** -- Tamper-evident `AuditLog` records documenting actor ID, event name, target entity, timestamp, and source IP address.
-- **Live Database Privilege Verification** -- Protected routes (`requireSuperAdmin`) query PostgreSQL in real-time on every single request, completely preventing stale JWT privilege escalation.
+- **Platform-Wide Management** — Manage platform products, categories, transactions, and store operations from a centralized interface.
+- **Security Audit Trail** — `AuditLog` records capture the actor ID, event name, target entity, timestamp, and source IP address to support security reviews.
+- **Live Database Permission Checks** — Protected routes using `requireSuperAdmin` check account privileges directly against PostgreSQL on every request, rather than relying solely on potentially outdated JWT claims.
 
 ### Platform-Wide
 
-- **Cloudflare Turnstile CAPTCHA** -- Frictionless, puzzle-free bot protection embedded in authentication forms and enforced at the Server Action layer.
-- **Disposable Email Shield** -- User registration strictly restricted to `@gmail.com` accounts across Zod schemas and Google OAuth profiles.
-- **Edge IP Anti-Spoofing** -- Resolves true client IPs by prioritizing Cloudflare's cryptographic `cf-connecting-ip` header.
-- **Integer Minor-Unit Currency** -- All financial data is calculated in single integer Rupiah units (`priceMinor`), eliminating IEEE-754 floating-point rounding errors.
-- **Zero-Downtime CI/CD** -- Automated Vercel deployments with atomic rollbacks and live database health checks.
+- **Cloudflare Turnstile** — Provides bot protection in authentication forms, with verification enforced at the Server Action layer.
+- **Gmail-Only Registration** — Zod schemas and Google OAuth profile checks restrict registration to `@gmail.com` accounts.
+- **Client IP Resolution** — The application prioritizes Cloudflare's `cf-connecting-ip` header when resolving the client IP address.
+- **Integer-Based Currency** — Financial values use integer Rupiah units (`priceMinor`) to avoid IEEE-754 floating-point rounding errors.
+- **Automated Deployment** — Vercel deployments support automated releases, rollbacks, and live database health checks.
 
 ---
 
 ## Database Architecture
 
-The application runs on PostgreSQL managed via Prisma ORM 7 with connection pooling:
+The application uses PostgreSQL with Prisma ORM 7 and connection pooling.
 
 | Model | Table Name | Purpose | Key Attributes & Constraints |
 |---|---|---|---|
-| `User` | `users` | Account identity & profile | Role (`CUSTOMER`, `SELLER`, `ADMIN`), Status (`ACTIVE`, `SUSPENDED`), `storeName` |
+| `User` | `users` | Account identity and profile | Role (`CUSTOMER`, `SELLER`, `ADMIN`), status (`ACTIVE`, `SUSPENDED`), `storeName` |
 | `Account` | `accounts` | OAuth provider credentials | Composite unique index on `[provider, providerAccountId]` |
-| `Session` | `sessions` | Server-side auth sessions | `sessionToken` unique index, expiration timestamp |
+| `Session` | `sessions` | Server-side authentication sessions | Unique `sessionToken`, expiration timestamp |
 | `Product` | `products` | Digital catalog entries | Integer price (`priceMinor`), status (`DRAFT`, `PUBLISHED`, `ARCHIVED`), `sellerId` relation |
-| `Category` | `categories` | Product taxonomy | Unique `slug`, `isActive` index |
+| `Category` | `categories` | Product classification | Unique `slug`, `isActive` index |
 | `Cart` | `carts` | User shopping carts | Status (`ACTIVE`, `CONVERTED`, `ABANDONED`), compound index on `[userId, status]` |
-| `CartItem` | `cart_items` | Items held in carts | Composite unique constraint on `[cartId, productId]` |
-| `Order` | `orders` | Immutable sales invoices | Unique `orderNumber`, status (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`), `totalMinor` |
-| `OrderItem` | `order_items` | Frozen line-item contract | Captures `productTitle`, `unitPriceMinor`, and references `Product` |
-| `Payment` | `payments` | Financial transaction log | References `Order`, tracks provider (`MIDTRANS`, `DUMMY`) and payment status |
-| `PaymentAttempt` | `payment_attempts` | Individual charge attempts | Unique `idempotencyKey`, provider reference ID |
-| `PaymentEvent` | `payment_events` | Webhook audit trail | Composite unique constraint on `[provider, providerEventId]` for strict idempotency |
-| `DigitalAsset` | `digital_assets` | Cloud storage references | Storage key pointers to `@vercel/blob`, file name, byte size, MIME type |
-| `DownloadGrant` | `download_grants` | Cryptographic download access | Bound to `[orderItemId, digitalAssetId]`, `expiresAt` (48h), `downloadCount` (max 5x) |
-| `AuditLog` | `audit_logs` | Security activity ledger | Actor user reference, action name, target entity ID, IP address, metadata JSON |
-| `AuthRateLimit` | `auth_rate_limits` | Brute-force rate limiter | Primary key hashed via SHA-256 (`key`), attempt count, `blockedUntil` timestamp |
-| `VerificationToken` | `verification_tokens` | 6-digit email OTP store | Composite identifier on `[identifier, token]`, 10-minute expiry |
+| `CartItem` | `cart_items` | Items in shopping carts | Composite unique constraint on `[cartId, productId]` |
+| `Order` | `orders` | Sales invoices | Unique `orderNumber`, status (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`), `totalMinor` |
+| `OrderItem` | `order_items` | Fixed order line items | Stores `productTitle` and `unitPriceMinor`, with a reference to `Product` |
+| `Payment` | `payments` | Payment transaction records | References `Order`; tracks provider (`MIDTRANS`, `DUMMY`) and payment status |
+| `PaymentAttempt` | `payment_attempts` | Individual payment attempts | Unique `idempotencyKey`, provider reference ID |
+| `PaymentEvent` | `payment_events` | Webhook event records | Composite unique constraint on `[provider, providerEventId]` for idempotency |
+| `DigitalAsset` | `digital_assets` | Cloud storage references | `@vercel/blob` storage key, file name, byte size, MIME type |
+| `DownloadGrant` | `download_grants` | Controlled download access | Bound to `[orderItemId, digitalAssetId]`, `expiresAt` (48h), `downloadCount` (maximum 5) |
+| `AuditLog` | `audit_logs` | Security activity records | Actor reference, action name, target entity ID, IP address, metadata JSON |
+| `AuthRateLimit` | `auth_rate_limits` | Brute-force protection | SHA-256-hashed primary key (`key`), attempt count, `blockedUntil` timestamp |
+| `VerificationToken` | `verification_tokens` | Email OTP storage | Composite identifier `[identifier, token]`, 10-minute expiry |
 
 ---
 
@@ -119,7 +119,7 @@ eincshop/
 │   ├── app/
 │   │   ├── (auth)/            # Authentication route group
 │   │   │   ├── actions.ts     # Auth Server Actions (Register, Login, OTP Verify, Resend)
-│   │   │   ├── auth-form.tsx  # Unified Login/Register UI with Google OAuth & Turnstile
+│   │   │   ├── auth-form.tsx  # Login/Register UI with Google OAuth and Turnstile
 │   │   │   ├── login/         # Customer and seller login page
 │   │   │   ├── register/      # New account registration page
 │   │   │   └── verify-otp/    # 6-digit email OTP verification form
@@ -127,33 +127,33 @@ eincshop/
 │   │   │   ├── page.tsx       # Account dashboard
 │   │   │   ├── profile/       # Profile management and avatar upload
 │   │   │   ├── orders/        # Customer order history
-│   │   │   └── downloads/     # Download center with real-time quota tracking
-│   │   ├── admin/             # Seller and Admin portal (protected by requireAdmin)
-│   │   │   ├── page.tsx       # Financial analytics dashboard with cashflow charts
+│   │   │   └── downloads/     # Download center with quota tracking
+│   │   ├── admin/             # Seller and admin portal (protected by requireAdmin)
+│   │   │   ├── page.tsx       # Financial analytics dashboard and cashflow charts
 │   │   │   ├── audit-logs/    # Security activity inspection (requireSuperAdmin)
 │   │   │   ├── categories/    # Category management
-│   │   │   ├── orders/        # Platform-wide and store-specific incoming orders
-│   │   │   └── products/      # Product inventory, images, and digital asset attachments
-│   │   ├── become-seller/     # Multi-seller onboarding application workflow
-│   │   ├── cart/              # Persistent cart and dynamic quantity adjustment
-│   │   ├── checkout/          # Pre-payment review and order initialization
+│   │   │   ├── orders/        # Platform-wide and store-specific orders
+│   │   │   └── products/      # Product inventory, images, and digital assets
+│   │   ├── become-seller/     # Seller onboarding workflow
+│   │   ├── cart/              # Persistent cart and quantity adjustment
+│   │   ├── checkout/          # Order review and initialization
 │   │   ├── orders/            # Order invoices and status summaries
-│   │   │   └── [orderNumber]/ # Invoice details and pay trigger
-│   │   │       └── pay/       # Embedded Midtrans Snap client checkout
-│   │   ├── products/          # Public catalog and localized product detail pages
+│   │   │   └── [orderNumber]/ # Invoice details and payment action
+│   │   │       └── pay/       # Embedded Midtrans Snap checkout
+│   │   ├── products/          # Public catalog and localized product pages
 │   │   │   └── [slug]/        # Individual product view
 │   │   └── api/               # Serverless Route Handlers
 │   │       ├── auth/          # NextAuth route handler ([...nextauth])
-│   │       ├── downloads/     # Quota and expiry-protected asset streamer ([grantId])
-│   │       ├── payments/      # Midtrans SHA-512 webhook verification handler
+│   │       ├── downloads/     # Quota- and expiry-protected file streaming ([grantId])
+│   │       ├── payments/      # Midtrans SHA-512 webhook verification
 │   │       ├── product-images/# Product preview image proxy
-│   │       └── profile-image/ # User avatar stream endpoint
+│   │       └── profile-image/ # User avatar streaming endpoint
 │   ├── components/
 │   │   ├── admin/             # FinancialChart, DeleteProductButton
 │   │   ├── cart/              # AddToCartForm, CartItemList
 │   │   ├── checkout/          # CheckoutForm
 │   │   ├── layout/            # SiteHeader, MobileNav, SiteFooter, AccountMenu
-│   │   ├── order/             # OrderStatus badges and summaries
+│   │   ├── order/             # Order status badges and summaries
 │   │   ├── payment/           # MidtransSnapPayment, PayOrderButton
 │   │   ├── product/           # ProductCard, CatalogControls, Pagination
 │   │   └── ui/                # Button, Container, Turnstile, LoadingButton, Modal
@@ -163,40 +163,40 @@ eincshop/
 │   │   ├── auth.ts            # Auth.js configuration, callbacks, credentials provider
 │   │   ├── db.ts              # PrismaClient singleton with PostgreSQL pool adapter
 │   │   ├── email/             # sender.ts (Nodemailer Gmail SMTP with terminal fallback)
-│   │   ├── format/            # currency.ts (formatIdr with minor-unit calculation)
+│   │   ├── format/            # currency.ts (formatIdr with integer currency calculations)
 │   │   ├── i18n/              # config.ts, server.ts, client.ts, dictionaries (en, id)
 │   │   ├── security/          # turnstile.ts, password.ts, rate-limit.ts, request.ts, otp.ts, audit.ts
-│   │   ├── storage/           # product-image.ts (magic byte image validator)
+│   │   ├── storage/           # product-image.ts (magic-byte image validation)
 │   │   └── validation/        # auth.ts, catalog.ts (Zod validation schemas)
 │   └── generated/
 │       └── prisma/            # Local type-safe Prisma Client output
-├── next.config.ts             # Security headers, server action limits, dev origins
+├── next.config.ts             # Security headers, Server Action limits, dev origins
 ├── package.json               # Dependencies and maintenance scripts
-└── tsconfig.json              # TypeScript compilation rules and path aliases
+└── tsconfig.json              # TypeScript compiler settings and path aliases
 ```
 
 ---
 
 ## Environment Variables
 
-All environment variables must be declared in your cloud hosting provider (e.g. Vercel Project Settings) or locally in `.env`:
+Configure environment variables in your hosting provider, such as Vercel Project Settings, or in your local `.env` file.
 
 | Variable Name | Required | Category | Description | Example Placeholder |
 |---|---|---|---|---|
 | `DATABASE_URL` | **Yes** | Database | PostgreSQL connection string with pooling parameters | `postgresql://user:password@host:5432/db?sslmode=require` |
-| `AUTH_SECRET` | **Yes** | Security | Secret string for encrypting Auth.js session JWT tokens | `generate-random-32-chars-string` |
-| `AUTH_GOOGLE_ID` | Optional | Auth | Google Cloud OAuth Client ID for 1-Click login | `your-google-client-id.apps.googleusercontent.com` |
+| `AUTH_SECRET` | **Yes** | Security | Secret used to encrypt Auth.js session JWTs | `generate-random-32-chars-string` |
+| `AUTH_GOOGLE_ID` | Optional | Auth | Google Cloud OAuth Client ID for one-click login | `your-google-client-id.apps.googleusercontent.com` |
 | `AUTH_GOOGLE_SECRET` | Optional | Auth | Google Cloud OAuth Client Secret | `GOCSPX-yourGoogleClientSecret` |
-| `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` | **Yes** | Payments | Midtrans Client Key for rendering frontend Snap modals | `Mid-client-xxxxxxxxxxxxxxxx` |
-| `MIDTRANS_SERVER_KEY` | **Yes** | Payments | Midtrans Server Key for Snap API and webhook signatures | `Mid-server-xxxxxxxxxxxxxxxx` |
-| `MIDTRANS_IS_PRODUCTION` | Optional | Payments | Flag toggling Midtrans Production vs Sandbox endpoints | `false` (default) or `true` |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | **Yes** | Security | Cloudflare Turnstile public site key for frontend widget | `0x4AAAAAAxxxxxxxxxxxxxx` |
-| `TURNSTILE_SECRET_KEY` | **Yes** | Security | Cloudflare Turnstile private secret key for server API | `0x4AAAAAAxxxxxxxxxxxxxx` |
-| `BLOB_READ_WRITE_TOKEN` | **Yes** | Storage | Access token for `@vercel/blob` private file storage | `vercel_blob_rw_xxxxxxxxxxxx` |
-| `SMTP_USER` | Optional | Email | Gmail or custom SMTP address for sending OTP verification codes | `your-service@gmail.com` |
-| `SMTP_PASS` | Optional | Email | SMTP App Password (16 characters, spaces stripped automatically) | `abcd efgh ijkl mnop` |
-| `PAYMENT_PROVIDER` | Optional | Payments | Testing switch; set to `dummy` only in non-production environments | `midtrans` (default) |
-| `NEXT_PUBLIC_APP_URL` | Optional | App | Base canonical domain of the application | `http://localhost:3000` |
+| `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` | **Yes** | Payments | Midtrans Client Key used to render Snap checkout | `Mid-client-xxxxxxxxxxxxxxxx` |
+| `MIDTRANS_SERVER_KEY` | **Yes** | Payments | Midtrans Server Key for Snap API requests and webhook signatures | `Mid-server-xxxxxxxxxxxxxxxx` |
+| `MIDTRANS_IS_PRODUCTION` | Optional | Payments | Selects Midtrans Production or Sandbox endpoints | `false` (default) or `true` |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | **Yes** | Security | Public Cloudflare Turnstile site key for the frontend widget | `0x4AAAAAAxxxxxxxxxxxxxx` |
+| `TURNSTILE_SECRET_KEY` | **Yes** | Security | Private Cloudflare Turnstile key for server-side verification | `0x4AAAAAAxxxxxxxxxxxxxx` |
+| `BLOB_READ_WRITE_TOKEN` | **Yes** | Storage | Access token for private `@vercel/blob` storage | `vercel_blob_rw_xxxxxxxxxxxx` |
+| `SMTP_USER` | Optional | Email | Gmail or custom SMTP address used to send OTP codes | `your-service@gmail.com` |
+| `SMTP_PASS` | Optional | Email | SMTP App Password (16 characters; spaces are stripped automatically) | `abcd efgh ijkl mnop` |
+| `PAYMENT_PROVIDER` | Optional | Payments | Testing switch; use `dummy` only outside production | `midtrans` (default) |
+| `NEXT_PUBLIC_APP_URL` | Optional | App | Canonical base URL for the application | `http://localhost:3000` |
 | `NODE_ENV` | Optional | Runtime | Node.js execution environment | `development` or `production` |
 
 ---
@@ -205,44 +205,46 @@ All environment variables must be declared in your cloud hosting provider (e.g. 
 
 ### Prerequisites
 
-- Node.js version **20.x** or **22.x LTS**
-- A running PostgreSQL database instance (e.g. Supabase, Neon, or local PostgreSQL 15+)
-- Cloudflare Turnstile Site & Secret Keys
-- Midtrans Merchant Account (Sandbox or Production)
+Before running the project, make sure you have:
+
+- Node.js **20.x** or **22.x LTS**
+- A running PostgreSQL database, such as Supabase, Neon, or local PostgreSQL 15+
+- Cloudflare Turnstile Site and Secret Keys
+- A Midtrans Merchant Account in Sandbox or Production mode
 
 ### Installation
 
 ```bash
-# 1. Clone repository and navigate to directory
+# 1. Clone the repository and enter the project directory
 git clone https://github.com/sukiliar8282/eincshop.git
 cd eincshop
 
 # 2. Install dependencies
 npm install
 
-# 3. Synchronize database schema and generate Prisma Client
+# 3. Generate Prisma Client and synchronize the database schema
 npx prisma generate
 npx prisma db push
 
-# 4. Launch the local development server
+# 4. Start the local development server
 npm run dev
 ```
 
-Open your browser at [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
 ## Available Scripts
 
-Defined in `package.json`:
+The following scripts are defined in `package.json`:
 
 | Script | Command | Purpose |
 |---|---|---|
-| `npm run dev` | `next dev` | Starts local Next.js development server with Turbopack |
-| `npm run build` | `prisma generate && next build` | Compiles Prisma Client and produces an optimized production build |
+| `npm run dev` | `next dev` | Starts the local Next.js development server with Turbopack |
+| `npm run build` | `prisma generate && next build` | Generates Prisma Client and builds the optimized production application |
 | `npm run start` | `next start` | Runs the compiled production build |
-| `npm run lint` | `eslint` | Performs static ESLint code quality checks |
-| `npm run postinstall` | `prisma generate` | Automatically generates local Prisma Client after `npm install` |
+| `npm run lint` | `eslint` | Runs ESLint code-quality checks |
+| `npm run postinstall` | `prisma generate` | Generates the local Prisma Client after `npm install` |
 
 ---
 
@@ -252,51 +254,51 @@ Defined in `package.json`:
 
 | Route | Access | Description |
 |---|---|---|
-| `/` | Public | Homepage showcasing featured digital products and trust badges |
-| `/products` | Public | Catalog with category filtering, keyword search, and sorting |
-| `/products/[slug]` | Public | Individual product details with image previews |
-| `/cart` | Public / Guest | Dynamic shopping cart linked to authenticated or guest sessions |
-| `/checkout` | Public / Guest | Order review and confirmation screen before payment |
+| `/` | Public | Homepage featuring selected digital products and trust badges |
+| `/products` | Public | Product catalog with category filters, keyword search, and sorting |
+| `/products/[slug]` | Public | Product details and image previews |
+| `/cart` | Public / Guest | Shopping cart connected to an authenticated or guest session |
+| `/checkout` | Public / Guest | Order review and confirmation before payment |
 
 ### Authentication
 
 | Route | Access | Description |
 |---|---|---|
-| `/login` | Anonymous | Sign in via Google OAuth or Gmail/Password with Turnstile CAPTCHA |
-| `/register` | Anonymous | Create a new buyer account restricted strictly to `@gmail.com` |
-| `/verify-otp` | Unverified User | Enter 6-digit email verification OTP dispatched via SMTP |
+| `/login` | Anonymous | Sign in with Google OAuth or Gmail/password, protected by Turnstile CAPTCHA |
+| `/register` | Anonymous | Create an account using an `@gmail.com` address |
+| `/verify-otp` | Unverified User | Enter the 6-digit email verification code sent through SMTP |
 
 ### Buyer Portal
 
 | Route | Access | Description |
 |---|---|---|
-| `/account` | Buyer (`CUSTOMER`) | Personal buyer overview |
-| `/account/profile` | Buyer (`CUSTOMER`) | Update user profile and upload custom avatars |
-| `/account/orders` | Buyer (`CUSTOMER`) | View order invoices and live payment statuses |
-| `/account/downloads` | Buyer (`CUSTOMER`) | Download center showing active grants, expiry dates, and remaining quotas |
+| `/account` | Buyer (`CUSTOMER`) | Buyer account overview |
+| `/account/profile` | Buyer (`CUSTOMER`) | Update profile information and upload an avatar |
+| `/account/orders` | Buyer (`CUSTOMER`) | View order invoices and payment statuses |
+| `/account/downloads` | Buyer (`CUSTOMER`) | View active download grants, expiration dates, and remaining quotas |
 
 ### Seller & Administrator Portal
 
 | Route | Access | Description |
 |---|---|---|
-| `/become-seller` | Authenticated User | Onboarding form for buyers applying to operate a seller storefront |
-| `/admin` | `SELLER` / `ADMIN` | Main operations dashboard with cashflow charts and metrics |
-| `/admin/products` | `SELLER` / `ADMIN` | Inventory management (strictly isolated per seller; admin views all) |
-| `/admin/products/new` | `SELLER` / `ADMIN` | Create new product and upload digital asset payload |
-| `/admin/products/[id]` | `SELLER` / `ADMIN` | Product detail overview |
-| `/admin/products/[id]/edit` | `SELLER` / `ADMIN` | Edit product metadata, pricing, and category |
-| `/admin/products/[id]/images` | `SELLER` / `ADMIN` | Manage product gallery photos (magic byte validation) |
+| `/become-seller` | Authenticated User | Apply to open a seller storefront |
+| `/admin` | `SELLER` / `ADMIN` | Operations dashboard with cashflow charts and metrics |
+| `/admin/products` | `SELLER` / `ADMIN` | Product inventory management, isolated by seller; admins can view all products |
+| `/admin/products/new` | `SELLER` / `ADMIN` | Create a product and upload its digital asset |
+| `/admin/products/[id]` | `SELLER` / `ADMIN` | Product details |
+| `/admin/products/[id]/edit` | `SELLER` / `ADMIN` | Edit product information, pricing, and category |
+| `/admin/products/[id]/images` | `SELLER` / `ADMIN` | Manage product images with magic-byte validation |
 | `/admin/products/[id]/assets` | `SELLER` / `ADMIN` | Manage downloadable digital files |
-| `/admin/categories` | `SELLER` / `ADMIN` | Create and manage product category taxonomy |
-| `/admin/orders` | `SELLER` / `ADMIN` | Incoming store orders (filtered per seller; admin views all) |
-| `/admin/audit-logs` | Super Admin (`ADMIN`) | System security activity logs (strictly restricted to `ADMIN`) |
+| `/admin/categories` | `SELLER` / `ADMIN` | Create and manage product categories |
+| `/admin/orders` | `SELLER` / `ADMIN` | Incoming orders filtered by seller; admins can view all orders |
+| `/admin/audit-logs` | Super Admin (`ADMIN`) | Review system security logs; access is restricted to `ADMIN` |
 
 ### Orders & Payment
 
 | Route | Access | Description |
 |---|---|---|
-| `/orders/[orderNumber]` | Order Owner | Itemized invoice with download action for settled orders |
-| `/orders/[orderNumber]/pay` | Order Owner | Embedded Midtrans Snap checkout popup trigger |
+| `/orders/[orderNumber]` | Order Owner | Itemized invoice and download action for paid orders |
+| `/orders/[orderNumber]/pay` | Order Owner | Opens the embedded Midtrans Snap checkout |
 
 ---
 
@@ -306,25 +308,25 @@ Defined in `package.json`:
 
 | Endpoint | Method | Authorization | Purpose |
 |---|---|---|---|
-| `/api/auth/[...nextauth]` | `GET`, `POST` | Public | Auth.js session negotiation, OAuth callbacks, and signout |
-| `/api/downloads/[grantId]` | `GET` | Session User | Securely streams digital files verifying 48h expiry and 5x quota |
-| `/api/payments/midtrans` | `POST` | Midtrans Webhook | Verifies SHA-512 signature, processes payments, and creates grants |
-| `/api/product-images/[imageId]` | `GET` | Public | Delivers product preview images from storage |
-| `/api/profile-image` | `GET` | Authenticated | Delivers user profile avatar |
+| `/api/auth/[...nextauth]` | `GET`, `POST` | Public | Auth.js session handling, OAuth callbacks, and sign-out |
+| `/api/downloads/[grantId]` | `GET` | Session User | Streams digital files after checking the 48-hour expiry and 5-download limit |
+| `/api/payments/midtrans` | `POST` | Midtrans Webhook | Verifies the SHA-512 signature, processes payments, and creates download grants |
+| `/api/product-images/[imageId]` | `GET` | Public | Serves product preview images from storage |
+| `/api/profile-image` | `GET` | Authenticated | Serves the user's profile avatar |
 
 ### Key Server Actions
 
 | Server Action | Defined In | Access | Security Controls |
 |---|---|---|---|
-| `registerAction` | `src/app/(auth)/actions.ts` | Public | Zod validation, `@gmail.com` enforcement, Turnstile, Rate limit |
-| `loginAction` | `src/app/(auth)/actions.ts` | Public | Zod validation, Turnstile, Rate limit, Auth.js credentials verification |
-| `verifyOtpAction` | `src/app/(auth)/actions.ts` | Public | 6-digit regex, Rate limit (5 attempts/10m), SHA-256 compare, AuditLog |
+| `registerAction` | `src/app/(auth)/actions.ts` | Public | Zod validation, `@gmail.com` enforcement, Turnstile, rate limiting |
+| `loginAction` | `src/app/(auth)/actions.ts` | Public | Zod validation, Turnstile, rate limiting, Auth.js credential verification |
+| `verifyOtpAction` | `src/app/(auth)/actions.ts` | Public | 6-digit regex, rate limit (5 attempts/10m), SHA-256 comparison, AuditLog |
 | `resendOtpAction` | `src/app/(auth)/actions.ts` | Public | Rate limit (3 attempts/15m), cryptographic OTP regeneration, Nodemailer |
-| `addToCartAction` | `src/app/cart/actions.ts` | Public / Guest | Live stock check, atomic cart item upsert |
-| `createOrderAction` | `src/modules/orders/actions.ts` | User / Guest | Atomic `$transaction`, re-calculates prices from DB, creates Order |
-| `createMidtransPaymentAction` | `src/modules/payments/actions.ts` | Order Owner | Order status verification, Midtrans Snap token generation |
-| `uploadProductImageAction` | `src/modules/catalog/image-actions.ts` | Seller / Admin | Tenant ownership check, magic byte signature check, max 5MB, Blob upload |
-| `becomeSellerAction` | `src/app/become-seller/actions.ts` | Customer | Zod validation, promotes role to `SELLER`, records `AuditLog` |
+| `addToCartAction` | `src/app/cart/actions.ts` | Public / Guest | Live stock check and atomic cart-item upsert |
+| `createOrderAction` | `src/modules/orders/actions.ts` | User / Guest | Atomic `$transaction`, database-based price recalculation, order creation |
+| `createMidtransPaymentAction` | `src/modules/payments/actions.ts` | Order Owner | Order-status validation and Midtrans Snap token generation |
+| `uploadProductImageAction` | `src/modules/catalog/image-actions.ts` | Seller / Admin | Ownership checks, magic-byte validation, 5MB limit, Blob upload |
+| `becomeSellerAction` | `src/app/become-seller/actions.ts` | Customer | Zod validation, role promotion to `SELLER`, AuditLog entry |
 
 ---
 
@@ -373,12 +375,12 @@ Defined in `package.json`:
 
 ## Internationalization
 
-The marketplace features a built-in bilingual architecture:
+EINCSHOP supports both Indonesian and English through a built-in localization system.
 
-1. User language preference is stored in an HTTP cookie named `einc_locale` (sanitized defensively to either `id` or `en`; defaults to `en`).
-2. Server Components read the dictionary (`id.ts` or `en.ts`) server-side via `getDictionary()`, introducing zero bundle bloat to client browsers.
-3. Client components consume translations using the reactive `useI18n()` hook.
-4. Currency formatting dynamically adjusts:
+1. The user's language preference is stored in the `einc_locale` HTTP cookie. Its value is sanitized to either `id` or `en`, with `en` as the default.
+2. Server Components load the appropriate dictionary (`id.ts` or `en.ts`) through `getDictionary()`. This keeps dictionary data out of the client-side JavaScript bundle.
+3. Client components access translations through the reactive `useI18n()` hook.
+4. Currency formatting follows the selected locale:
    - Indonesian: `Rp 150.000` (`id-ID`)
    - English: `IDR 150,000` (`en-US`)
 
@@ -386,84 +388,96 @@ The marketplace features a built-in bilingual architecture:
 
 ## Security Practices
 
-### 1. Integer Minor-Unit Currency
+### 1. Integer-Based Currency
 
-- **Threat Prevented**: Floating-point rounding errors (e.g. `0.1 + 0.2 = 0.30000000000000004`), resulting in accounting discrepancies and payment gateway mismatch rejections.
-- **Mechanism**: All product prices, line totals, and order subtotals are stored and manipulated as integers representing single Rupiahs (`priceMinor`). Think of it like counting physical single-rupiah coins rather than fractional decimal bills.
-- **Implementation**: `src/lib/format/currency.ts`, `prisma/schema.prisma`, `src/modules/orders/service.ts`.
-- **Usage**: Always assign `priceMinor: Math.round(priceInRupiah)` and format via `formatIdr(amountMinor, locale)`.
+- **Threat addressed:** Floating-point rounding errors, such as `0.1 + 0.2 = 0.30000000000000004`, which can lead to accounting discrepancies or payment-gateway rejections.
+- **How it works:** Product prices, line totals, and order subtotals are stored and processed as integers representing individual Rupiah units (`priceMinor`). This avoids calculations based on fractional currency values.
+- **Implementation:** `src/lib/format/currency.ts`, `prisma/schema.prisma`, `src/modules/orders/service.ts`.
+- **Usage:** Set prices using `priceMinor: Math.round(priceInRupiah)` and format them with `formatIdr(amountMinor, locale)`.
 
-### 2. Multi-Tenant Seller Isolation & Live DB Privilege Checks
+### 2. Multi-Tenant Seller Isolation & Live Database Permission Checks
 
-- **Threat Prevented**: Unauthorized cross-tenant data leaks and horizontal privilege escalation (e.g. Seller A accessing or deleting Seller B's inventory, or suspended users continuing with stale JWT sessions).
-- **Mechanism**: Seller identity is never trusted from client inputs. `requireAdmin()` and query builders extract the authenticated user ID and enforce `{ sellerId: admin.id }` for all non-superadmin actors. Every privileged request queries PostgreSQL directly to verify that the account status remains `ACTIVE`.
-- **Implementation**: `src/lib/auth/require-user.ts`, `src/app/admin/products/page.tsx`, `src/modules/catalog/image-actions.ts`.
-- **Usage**: Wrap all administrative pages with `await requireAdmin()` or `await requireSuperAdmin()`.
+- **Threat addressed:** Cross-seller data exposure and unauthorized privilege escalation, such as one seller accessing or deleting another seller's products, or a suspended account continuing to operate with an outdated JWT.
+- **How it works:** Seller identity is not taken from client-submitted data. `requireAdmin()` derives the authenticated user ID and applies `{ sellerId: admin.id }` to queries for non-superadmin users. Administrative requests also check the account's `ACTIVE` status directly in PostgreSQL.
+- **Implementation:** `src/lib/auth/require-user.ts`, `src/app/admin/products/page.tsx`, `src/modules/catalog/image-actions.ts`.
+- **Usage:** Protect administrative pages with `await requireAdmin()` or `await requireSuperAdmin()`.
 
-### 3. Expiring & Quota-Limited Download Grants
+### 3. Expiring, Quota-Limited Download Grants
 
-- **Threat Prevented**: Unauthorized file redistribution, permanent download URL leaks, and bandwidth leeching.
-- **Mechanism**: Downloadable digital assets are never exposed via public URLs. Assets reside in private storage (`@vercel/blob`). Access requires an active database `DownloadGrant` bound to the verified buyer. Downloads strictly validate that current time is under `expiresAt` (**48 hours**) and total downloads do not exceed `MAX_DOWNLOAD_LIMIT` (**5 times**).
-- **Implementation**: `src/app/api/downloads/[grantId]/route.ts`, `src/modules/digital-delivery/service.ts`.
-- **Usage**: Generated automatically upon order settlement via `createDownloadGrantsForPaidOrder(orderId)`.
+- **Threat addressed:** Unauthorized redistribution, permanent download-link exposure, and excessive bandwidth usage.
+- **How it works:** Downloadable files remain in private `@vercel/blob` storage rather than being exposed through permanent public URLs. The `/api/downloads/[grantId]` route checks payment status, verifies that the grant has not expired (**48 hours**), and enforces the `MAX_DOWNLOAD_LIMIT` of **5 downloads**.
+- **Implementation:** `src/app/api/downloads/[grantId]/route.ts`, `src/modules/digital-delivery/service.ts`.
+- **Usage:** Grants are created automatically after payment settlement through `createDownloadGrantsForPaidOrder(orderId)`.
 
 ### 4. Cloudflare Turnstile Bot Defense
 
-- **Threat Prevented**: Automated bot account creation, credential stuffing, and spam attacks on authentication endpoints.
-- **Mechanism**: Both login and registration forms render a non-intrusive Turnstile widget. The received token is transmitted to `actions.ts` and verified server-side against `https://challenges.cloudflare.com/turnstile/v0/siteverify` before processing credentials.
-- **Implementation**: `src/components/ui/turnstile.tsx`, `src/lib/security/turnstile.ts`, `src/app/(auth)/actions.ts`.
-- **Usage**: Embed `<Turnstile />` in forms and invoke `await verifyTurnstileToken(token, requestIp)` in actions.
+- **Threat addressed:** Automated account creation, credential stuffing, and spam targeting authentication endpoints.
+- **How it works:** Login and registration forms include a Turnstile widget. The submitted token is verified server-side through Cloudflare's API at `https://challenges.cloudflare.com/turnstile/v0/siteverify` before credentials are processed.
+- **Implementation:** `src/components/ui/turnstile.tsx`, `src/lib/security/turnstile.ts`, `src/app/(auth)/actions.ts`.
+- **Usage:** Add `<Turnstile />` to forms and call `await verifyTurnstileToken(token, requestIp)` in Server Actions.
 
-### 5. Disposable Email Shield & 6-Digit Cryptographic OTP
+### 5. Gmail-Only Registration & 6-Digit Cryptographic OTP
 
-- **Threat Prevented**: Fake registrations via burner/disposable email services, bot account proliferation, and unverified identity spoofing.
-- **Mechanism**: Registration input is strictly restricted to `@gmail.com` via Zod regex. Newly registered accounts require verifying a 6-digit cryptographic OTP code generated via `randomInt`, hashed using SHA-256 in the database, and dispatched via Gmail SMTP. Unverified accounts are prevented from accessing buyer/seller areas.
-- **Implementation**: `src/lib/validation/auth.ts`, `src/lib/security/otp.ts`, `src/lib/email/sender.ts`, `src/app/(auth)/verify-otp/`.
-- **Usage**: Enforced automatically in `registerAction` and guarded by `requireUser()`.
+- **Threat addressed:** Disposable-email registrations, automated account creation, and unverified accounts.
+- **How it works:** Zod validation restricts registration to `@gmail.com` addresses. New accounts must verify a 6-digit OTP generated with `randomInt`, hashed with SHA-256 in the database, and sent through Gmail SMTP. Unverified accounts cannot access buyer or seller areas.
+- **Implementation:** `src/lib/validation/auth.ts`, `src/lib/security/otp.ts`, `src/lib/email/sender.ts`, `src/app/(auth)/verify-otp/`.
+- **Usage:** Registration verification is handled by `registerAction` and enforced through `requireUser()`.
 
-### 6. Edge IP Anti-Spoofing & Real Client Resolution
+### 6. Client IP Resolution & Edge Header Protection
 
-- **Threat Prevented**: Rate-limiter bypass and IP spoofing attacks via forged `X-Forwarded-For` HTTP headers.
-- **Mechanism**: The system resolves incoming IP addresses through a strict hierarchy prioritizing Cloudflare's cryptographic `cf-connecting-ip` edge header over standard proxy headers.
-- **Implementation**: `src/lib/security/request.ts`.
-- **Usage**: Invoke `const clientIp = await getRequestIp();` in server actions and audit loggers.
+- **Threat addressed:** Rate-limit bypass and IP spoofing through forged `X-Forwarded-For` headers.
+- **How it works:** The application resolves the client IP using a strict header priority, favoring Cloudflare's `cf-connecting-ip` header over standard proxy headers.
+- **Implementation:** `src/lib/security/request.ts`.
+- **Usage:** Call `const clientIp = await getRequestIp();` in Server Actions and audit logging.
 
-### 7. SHA-512 Webhook Signature & Idempotent Event Ledger
+### 7. SHA-512 Webhook Verification & Idempotent Event Processing
 
-- **Threat Prevented**: Forged payment notifications, fake settlement webhooks, and double-crediting orders through duplicate webhook deliveries.
-- **Mechanism**: Midtrans webhook payloads are verified by hashing `order_id + status_code + gross_amount + MIDTRANS_SERVER_KEY` with SHA-512 and comparing via `crypto.timingSafeEqual`. Webhook processing runs in an atomic `$transaction` that creates a `PaymentEvent` record constrained by `@@unique([provider, providerEventId])`, guaranteeing strict idempotency.
-- **Implementation**: `src/app/api/payments/midtrans/route.ts`.
-- **Usage**: Handled automatically on `POST /api/payments/midtrans`.
+- **Threat addressed:** Forged payment notifications and duplicate order processing caused by repeated webhook deliveries.
+- **How it works:** Midtrans webhook payloads are verified by hashing `order_id + status_code + gross_amount + MIDTRANS_SERVER_KEY` with SHA-512. The result is compared using `crypto.timingSafeEqual`. Processing runs inside an atomic `$transaction`, while the `PaymentEvent` record uses `@@unique([provider, providerEventId])` to prevent duplicate event processing.
+- **Implementation:** `src/app/api/payments/midtrans/route.ts`.
+- **Usage:** Applied automatically to `POST /api/payments/midtrans`.
 
-### 8. Magic Byte Image File Verification
+### 8. Magic-Byte Image Validation
 
-- **Threat Prevented**: Malicious executable file uploads disguised with fake image extensions (e.g. PHP or executable scripts renamed to `.jpg`).
-- **Mechanism**: Image uploads do not rely on client-supplied MIME types or file extensions. The server inspects the initial 12 bytes of the file buffer to confirm legitimate file signatures (JPEG `0xFF 0xD8 0xFF`, PNG `0x89 0x50 0x4E 0x47`, WebP `RIFF...WEBP`) and enforces a 5MB limit.
-- **Implementation**: `src/lib/storage/product-image.ts`.
-- **Usage**: Processed inside `uploadProductImageAction`.
+- **Threat addressed:** Malicious files disguised as images by changing their file extensions, such as executable scripts renamed to `.jpg`.
+- **How it works:** The server does not rely solely on the uploaded MIME type or extension. It checks the first 12 bytes of the file buffer against supported image signatures: JPEG (`0xFF 0xD8 0xFF`), PNG (`0x89 0x50 0x4E 0x47`), and WebP (`RIFF...WEBP`). Uploads are limited to 5MB.
+- **Implementation:** `src/lib/storage/product-image.ts`.
+- **Usage:** Applied inside `uploadProductImageAction`.
 
-### 9. Database-Backed Rate Limiting with SHA-256 Hashing
+### 9. Database-Backed Rate Limiting with SHA-256
 
-- **Threat Prevented**: Password brute-force attacks, OTP enumeration, and resource exhaustion.
-- **Mechanism**: Authentication attempts are throttled by `consumeAuthRateLimit`. The storage identifier is hashed with SHA-256 before saving to PostgreSQL, ensuring client IPs and emails are not stored in plaintext. Expired records are pruned probabilistically (5% chance per request) to prevent table bloat.
-- **Implementation**: `src/lib/security/rate-limit.ts`.
-- **Usage**: Call `await consumeAuthRateLimit(key, options)` before executing sensitive actions.
+- **Threat addressed:** Password brute-force attempts, OTP enumeration, and resource exhaustion.
+- **How it works:** `consumeAuthRateLimit` tracks authentication attempts in PostgreSQL. The identifier is hashed with SHA-256 before storage, so client IP addresses and email addresses are not stored as plaintext. Expired records are cleaned up probabilistically, with a 5% chance per request.
+- **Implementation:** `src/lib/security/rate-limit.ts`.
+- **Usage:** Call `await consumeAuthRateLimit(key, options)` before processing sensitive actions.
 
 ### 10. HTTP Security Headers & Hardened Defaults
 
-- **Threat Prevented**: Cross-Site Scripting (XSS), Clickjacking, MIME-sniffing, and SSL-stripping man-in-the-middle attacks.
-- **Mechanism**: `next.config.ts` enforces HTTP headers globally: HSTS (`max-age=63072000; includeSubDomains; preload`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Cross-Origin-Opener-Policy: same-origin-allow-popups`. `poweredByHeader` is explicitly disabled.
-- **Implementation**: `next.config.ts`.
-- **Usage**: Applied automatically to all outgoing HTTP responses.
+- **Threat addressed:** Cross-Site Scripting (XSS), clickjacking, MIME sniffing, and SSL-stripping attacks.
+- **How it works:** `next.config.ts` applies security headers to HTTP responses: HSTS (`max-age=63072000; includeSubDomains; preload`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Cross-Origin-Opener-Policy: same-origin-allow-popups`. The `poweredByHeader` setting is disabled.
+- **Implementation:** `next.config.ts`.
+- **Usage:** These headers are applied automatically to outgoing HTTP responses.
 
 ---
----
 
-# EINCSHOP -- Platform Marketplace Aset Digital Multi-Seller
+## License
 
-Platform marketplace aset digital modern dan siap produksi yang dibangun dengan Next.js 16.4.3 (App Router), React 19.2.8, TypeScript 5, Tailwind CSS v4, Prisma ORM 7.10.1, PostgreSQL (Supabase), Auth.js v5 Beta, Cloudflare Turnstile, dan Midtrans Payment Gateway.
+### EINCSHOP — Proprietary License
 
-Bayangkan seperti versi digital dari sebuah pusat perbelanjaan. Setiap penjual memiliki etalase toko sendiri yang terkunci. Pembeli menjelajahi mall, memilih produk, membayar di kasir otomatis yang aman, lalu langsung menerima tiket digital khusus yang membuka akses unduhan file yang telah dibeli. Tidak ada penjual yang dapat mengintip kasir atau stok inventaris penjual lain -- seluruh arsitektur terisolasi, aman, dan anti-manipulasi sejak awal.
+Copyright © 2026 EINCSHOP. All Rights Reserved.
+
+The source code in this repository is available for viewing and reference purposes only.
+
+Copying, modifying, redistributing, sublicensing, or using this code for commercial or public deployment requires prior written permission from the copyright holder.
+
+All rights are reserved except where applicable law states otherwise.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+# EINCSHOP — Marketplace Aset Digital Multi-Seller
+
+EINCSHOP adalah platform marketplace aset digital yang dibangun menggunakan Next.js 16.4.3 (App Router), React 19.2.8, TypeScript 5, Tailwind CSS v4, Prisma ORM 7.10.1, PostgreSQL (Supabase), Auth.js v5 Beta, Cloudflare Turnstile, dan Midtrans Payment Gateway.
+
+Platform ini bekerja seperti pusat perbelanjaan digital. Setiap penjual memiliki etalase sendiri, sedangkan pembeli dapat menjelajahi katalog, memilih produk, dan membayar melalui proses checkout otomatis. Setelah pembayaran dikonfirmasi, pembeli memperoleh akses unduh ke file yang dibeli. Sistem dirancang agar data produk dan transaksi setiap penjual tetap terpisah sesuai dengan batas hak aksesnya.
 
 ---
 
@@ -490,19 +504,19 @@ Bayangkan seperti versi digital dari sebuah pusat perbelanjaan. Setiap penjual m
 | Lapisan | Teknologi | Versi | Fungsi |
 |---|---|---|---|
 | **Framework** | Next.js (App Router, Turbopack) | `16.4.3` | Server Components, Server Actions, Route Handlers |
-| **Library UI** | React & React DOM | `19.2.8` | Hidrasi client, antarmuka optimistik, reactive hooks |
-| **Bahasa Pemrograman** | TypeScript | `^5.0.0` | Jaminan keamanan tipe statis ujung-ke-ujung |
-| **Styling** | Tailwind CSS & PostCSS Plugin | `^4.0.0` | Desain token modern, CSS custom properties |
-| **Database & ORM** | Prisma Client & CLI | `^7.10.1` | Object-Relational Mapping & engine migrasi skema |
-| **Driver Database** | PostgreSQL (`pg` + `@prisma/adapter-pg`) | `^8.23.0` | Connection pooling terintegrasi dengan Supabase |
-| **Penyimpanan Cloud** | `@vercel/blob` | `^2.8.0` | Penyimpanan privat untuk aset digital dan foto produk |
-| **Autentikasi** | Auth.js (`next-auth`) | `^5.0.0-beta.32` | Manajemen sesi JWT & login 1-klik Google OAuth |
-| **Hashing Password** | `bcryptjs` | `^3.0.3` | Hashing dan salting password kriptografis (cost factor 12) |
-| **Layanan Email** | `nodemailer` | `^8.0.11` | Pengiriman otomatis kode OTP 6-digit via SMTP aman |
-| **Proteksi Bot** | Cloudflare Turnstile | Server API | CAPTCHA pintar tanpa puzzle pada formulir auth |
-| **Payment Gateway** | Midtrans Core Snap API | Sandbox / Prod | Kasir pembayaran Snap & webhook bertanda tangan SHA-512 |
-| **Validasi Skema** | Zod | `^4.6.5` | Validasi tipe data formulir & filter wajib Gmail |
-| **Hosting & CI/CD** | Vercel Serverless Platform | Production | Pipeline integrasi otomatis GitHub & deploy tanpa downtime |
+| **Library UI** | React & React DOM | `19.2.8` | Hidrasi client, UI optimistik, dan reactive state hooks |
+| **Bahasa Pemrograman** | TypeScript | `^5.0.0` | Pemeriksaan tipe statis di seluruh aplikasi |
+| **Styling** | Tailwind CSS & PostCSS Plugin | `^4.0.0` | Sistem design token dan CSS custom properties |
+| **Database & ORM** | Prisma Client & CLI | `^7.10.1` | Object-relational mapping dan migrasi skema |
+| **Driver Database** | PostgreSQL (`pg` + `@prisma/adapter-pg`) | `^8.23.0` | Connection pooling dengan Supabase |
+| **Penyimpanan Cloud** | `@vercel/blob` | `^2.8.0` | Penyimpanan privat untuk unduhan digital dan gambar produk |
+| **Autentikasi** | Auth.js (`next-auth`) | `^5.0.0-beta.32` | Manajemen sesi JWT dan Google OAuth |
+| **Hashing Password** | `bcryptjs` | `^3.0.3` | Salting dan hashing password dengan cost factor 12 |
+| **Layanan Email** | `nodemailer` | `^8.0.11` | Pengiriman kode OTP 6 digit melalui SMTP |
+| **Proteksi Bot** | Cloudflare Turnstile | Server API | CAPTCHA terkelola untuk registrasi dan autentikasi |
+| **Payment Gateway** | Midtrans Core Snap API | Sandbox / Prod | Checkout Snap terintegrasi dan webhook bertanda tangan SHA-512 |
+| **Validasi Skema** | Zod | `^4.6.5` | Validasi formulir berbasis tipe dan sanitasi input |
+| **Hosting & CI/CD** | Vercel Serverless Platform | Production | Integrasi otomatis dan deployment aplikasi |
 
 ---
 
@@ -510,62 +524,62 @@ Bayangkan seperti versi digital dari sebuah pusat perbelanjaan. Setiap penjual m
 
 ### Untuk Pembeli (Customer)
 
-- **Katalog Produk Digital** -- Jelajahi dan cari produk digital dengan filter kategori, pengurutan harga/tanggal, pencarian kata kunci, dan mode tampilan grid/list.
-- **Keranjang Belanja Ramah Pengunjung** -- Keranjang belanja persisten yang tetap tersimpan saat halaman di-refresh menggunakan cookie aman `einc_guest_id` tanpa memaksa login di awal.
-- **Halaman Checkout Terisolasi** -- Halaman `/checkout` khusus untuk meninjau pesanan dan mengunci harga asli langsung dari baris database.
-- **Kasir Pembayaran Otomatis** -- Terintegrasi penuh dengan Midtrans Snap mendukung Transfer Bank (Virtual Account), QRIS (GoPay, OVO, ShopeePay), Kartu Kredit, dan Minimarket.
-- **Unduhan Berkuota & Berbatas Waktu** -- Tiket `DownloadGrant` otomatis dibuat begitu pembayaran lunas. Tautan unduh dibatasi aktif selama **48 jam** dan kuota unduhan dibatasi maksimal **5 kali** per file aset.
-- **Riwayat & Faktur Pesanan** -- Pelacakan status pesanan secara real-time (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`) lengkap dengan rincian biaya.
-- **Profil Pengguna** -- Kelola informasi profil akun dan unggah foto avatar pribadi.
-- **Antarmuka Dwibahasa** -- Dukungan penuh Bahasa Indonesia dan Bahasa Inggris dengan deteksi preferensi bahasa peramban otomatis.
+- **Katalog Produk Digital** — Pembeli dapat menjelajahi dan mencari produk menggunakan filter kategori, pencarian kata kunci, pengurutan berdasarkan harga atau tanggal, serta pilihan tampilan grid dan list.
+- **Keranjang untuk Guest** — Produk tetap tersimpan di keranjang meskipun halaman di-refresh. Sistem menggunakan cookie `einc_guest_id`, sehingga pembeli tidak harus login sejak awal.
+- **Halaman Checkout Khusus** — Halaman `/checkout` digunakan untuk meninjau pesanan. Sistem memeriksa ketersediaan produk dan mengambil harga terbaru dari database.
+- **Pembayaran Otomatis** — Integrasi Midtrans Snap mendukung Virtual Account, QRIS (GoPay, OVO, ShopeePay), kartu kredit, dan pembayaran melalui minimarket.
+- **Unduhan dengan Batas Waktu dan Kuota** — Setelah pembayaran lunas, sistem membuat catatan `DownloadGrant` untuk mengatur akses file. Setiap grant berlaku selama **48 jam** dengan batas maksimal **5 kali unduhan** per aset.
+- **Riwayat Pesanan dan Faktur** — Pembeli dapat memantau status pesanan (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`) dan melihat rincian transaksi.
+- **Pengelolaan Profil** — Pengguna dapat memperbarui informasi akun, mengganti nama, dan mengunggah avatar.
+- **Antarmuka Dwibahasa** — Marketplace mendukung Bahasa Indonesia dan Bahasa Inggris, termasuk deteksi bahasa peramban secara otomatis.
 
 ### Untuk Penjual (Seller)
 
-- **Alur Pendaftaran Penjual** -- Pengguna terdaftar dapat mendaftar menjadi penjual resmi melalui alur onboarding `/become-seller`.
-- **Manajemen Siklus Produk** -- Buat, edit, publikasikan, atau arsipkan produk digital. Unggah gambar pratinjau (diverifikasi dengan magic byte), atur harga integer Rupiah, tentukan kategori, dan unggah file payload digital ke storage privat.
-- **Dashboard Analitik Keuangan & Grafik Cashflow** -- Panel analitik visual untuk memantau grafik cashflow interaktif (Pendapatan Kotor, Potongan Platform, Pendapatan Bersih), indikator performa utama, dan kalkulasi komisi otomatis 3% (`AUTO_FEE_RATE = 0.03`).
-- **Pengawasan Pesanan Toko** -- Pantau pesanan masuk yang terisolasi khusus untuk produk milik penjual yang sedang login.
-- **Manajemen Kategori** -- Atur kategori etalase produk toko Anda.
+- **Pendaftaran Penjual** — Pengguna yang sudah memiliki akun dapat mengajukan diri untuk mengelola toko melalui `/become-seller`.
+- **Manajemen Produk** — Penjual dapat membuat, mengedit, menerbitkan, atau mengarsipkan produk digital. Fitur ini mencakup unggahan gambar pratinjau yang diperiksa melalui magic-byte signature, pengaturan harga integer dalam Rupiah, pemilihan kategori, dan lampiran file digital.
+- **Analitik Keuangan** — Dashboard menampilkan grafik interaktif untuk Pendapatan Kotor, Biaya Platform, dan Pendapatan Bersih. Tersedia juga indikator performa utama serta perhitungan komisi platform otomatis sebesar 3% (`AUTO_FEE_RATE = 0.03`).
+- **Pemantauan Pesanan Toko** — Penjual dapat melihat pesanan masuk yang berkaitan dengan produk miliknya.
+- **Manajemen Kategori** — Penjual dapat membuat dan mengatur kategori produk di tokonya.
 
 ### Untuk Administrator
 
-- **Pengawasan Menyeluruh Platform** -- Kendali komprehensif atas seluruh produk, kategori, pesanan, dan operasional pasar.
-- **Log Audit Anti-Manipulasi** -- Tabel `AuditLog` yang mencatat aktor, nama aksi, entitas target, stempel waktu, dan alamat IP pengunjung.
-- **Validasi Hak Akses Real-Time (RBAC)** -- Rute yang dilindungi (`requireSuperAdmin`) memvalidasi status akun langsung ke database PostgreSQL pada setiap request, menutup celah pemalsuan hak akses melalui token JWT usang.
+- **Pengelolaan Seluruh Platform** — Administrator dapat mengelola produk, kategori, transaksi, dan operasional toko melalui satu area terpusat.
+- **Jejak Audit Keamanan** — `AuditLog` menyimpan ID aktor, nama peristiwa, entitas target, waktu kejadian, dan alamat IP sumber untuk membantu pemeriksaan aktivitas.
+- **Pemeriksaan Hak Akses Langsung ke Database** — Rute yang menggunakan `requireSuperAdmin` memeriksa hak akses langsung ke PostgreSQL pada setiap request. Dengan begitu, sistem tidak hanya mengandalkan klaim JWT yang mungkin sudah tidak sesuai dengan kondisi akun terbaru.
 
-### Seluruh Platform
+### Fitur untuk Seluruh Platform
 
-- **Perlindungan CAPTCHA Cloudflare Turnstile** -- Perlindungan bot pintar pada formulir Login dan Registrasi tanpa menyulitkan calon pembeli.
-- **Aturan Ketat Wajib Gmail** -- Pendaftaran akun dibatasi hanya menerima email `@gmail.com` guna mematikan bot pembuat akun dan email sekali pakai.
-- **Anti-Spoofing IP Edge** -- Membaca alamat IP pengunjung dengan memprioritaskan header resmi `cf-connecting-ip` dari jaringan Cloudflare.
-- **Mata Uang Integer Bebas Error** -- Seluruh nominal uang disimpan dalam satuan Rupiah bulat terkecil (`priceMinor`) untuk menghilangkan bug kalkulasi floating-point JavaScript.
-- **Deploy Otomatis Tanpa Downtime** -- Terhubung langsung dengan pipeline Vercel dan GitHub; website diperbarui otomatis setiap kali Anda menjalankan `git push`.
+- **Cloudflare Turnstile** — Melindungi formulir autentikasi dari bot. Pemeriksaan token juga dilakukan di lapisan Server Action.
+- **Pembatasan Email Gmail** — Skema Zod dan pemeriksaan profil Google OAuth membatasi pendaftaran ke alamat `@gmail.com`.
+- **Resolusi IP Pengguna** — Sistem memprioritaskan header `cf-connecting-ip` milik Cloudflare saat menentukan alamat IP klien.
+- **Perhitungan Uang Berbasis Integer** — Nilai keuangan disimpan sebagai bilangan bulat Rupiah (`priceMinor`) untuk menghindari kesalahan pembulatan floating-point IEEE-754.
+- **Deployment Otomatis** — Deployment Vercel mendukung perilisan otomatis, rollback, dan pemeriksaan kesehatan database.
 
 ---
 
 ## Arsitektur Database
 
-Aplikasi berjalan di atas PostgreSQL yang dikelola melalui Prisma ORM 7 dengan adapter connection pooling:
+Aplikasi menggunakan PostgreSQL yang dikelola melalui Prisma ORM 7 dengan connection pooling.
 
 | Model | Nama Tabel | Fungsi | Atribut & Constraint Kunci |
 |---|---|---|---|
-| `User` | `users` | Identitas akun & profil | Peran (`CUSTOMER`, `SELLER`, `ADMIN`), Status (`ACTIVE`, `SUSPENDED`), `storeName` |
+| `User` | `users` | Identitas akun dan profil | Peran (`CUSTOMER`, `SELLER`, `ADMIN`), status (`ACTIVE`, `SUSPENDED`), `storeName` |
 | `Account` | `accounts` | Kredensial provider OAuth | Indeks unik gabungan `[provider, providerAccountId]` |
-| `Session` | `sessions` | Rekaman sesi login server | Indeks unik `sessionToken`, stempel kedaluwarsa |
+| `Session` | `sessions` | Sesi autentikasi server | `sessionToken` unik dan waktu kedaluwarsa |
 | `Product` | `products` | Katalog produk digital | Harga integer (`priceMinor`), status (`DRAFT`, `PUBLISHED`, `ARCHIVED`), relasi `sellerId` |
-| `Category` | `categories` | Taksonomi kategori produk | Indeks unik `slug`, indeks status `isActive` |
+| `Category` | `categories` | Klasifikasi produk | `slug` unik dan indeks `isActive` |
 | `Cart` | `carts` | Keranjang belanja pengguna | Status (`ACTIVE`, `CONVERTED`, `ABANDONED`), indeks gabungan `[userId, status]` |
-| `CartItem` | `cart_items` | Item dalam keranjang belanja | Constraint unik gabungan `[cartId, productId]` |
-| `Order` | `orders` | Faktur transaksi penjualan | Indeks unik `orderNumber`, status (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`), `totalMinor` |
-| `OrderItem` | `order_items` | Kontrak item pesanan terkunci | Mengunci `productTitle`, `unitPriceMinor`, dan mereferensikan `Product` |
-| `Payment` | `payments` | Jejak audit transaksi | Mereferensikan `Order`, mencatat provider (`MIDTRANS`, `DUMMY`) dan status pembayaran |
-| `PaymentAttempt` | `payment_attempts` | Percobaan penagihan pembayaran | Kunci unik `idempotencyKey`, referensi ID provider |
-| `PaymentEvent` | `payment_events` | Buku besar webhook | Constraint unik gabungan `[provider, providerEventId]` untuk menjamin idempotensi mutlak |
+| `CartItem` | `cart_items` | Item dalam keranjang | Constraint unik gabungan `[cartId, productId]` |
+| `Order` | `orders` | Faktur transaksi penjualan | `orderNumber` unik, status (`PENDING_PAYMENT`, `PAID`, `CANCELLED`, `REFUNDED`), `totalMinor` |
+| `OrderItem` | `order_items` | Rincian item pesanan yang dikunci | Menyimpan `productTitle` dan `unitPriceMinor`, serta referensi ke `Product` |
+| `Payment` | `payments` | Catatan transaksi pembayaran | Referensi ke `Order`, provider (`MIDTRANS`, `DUMMY`), dan status pembayaran |
+| `PaymentAttempt` | `payment_attempts` | Catatan setiap percobaan pembayaran | `idempotencyKey` unik dan ID referensi provider |
+| `PaymentEvent` | `payment_events` | Catatan peristiwa webhook | Constraint unik gabungan `[provider, providerEventId]` untuk idempotensi |
 | `DigitalAsset` | `digital_assets` | Referensi penyimpanan cloud | Kunci penyimpanan `@vercel/blob`, nama file, ukuran byte, tipe MIME |
-| `DownloadGrant` | `download_grants` | Tiket akses unduh digital | Terikat pada `[orderItemId, digitalAssetId]`, `expiresAt` (48 jam), `downloadCount` (maksimal 5x) |
-| `AuditLog` | `audit_logs` | Buku besar audit keamanan | Relasi aktor pengguna, nama aksi, ID entitas target, alamat IP, metadata JSON |
-| `AuthRateLimit` | `auth_rate_limits` | Pembatas serangan brute-force | Kunci primer ter-hash SHA-256 (`key`), hitungan percobaan, batas waktu `blockedUntil` |
-| `VerificationToken` | `verification_tokens` | Penyimpanan OTP email | Identifier gabungan `[identifier, token]`, kedaluwarsa 10 menit |
+| `DownloadGrant` | `download_grants` | Pengaturan akses unduhan | Terikat pada `[orderItemId, digitalAssetId]`, `expiresAt` (48 jam), `downloadCount` (maksimal 5) |
+| `AuditLog` | `audit_logs` | Catatan aktivitas keamanan | Referensi pengguna, nama aksi, ID entitas target, alamat IP, metadata JSON |
+| `AuthRateLimit` | `auth_rate_limits` | Pembatas percobaan brute-force | Primary key yang di-hash dengan SHA-256 (`key`), jumlah percobaan, waktu `blockedUntil` |
+| `VerificationToken` | `verification_tokens` | Penyimpanan OTP email | Identifier gabungan `[identifier, token]`, kedaluwarsa dalam 10 menit |
 
 ---
 
@@ -575,89 +589,89 @@ Aplikasi berjalan di atas PostgreSQL yang dikelola melalui Prisma ORM 7 dengan a
 eincshop/
 ├── prisma/
 │   ├── schema.prisma          # Model database, enum, indeks, dan relasi PostgreSQL
-│   └── migrations/            # Riwayat migrasi database terkelola
+│   └── migrations/            # Riwayat migrasi database
 ├── src/
 │   ├── app/
 │   │   ├── (auth)/            # Grup rute autentikasi
-│   │   │   ├── actions.ts     # Server Actions auth (Register, Login, Verifikasi OTP, Kirim Ulang)
-│   │   │   ├── auth-form.tsx  # Form UI dengan Google OAuth & Turnstile CAPTCHA
-│   │   │   ├── login/         # Halaman masuk pelanggan dan penjual
-│   │   │   ├── register/      # Halaman pendaftaran akun baru
-│   │   │   └── verify-otp/    # Halaman input kode verifikasi email 6-digit
+│   │   │   ├── actions.ts     # Server Actions untuk Register, Login, verifikasi OTP, dan kirim ulang
+│   │   │   ├── auth-form.tsx  # Form login/register dengan Google OAuth dan Turnstile
+│   │   │   ├── login/         # Halaman login pelanggan dan penjual
+│   │   │   ├── register/      # Halaman pendaftaran akun
+│   │   │   └── verify-otp/    # Form verifikasi email dengan OTP 6 digit
 │   │   ├── account/           # Portal pelanggan (dilindungi requireUser)
-│   │   │   ├── page.tsx       # Beranda dashboard akun
-│   │   │   ├── profile/       # Pengelolaan data profil dan avatar
-│   │   │   ├── orders/        # Riwayat faktur pesanan pembeli
-│   │   │   └── downloads/     # Pusat unduhan file aset berkuota
+│   │   │   ├── page.tsx       # Dashboard akun
+│   │   │   ├── profile/       # Pengelolaan profil dan unggahan avatar
+│   │   │   ├── orders/        # Riwayat pesanan pelanggan
+│   │   │   └── downloads/     # Pusat unduhan dengan pelacakan kuota
 │   │   ├── admin/             # Portal penjual dan admin (dilindungi requireAdmin)
-│   │   │   ├── page.tsx       # Dashboard analitik keuangan & grafik cashflow
-│   │   │   ├── audit-logs/    # Inspeksi log aktivitas keamanan (requireSuperAdmin)
-│   │   │   ├── categories/    # Manajemen kategori produk
-│   │   │   ├── orders/        # Pesanan masuk toko dan platform
-│   │   │   └── products/      # Inventaris produk, galeri gambar, dan lampiran file digital
-│   │   ├── become-seller/     # Alur pendaftaran menjadi penjual terverifikasi
-│   │   ├── cart/              # Keranjang belanja dinamis
-│   │   ├── checkout/          # Halaman tinjauan pesanan sebelum kasir pembayaran
-│   │   ├── orders/            # Faktur pesanan dan rincian transaksi
-│   │   │   └── [orderNumber]/ # Rincian faktur dan tombol bayar
-│   │   │       └── pay/       # Antarmuka kasir pembayaran pop-up Midtrans Snap
-│   │   ├── products/          # Katalog publik dan halaman detail produk ter-lokalisasi
-│   │   │   └── [slug]/        # Tampilan produk individual
+│   │   │   ├── page.tsx       # Dashboard keuangan dan grafik cashflow
+│   │   │   ├── audit-logs/    # Pemeriksaan aktivitas keamanan (requireSuperAdmin)
+│   │   │   ├── categories/    # Manajemen kategori
+│   │   │   ├── orders/        # Pesanan toko dan pesanan tingkat platform
+│   │   │   └── products/      # Inventaris, gambar, dan lampiran file digital
+│   │   ├── become-seller/     # Alur pendaftaran penjual
+│   │   ├── cart/              # Keranjang persisten dan pengaturan kuantitas
+│   │   ├── checkout/          # Peninjauan pesanan dan inisialisasi checkout
+│   │   ├── orders/            # Faktur dan status pesanan
+│   │   │   └── [orderNumber]/ # Detail faktur dan aksi pembayaran
+│   │   │       └── pay/       # Checkout Midtrans Snap terintegrasi
+│   │   ├── products/          # Katalog publik dan halaman produk sesuai bahasa
+│   │   │   └── [slug]/        # Detail produk individual
 │   │   └── api/               # Serverless Route Handlers
-│   │       ├── auth/          # Handler rute NextAuth ([...nextauth])
-│   │       ├── downloads/     # Streaming file berkuota & berbatas waktu ([grantId])
-│   │       ├── payments/      # Handler webhook Midtrans dengan validasi tanda tangan SHA-512
-│   │       ├── product-images/# Penyaji foto pratinjau produk
-│   │       └── profile-image/ # Penyaji foto profil pengguna
+│   │       ├── auth/          # Handler NextAuth ([...nextauth])
+│   │       ├── downloads/     # Streaming file dengan batas kuota dan masa aktif ([grantId])
+│   │       ├── payments/      # Verifikasi webhook Midtrans dengan SHA-512
+│   │       ├── product-images/# Proxy gambar pratinjau produk
+│   │       └── profile-image/ # Endpoint streaming avatar pengguna
 │   ├── components/
 │   │   ├── admin/             # FinancialChart, DeleteProductButton
 │   │   ├── cart/              # AddToCartForm, CartItemList
 │   │   ├── checkout/          # CheckoutForm
 │   │   ├── layout/            # SiteHeader, MobileNav, SiteFooter, AccountMenu
-│   │   ├── order/             # Badge status pesanan dan ringkasan transaksi
+│   │   ├── order/             # Badge status dan ringkasan pesanan
 │   │   ├── payment/           # MidtransSnapPayment, PayOrderButton
 │   │   ├── product/           # ProductCard, CatalogControls, Pagination
 │   │   └── ui/                # Button, Container, Turnstile, LoadingButton, Modal
 │   ├── lib/
 │   │   ├── admin/             # financial-analytics.ts, seller-metrics.ts
-│   │   ├── auth/              # requireUser, requireAdmin, requireSuperAdmin, guest cookies
+│   │   ├── auth/              # requireUser, requireAdmin, requireSuperAdmin, cookie guest
 │   │   ├── auth.ts            # Konfigurasi Auth.js, callback, provider credentials
-│   │   ├── db.ts              # Inisialisasi PrismaClient dengan adapter pool PostgreSQL
-│   │   ├── email/             # sender.ts (SMTP Gmail Nodemailer dengan fallback konsol)
-│   │   ├── format/            # currency.ts (formatIdr dengan kalkulasi mata uang integer)
-│   │   ├── i18n/              # config.ts, server.ts, client.ts, kamus bahasa (id, en)
+│   │   ├── db.ts              # Singleton PrismaClient dengan adapter pool PostgreSQL
+│   │   ├── email/             # sender.ts (Nodemailer Gmail SMTP dengan fallback terminal)
+│   │   ├── format/            # currency.ts (formatIdr dengan perhitungan integer)
+│   │   ├── i18n/              # config.ts, server.ts, client.ts, kamus bahasa (en, id)
 │   │   ├── security/          # turnstile.ts, password.ts, rate-limit.ts, request.ts, otp.ts, audit.ts
-│   │   ├── storage/           # product-image.ts (pemeriksa magic byte signature gambar)
+│   │   ├── storage/           # product-image.ts (validasi magic-byte gambar)
 │   │   └── validation/        # auth.ts, catalog.ts (skema validasi Zod)
 │   └── generated/
-│       └── prisma/            # Output Prisma Client type-safe lokal
-├── next.config.ts             # Header keamanan HTTP, batas server actions, dev origins
-├── package.json               # Dependensi dan script pemeliharaan sistem
-└── tsconfig.json              # Aturan kompilasi TypeScript dan alias path
+│       └── prisma/            # Output Prisma Client lokal yang type-safe
+├── next.config.ts             # Header keamanan, batas Server Actions, dan dev origins
+├── package.json               # Dependensi dan script pemeliharaan
+└── tsconfig.json              # Pengaturan kompilasi TypeScript dan alias path
 ```
 
 ---
 
 ## Variabel Lingkungan
 
-Seluruh variabel lingkungan harus didaftarkan di pengaturan hosting cloud (mis. Vercel Project Settings) atau di file `.env` lokal:
+Daftarkan seluruh variabel lingkungan di pengaturan hosting cloud, misalnya Vercel Project Settings, atau di file `.env` lokal.
 
 | Nama Variabel | Wajib | Kategori | Deskripsi | Contoh Placeholder |
 |---|---|---|---|---|
 | `DATABASE_URL` | **Ya** | Database | String koneksi PostgreSQL dengan parameter connection pooling | `postgresql://user:password@host:5432/db?sslmode=require` |
-| `AUTH_SECRET` | **Ya** | Keamanan | String acak untuk mengenkripsi token sesi JWT Auth.js | `generate-random-32-chars-string` |
-| `AUTH_GOOGLE_ID` | Opsional | Auth | Client ID Google Cloud OAuth untuk fitur login 1-klik | `your-google-client-id.apps.googleusercontent.com` |
+| `AUTH_SECRET` | **Ya** | Keamanan | Secret untuk mengenkripsi token sesi JWT Auth.js | `generate-random-32-chars-string` |
+| `AUTH_GOOGLE_ID` | Opsional | Auth | Client ID Google Cloud OAuth untuk login satu klik | `your-google-client-id.apps.googleusercontent.com` |
 | `AUTH_GOOGLE_SECRET` | Opsional | Auth | Client Secret Google Cloud OAuth | `GOCSPX-yourGoogleClientSecret` |
-| `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` | **Ya** | Pembayaran | Client Key Midtrans untuk memunculkan antarmuka modal Snap | `Mid-client-xxxxxxxxxxxxxxxx` |
-| `MIDTRANS_SERVER_KEY` | **Ya** | Pembayaran | Server Key Midtrans untuk API Snap dan verifikasi webhook | `Mid-server-xxxxxxxxxxxxxxxx` |
-| `MIDTRANS_IS_PRODUCTION` | Opsional | Pembayaran | Menentukan endpoint Midtrans mode Sandbox atau Production | `false` (default) atau `true` |
+| `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` | **Ya** | Pembayaran | Client Key Midtrans untuk menampilkan checkout Snap | `Mid-client-xxxxxxxxxxxxxxxx` |
+| `MIDTRANS_SERVER_KEY` | **Ya** | Pembayaran | Server Key Midtrans untuk API Snap dan tanda tangan webhook | `Mid-server-xxxxxxxxxxxxxxxx` |
+| `MIDTRANS_IS_PRODUCTION` | Opsional | Pembayaran | Menentukan endpoint Midtrans Production atau Sandbox | `false` (default) atau `true` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | **Ya** | Keamanan | Site Key publik Cloudflare Turnstile untuk widget frontend | `0x4AAAAAAxxxxxxxxxxxxxx` |
-| `TURNSTILE_SECRET_KEY` | **Ya** | Keamanan | Secret Key privat Cloudflare Turnstile untuk validasi server | `0x4AAAAAAxxxxxxxxxxxxxx` |
-| `BLOB_READ_WRITE_TOKEN` | **Ya** | Storage | Token otorisasi `@vercel/blob` untuk penyimpanan file privat | `vercel_blob_rw_xxxxxxxxxxxx` |
-| `SMTP_USER` | Opsional | Email | Alamat email SMTP (mis. Gmail) untuk mengirim kode OTP | `your-service@gmail.com` |
-| `SMTP_PASS` | Opsional | Email | App Password SMTP (16 karakter, spasi otomatis dibersihkan) | `abcd efgh ijkl mnop` |
-| `PAYMENT_PROVIDER` | Opsional | Pembayaran | Switch pengujian; set ke `dummy` hanya pada mode development | `midtrans` (default) |
-| `NEXT_PUBLIC_APP_URL` | Opsional | App | Domain kanonikal utama aplikasi | `http://localhost:3000` |
+| `TURNSTILE_SECRET_KEY` | **Ya** | Keamanan | Secret Key privat Cloudflare Turnstile untuk verifikasi server | `0x4AAAAAAxxxxxxxxxxxxxx` |
+| `BLOB_READ_WRITE_TOKEN` | **Ya** | Storage | Token akses untuk penyimpanan privat `@vercel/blob` | `vercel_blob_rw_xxxxxxxxxxxx` |
+| `SMTP_USER` | Opsional | Email | Alamat Gmail atau SMTP khusus untuk mengirim kode OTP | `your-service@gmail.com` |
+| `SMTP_PASS` | Opsional | Email | SMTP App Password 16 karakter; spasi dibersihkan otomatis | `abcd efgh ijkl mnop` |
+| `PAYMENT_PROVIDER` | Opsional | Pembayaran | Pengaturan untuk pengujian; gunakan `dummy` hanya di luar produksi | `midtrans` (default) |
+| `NEXT_PUBLIC_APP_URL` | Opsional | App | URL dasar kanonikal aplikasi | `http://localhost:3000` |
 | `NODE_ENV` | Opsional | Runtime | Lingkungan eksekusi Node.js | `development` atau `production` |
 
 ---
@@ -666,10 +680,12 @@ Seluruh variabel lingkungan harus didaftarkan di pengaturan hosting cloud (mis. 
 
 ### Prasyarat
 
+Pastikan perangkat dan layanan berikut sudah tersedia:
+
 - Node.js versi **20.x** atau **22.x LTS**
-- Database PostgreSQL yang aktif (Supabase, Neon, atau instance PostgreSQL 15+ lokal)
-- Kunci Site Key & Secret Key Cloudflare Turnstile
-- Akun Merchant Midtrans (Sandbox atau Production)
+- Database PostgreSQL yang aktif, misalnya Supabase, Neon, atau PostgreSQL 15+ lokal
+- Site Key dan Secret Key Cloudflare Turnstile
+- Akun Merchant Midtrans dalam mode Sandbox atau Production
 
 ### Instalasi
 
@@ -681,7 +697,7 @@ cd eincshop
 # 2. Pasang dependensi
 npm install
 
-# 3. Sinkronisasikan skema database dan bangun Prisma Client
+# 3. Buat Prisma Client dan sinkronkan skema database
 npx prisma generate
 npx prisma db push
 
@@ -689,75 +705,75 @@ npx prisma db push
 npm run dev
 ```
 
-Buka peramban Anda di [http://localhost:3000](http://localhost:3000).
+Setelah server berjalan, buka [http://localhost:3000](http://localhost:3000) di peramban.
 
 ---
 
 ## Perintah Tersedia
 
-Didefinisikan di `package.json`:
+Daftar perintah berikut tersedia di `package.json`:
 
 | Perintah | Baris Perintah | Fungsi |
 |---|---|---|
-| `npm run dev` | `next dev` | Menjalankan server pengembangan lokal dengan engine Turbopack |
-| `npm run build` | `prisma generate && next build` | Membangun Prisma Client dan mengompilasi build produksi Next.js |
-| `npm run start` | `next start` | Menjalankan build produksi yang telah dikompilasi |
-| `npm run lint` | `eslint` | Menjalankan inspeksi kualitas kode dengan ESLint |
-| `npm run postinstall` | `prisma generate` | Otomatis me-regenerasi Prisma Client lokal setelah `npm install` |
+| `npm run dev` | `next dev` | Menjalankan server pengembangan Next.js dengan Turbopack |
+| `npm run build` | `prisma generate && next build` | Membuat Prisma Client dan membangun aplikasi untuk produksi |
+| `npm run start` | `next start` | Menjalankan hasil build produksi |
+| `npm run lint` | `eslint` | Memeriksa kualitas kode menggunakan ESLint |
+| `npm run postinstall` | `prisma generate` | Membuat Prisma Client secara otomatis setelah `npm install` |
 
 ---
 
 ## Daftar Rute Halaman
 
-### Halaman Publik & Belanja
+### Halaman Publik dan Belanja
 
 | Rute | Akses | Deskripsi |
 |---|---|---|
-| `/` | Publik | Halaman utama dengan hero section, produk digital unggulan, dan jaminan keamanan |
-| `/products` | Publik | Katalog produk dengan filter kategori, pencarian, dan pengurutan harga |
-| `/products/[slug]` | Publik | Detail produk lengkap dengan galeri pratinjau dan tombol tambah ke keranjang |
-| `/cart` | Publik / Guest | Keranjang belanja dinamis terhubung ke sesi login atau cookie guest |
-| `/checkout` | Publik / Guest | Halaman peninjauan pesanan sebelum kasir pembayaran diinisialisasi |
+| `/` | Publik | Halaman utama dengan produk digital pilihan dan indikator kepercayaan |
+| `/products` | Publik | Katalog produk dengan filter kategori, pencarian kata kunci, dan pengurutan |
+| `/products/[slug]` | Publik | Detail produk beserta gambar pratinjau |
+| `/cart` | Publik / Guest | Keranjang belanja yang terhubung ke sesi pengguna atau cookie guest |
+| `/checkout` | Publik / Guest | Peninjauan dan konfirmasi pesanan sebelum pembayaran |
 
 ### Autentikasi
 
 | Rute | Akses | Deskripsi |
 |---|---|---|
-| `/login` | Pengunjung | Masuk via Google OAuth atau Gmail/Password dengan proteksi Turnstile CAPTCHA |
-| `/register` | Pengunjung | Pendaftaran akun baru yang dibatasi secara ketat khusus untuk domain `@gmail.com` |
-| `/verify-otp` | User Belum Verifikasi | Input kode verifikasi email 6-digit yang dikirimkan via SMTP |
+| `/login` | Pengunjung | Login melalui Google OAuth atau Gmail/password dengan Turnstile CAPTCHA |
+| `/register` | Pengunjung | Pendaftaran akun baru dengan alamat `@gmail.com` |
+| `/verify-otp` | Pengguna Belum Terverifikasi | Memasukkan kode verifikasi email 6 digit yang dikirim melalui SMTP |
 
 ### Portal Pembeli
 
 | Rute | Akses | Deskripsi |
 |---|---|---|
-| `/account` | Pembeli (`CUSTOMER`) | Beranda ringkasan akun pembeli |
-| `/account/profile` | Pembeli (`CUSTOMER`) | Perbarui informasi profil pribadi dan unggah foto avatar |
-| `/account/orders` | Pembeli (`CUSTOMER`) | Pantau riwayat transaksi faktur pesanan dan status pembayaran |
-| `/account/downloads` | Pembeli (`CUSTOMER`) | Pusat unduhan file digital dengan pelacakan sisa kuota dan masa aktif |
+| `/account` | Pembeli (`CUSTOMER`) | Ringkasan akun pembeli |
+| `/account/profile` | Pembeli (`CUSTOMER`) | Memperbarui profil dan mengunggah avatar |
+| `/account/orders` | Pembeli (`CUSTOMER`) | Melihat faktur pesanan dan status pembayaran |
+| `/account/downloads` | Pembeli (`CUSTOMER`) | Melihat grant unduhan aktif, tanggal kedaluwarsa, dan sisa kuota |
 
-### Portal Penjual & Administrator
-
-| Rute | Akses | Deskripsi |
-|---|---|---|
-| `/become-seller` | Pengguna Terdaftar | Alur pendaftaran bagi akun pembeli yang ingin membuka etalase toko |
-| `/admin` | `SELLER` / `ADMIN` | Dashboard operasional dengan grafik cashflow dan indikator penjualan |
-| `/admin/products` | `SELLER` / `ADMIN` | Manajemen inventaris (terisolasi per penjual; admin melihat seluruh produk) |
-| `/admin/products/new` | `SELLER` / `ADMIN` | Buat produk baru dan unggah aset file digital ke storage privat |
-| `/admin/products/[id]` | `SELLER` / `ADMIN` | Ringkasan detail produk |
-| `/admin/products/[id]/edit` | `SELLER` / `ADMIN` | Perbarui data produk, harga, dan kategori |
-| `/admin/products/[id]/images` | `SELLER` / `ADMIN` | Kelola foto produk (verifikasi magic byte signature) |
-| `/admin/products/[id]/assets` | `SELLER` / `ADMIN` | Kelola lampiran file digital yang dijual |
-| `/admin/categories` | `SELLER` / `ADMIN` | Manajemen kategori produk pasar |
-| `/admin/orders` | `SELLER` / `ADMIN` | Pengawasan pesanan masuk (terisolasi per penjual; admin melihat seluruh pesanan) |
-| `/admin/audit-logs` | Super Admin (`ADMIN`) | Inspeksi log audit keamanan sistem (khusus role `ADMIN`) |
-
-### Pesanan & Pembayaran
+### Portal Penjual dan Administrator
 
 | Rute | Akses | Deskripsi |
 |---|---|---|
-| `/orders/[orderNumber]` | Pemilik Pesanan | Faktur rincian pesanan lengkap dengan aksi unduh jika pembayaran telah lunas |
-| `/orders/[orderNumber]/pay` | Pemilik Pesanan | Antarmuka kasir pembayaran pop-up Midtrans Snap |
+| `/become-seller` | Pengguna Terautentikasi | Mengajukan pembukaan toko penjual |
+| `/admin` | `SELLER` / `ADMIN` | Dashboard operasional dengan grafik cashflow dan metrik penjualan |
+| `/admin/products` | `SELLER` / `ADMIN` | Manajemen inventaris yang terpisah per penjual; admin dapat melihat semua produk |
+| `/admin/products/new` | `SELLER` / `ADMIN` | Membuat produk dan mengunggah file digital |
+| `/admin/products/[id]` | `SELLER` / `ADMIN` | Detail produk |
+| `/admin/products/[id]/edit` | `SELLER` / `ADMIN` | Mengubah informasi, harga, dan kategori produk |
+| `/admin/products/[id]/images` | `SELLER` / `ADMIN` | Mengelola gambar produk dengan validasi magic byte |
+| `/admin/products/[id]/assets` | `SELLER` / `ADMIN` | Mengelola file digital yang dapat diunduh |
+| `/admin/categories` | `SELLER` / `ADMIN` | Membuat dan mengelola kategori produk |
+| `/admin/orders` | `SELLER` / `ADMIN` | Memantau pesanan masuk sesuai penjual; admin dapat melihat semua pesanan |
+| `/admin/audit-logs` | Super Admin (`ADMIN`) | Memeriksa log keamanan sistem; akses khusus untuk role `ADMIN` |
+
+### Pesanan dan Pembayaran
+
+| Rute | Akses | Deskripsi |
+|---|---|---|
+| `/orders/[orderNumber]` | Pemilik Pesanan | Faktur pesanan terperinci dan aksi unduh untuk pesanan yang sudah lunas |
+| `/orders/[orderNumber]/pay` | Pemilik Pesanan | Membuka checkout Midtrans Snap yang terintegrasi |
 
 ---
 
@@ -767,38 +783,38 @@ Didefinisikan di `package.json`:
 
 | Endpoint | Method | Otorisasi | Fungsi |
 |---|---|---|---|
-| `/api/auth/[...nextauth]` | `GET`, `POST` | Publik | Negosiasi sesi Auth.js, penanganan callback OAuth, dan signout |
-| `/api/downloads/[grantId]` | `GET` | Sesi Pengguna | Mengalirkan file privat dengan memvalidasi masa aktif 48 jam dan kuota 5x |
-| `/api/payments/midtrans` | `POST` | Webhook Midtrans | Memverifikasi tanda tangan SHA-512, memproses pembayaran, dan menerbitkan tiket unduh |
-| `/api/product-images/[imageId]` | `GET` | Publik | Menyajikan gambar pratinjau produk dari storage cloud |
-| `/api/profile-image` | `GET` | Terautentikasi | Menyajikan gambar avatar pengguna |
+| `/api/auth/[...nextauth]` | `GET`, `POST` | Publik | Pengelolaan sesi Auth.js, callback OAuth, dan sign-out |
+| `/api/downloads/[grantId]` | `GET` | Sesi Pengguna | Mengirim file setelah memeriksa masa aktif 48 jam dan batas 5 unduhan |
+| `/api/payments/midtrans` | `POST` | Webhook Midtrans | Memverifikasi tanda tangan SHA-512, memproses pembayaran, dan membuat grant unduhan |
+| `/api/product-images/[imageId]` | `GET` | Publik | Menyajikan gambar pratinjau produk dari storage |
+| `/api/profile-image` | `GET` | Terautentikasi | Menyajikan avatar pengguna |
 
-### Server Actions Kunci
+### Server Actions Utama
 
 | Server Action | Lokasi File | Akses | Mekanisme Keamanan |
 |---|---|---|---|
-| `registerAction` | `src/app/(auth)/actions.ts` | Publik | Validasi Zod, filter `@gmail.com`, Turnstile, Rate limit, pengiriman OTP |
-| `loginAction` | `src/app/(auth)/actions.ts` | Publik | Validasi Zod, Turnstile, Rate limit, verifikasi kredensial Auth.js |
-| `verifyOtpAction` | `src/app/(auth)/actions.ts` | Publik | Regex 6-digit, Rate limit (5x/10m), komparasi hash SHA-256, AuditLog |
-| `resendOtpAction` | `src/app/(auth)/actions.ts` | Publik | Rate limit (3x/15m), regenerasi OTP kriptografis, pengiriman email SMTP |
-| `addToCartAction` | `src/app/cart/actions.ts` | Publik / Guest | Validasi status produk aktif, upsert baris keranjang atomik |
-| `createOrderAction` | `src/modules/orders/actions.ts` | User / Guest | `$transaction` atomik, hitung ulang harga dari DB, penerbitan Order |
-| `createMidtransPaymentAction` | `src/modules/payments/actions.ts` | Pemilik Order | Validasi status pesanan, inisialisasi token pembayaran Snap |
-| `uploadProductImageAction` | `src/modules/catalog/image-actions.ts` | Seller / Admin | Isolasi hak kepemilikan, cek magic byte signature, batas 5MB, upload Blob |
-| `becomeSellerAction` | `src/app/become-seller/actions.ts` | Customer | Validasi Zod, promosi peran ke `SELLER`, pencatatan `AuditLog` |
+| `registerAction` | `src/app/(auth)/actions.ts` | Publik | Validasi Zod, pembatasan `@gmail.com`, Turnstile, rate limit |
+| `loginAction` | `src/app/(auth)/actions.ts` | Publik | Validasi Zod, Turnstile, rate limit, pemeriksaan kredensial Auth.js |
+| `verifyOtpAction` | `src/app/(auth)/actions.ts` | Publik | Regex 6 digit, rate limit (5 percobaan/10 menit), perbandingan SHA-256, AuditLog |
+| `resendOtpAction` | `src/app/(auth)/actions.ts` | Publik | Rate limit (3 percobaan/15 menit), pembuatan ulang OTP kriptografis, Nodemailer |
+| `addToCartAction` | `src/app/cart/actions.ts` | Publik / Guest | Pemeriksaan stok terbaru dan upsert item keranjang secara atomik |
+| `createOrderAction` | `src/modules/orders/actions.ts` | User / Guest | `$transaction` atomik, penghitungan ulang harga dari database, pembuatan Order |
+| `createMidtransPaymentAction` | `src/modules/payments/actions.ts` | Pemilik Order | Pemeriksaan status pesanan dan pembuatan token Midtrans Snap |
+| `uploadProductImageAction` | `src/modules/catalog/image-actions.ts` | Seller / Admin | Pemeriksaan kepemilikan, validasi magic byte, batas 5MB, unggahan Blob |
+| `becomeSellerAction` | `src/app/become-seller/actions.ts` | Customer | Validasi Zod, perubahan role menjadi `SELLER`, pencatatan AuditLog |
 
 ---
 
-## Alur Pembayaran & Pengiriman Digital
+## Alur Pembayaran dan Pengiriman Digital
 
 ```text
-[Pembeli / Guest] ──> Menambahkan Produk ke Keranjang Belanja
+[Pembeli / Guest] ──> Menambahkan Produk ke Keranjang
        │
        ▼
-[Checkout (/checkout)] ──> Server Action membuat Pesanan via $transaction (Harga dikunci dari DB)
+[Checkout (/checkout)] ──> Server Action membuat Order melalui $transaction (Harga dikunci dari DB)
        │
        ▼
-[API Midtrans Snap] ──> Mengembalikan Token Snap & URL Kasir Pembayaran
+[API Midtrans Snap] ──> Mengembalikan Token Snap dan URL Kasir
        │
        ▼
 [Pembeli Membayar] ──> Virtual Account / QRIS / Kartu Kredit / Minimarket
@@ -806,40 +822,40 @@ Didefinisikan di `package.json`:
        ▼
 [Webhook Midtrans (/api/payments/midtrans)]
        │
-       ├── 1. Verifikasi Tanda Tangan SHA-512 (order_id + status_code + gross_amount + serverKey)
-       ├── 2. Validasi Mata Uang (IDR) & Kesesuaian Nominal dengan order.totalMinor di DB
-       ├── 3. Eksekusi $transaction Atomik:
-       │      ├── Perbarui status Payment -> PAID
-       │      ├── Perbarui status Order -> PAID
-       │      ├── Konversi status Cart -> CONVERTED
-       │      └── Simpan PaymentEvent (Idempoten via unique constraint gabungan)
+       ├── 1. Memverifikasi tanda tangan SHA-512 (order_id + status_code + gross_amount + serverKey)
+       ├── 2. Memeriksa mata uang (IDR) dan nominal terhadap order.totalMinor di DB
+       ├── 3. Menjalankan $transaction secara atomik:
+       │      ├── Mengubah status Payment menjadi PAID
+       │      ├── Mengubah status Order menjadi PAID
+       │      ├── Mengubah status Cart menjadi CONVERTED
+       │      └── Menyimpan PaymentEvent (idempoten melalui unique constraint)
        │
-       └── 4. Jalankan createDownloadGrantsForPaidOrder:
-              └── Terbitkan DownloadGrant (expiresAt = sekarang + 48 jam, downloadCount = 0)
+       └── 4. Menjalankan createDownloadGrantsForPaidOrder:
+              └── Membuat DownloadGrant (expiresAt = sekarang + 48 jam, downloadCount = 0)
                      │
                      ▼
-[Pembeli Mengakses /account/downloads atau /orders/[orderNumber]]
+[Pembeli Membuka /account/downloads atau /orders/[orderNumber]]
        │
        ▼
-[Permintaan Unduh File (/api/downloads/[grantId])]
-       ├── Cek: session.user.id == grant.userId
-       ├── Cek: order.paymentStatus == "PAID"
-       ├── Cek: sekarang <= grant.expiresAt (Masa Aktif 48 Jam)
-       ├── Cek: grant.downloadCount < 5 (Batas Maksimal Kuota)
-       ├── Tambah hitungan downloadCount secara atomik (+1)
-       └── Mengalirkan binary file langsung dari storage privat @vercel/blob
+[Permintaan Unduh (/api/downloads/[grantId])]
+       ├── Memeriksa: session.user.id == grant.userId
+       ├── Memeriksa: order.paymentStatus == "PAID"
+       ├── Memeriksa: sekarang <= grant.expiresAt (masa aktif 48 jam)
+       ├── Memeriksa: grant.downloadCount < 5 (batas kuota)
+       ├── Menambah downloadCount secara atomik (+1)
+       └── Mengirim file biner dari storage privat @vercel/blob
 ```
 
 ---
 
 ## Internasionalisasi
 
-Marketplace memiliki arsitektur dwibahasa bawaan yang ringan:
+EINCSHOP menyediakan dukungan Bahasa Indonesia dan Bahasa Inggris melalui sistem lokalisasi bawaan.
 
-1. Preferensi bahasa pengguna disimpan dalam HTTP cookie bernama `einc_locale` (disanitasi ketat hanya bernilai `id` atau `en`; default `en`).
-2. Server Components membaca kamus bahasa (`id.ts` atau `en.ts`) langsung di sisi server via `getDictionary()`, tanpa membebani ukuran bundle JavaScript di peramban pengguna.
-3. Komponen client membaca terjemahan menggunakan hook reaktif `useI18n()`.
-4. Format mata uang menyesuaikan secara otomatis:
+1. Preferensi bahasa disimpan dalam cookie HTTP `einc_locale`. Nilainya dibatasi menjadi `id` atau `en`, dengan `en` sebagai pilihan default.
+2. Server Components memuat kamus bahasa (`id.ts` atau `en.ts`) melalui `getDictionary()`. Kamus diproses di sisi server sehingga tidak menambah ukuran bundle JavaScript di peramban.
+3. Komponen client mengambil terjemahan melalui hook reaktif `useI18n()`.
+4. Format mata uang mengikuti bahasa yang dipilih:
    - Bahasa Indonesia: `Rp 150.000` (`id-ID`)
    - Bahasa Inggris: `IDR 150,000` (`en-US`)
 
@@ -847,88 +863,89 @@ Marketplace memiliki arsitektur dwibahasa bawaan yang ringan:
 
 ## Praktik Keamanan
 
-### 1. Mata Uang Integer Minor Unit (Anti-Floating Point Bug)
+### 1. Mata Uang Berbasis Integer
 
-- **Ancaman yang Dicegah**: Bug presisi floating-point JavaScript (mis. `0.1 + 0.2 = 0.30000000000000004`) yang menyebabkan selisih pembukuan dan penolakan transaksi oleh payment gateway.
-- **Cara Kerja**: Semua nilai uang disimpan dan dikalkulasi dalam bilangan bulat terkecil (Rupiah satuan / `priceMinor`). Bayangkan seperti kasir yang menghitung koin fisik satu per satu, bukan menggunakan pecahan kertas desimal, sehingga tidak ada potensi selisih desimal.
-- **Lokasi Implementasi**: `src/lib/format/currency.ts`, `prisma/schema.prisma`, `src/modules/orders/service.ts`.
-- **Cara Memakai**: Selalu set nilai harga dengan integer `priceMinor: Math.round(nominalRupiah)` dan tampilkan via `formatIdr(amountMinor, locale)`.
+- **Ancaman yang ditangani:** Kesalahan pembulatan floating-point, misalnya `0.1 + 0.2 = 0.30000000000000004`, yang dapat menyebabkan selisih pembukuan atau penolakan transaksi oleh payment gateway.
+- **Cara kerja:** Harga produk, total item, dan subtotal pesanan disimpan serta dihitung sebagai bilangan bulat Rupiah (`priceMinor`). Pendekatan ini menghindari perhitungan berdasarkan pecahan nilai mata uang.
+- **Lokasi implementasi:** `src/lib/format/currency.ts`, `prisma/schema.prisma`, `src/modules/orders/service.ts`.
+- **Cara penggunaan:** Tetapkan harga dengan `priceMinor: Math.round(nominalRupiah)` dan tampilkan melalui `formatIdr(amountMinor, locale)`.
 
-### 2. Isolasi Tenant Multi-Seller & Pengecekan Sesi Live Database
+### 2. Isolasi Antarpenjual dan Pemeriksaan Hak Akses ke Database
 
-- **Ancaman yang Dicegah**: Kebocoran data antar-toko dan eskalasi hak akses ilegal (mis. Penjual A memodifikasi produk Penjual B, atau pengguna yang telah di-suspend tetap bisa beroperasi menggunakan token JWT lama).
-- **Cara Kerja**: Identitas penjual tidak pernah dipercayai dari input peramban. Guard `requireAdmin()` mengekstrak identitas dari sesi server dan menyisipkan filter `{ sellerId: admin.id }` untuk semua non-superadmin. Setiap request administratif mengecek status akun `ACTIVE` langsung ke PostgreSQL.
-- **Lokasi Implementasi**: `src/lib/auth/require-user.ts`, `src/app/admin/products/page.tsx`, `src/modules/catalog/image-actions.ts`.
-- **Cara Memakai**: Bungkus seluruh halaman administratif dengan `await requireAdmin()` atau `await requireSuperAdmin()`.
+- **Ancaman yang ditangani:** Kebocoran data antarpenjual dan eskalasi hak akses, misalnya penjual mengakses atau menghapus produk milik penjual lain, atau akun yang sudah ditangguhkan tetap beroperasi menggunakan JWT lama.
+- **Cara kerja:** Identitas penjual tidak diambil dari input yang dikirim klien. `requireAdmin()` mengambil ID pengguna dari sesi terautentikasi dan menerapkan filter `{ sellerId: admin.id }` untuk pengguna non-superadmin. Setiap request administratif juga memeriksa status `ACTIVE` langsung ke PostgreSQL.
+- **Lokasi implementasi:** `src/lib/auth/require-user.ts`, `src/app/admin/products/page.tsx`, `src/modules/catalog/image-actions.ts`.
+- **Cara penggunaan:** Lindungi halaman administratif menggunakan `await requireAdmin()` atau `await requireSuperAdmin()`.
 
-### 3. Tiket Unduh Berkuota & Berbatas Waktu (48 Jam / 5x)
+### 3. Grant Unduhan dengan Batas Waktu dan Kuota
 
-- **Ancaman yang Dicegah**: Pembajakan aset digital, penyebaran tautan publik permanen, dan pencurian bandwidth server.
-- **Cara Kerja**: File digital disimpan secara privat di `@vercel/blob` tanpa link publik abadi. Akses pengunduhan dialirkan melalui rute `/api/downloads/[grantId]` yang memverifikasi bahwa pesanan telah lunas, waktu sekarang belum melampaui `expiresAt` (**48 jam**), dan kuota unduh belum melampaui `MAX_DOWNLOAD_LIMIT` (**5 kali**).
-- **Lokasi Implementasi**: `src/app/api/downloads/[grantId]/route.ts`, `src/modules/digital-delivery/service.ts`.
-- **Cara Memakai**: Diterbitkan otomatis saat pembayaran lunas via fungsi `createDownloadGrantsForPaidOrder(orderId)`.
+- **Ancaman yang ditangani:** Penyebaran aset digital tanpa izin, kebocoran tautan unduhan permanen, dan penggunaan bandwidth secara berlebihan.
+- **Cara kerja:** File digital disimpan di `@vercel/blob` secara privat, bukan melalui URL publik permanen. Rute `/api/downloads/[grantId]` memeriksa status pembayaran, memastikan masa aktif belum lewat (**48 jam**), dan membatasi jumlah unduhan melalui `MAX_DOWNLOAD_LIMIT` (**5 kali**).
+- **Lokasi implementasi:** `src/app/api/downloads/[grantId]/route.ts`, `src/modules/digital-delivery/service.ts`.
+- **Cara penggunaan:** Grant dibuat otomatis setelah pembayaran selesai melalui `createDownloadGrantsForPaidOrder(orderId)`.
 
-### 4. Proteksi Bot Cerdas Cloudflare Turnstile
+### 4. Perlindungan Bot dengan Cloudflare Turnstile
 
-- **Ancaman yang Dicegah**: Serangan brute-force otomatis, spamming formulir pendaftaran, dan credential stuffing oleh skrip bot.
-- **Cara Kerja**: Formulir login dan register menampilkan widget Cloudflare Turnstile tanpa puzzle gambar menyulitkan. Token yang diterima divalidasi langsung di sisi server via API resmi Cloudflare (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) sebelum kredensial akun diperiksa.
-- **Lokasi Implementasi**: `src/components/ui/turnstile.tsx`, `src/lib/security/turnstile.ts`, `src/app/(auth)/actions.ts`.
-- **Cara Memakai**: Pasang `<Turnstile />` di formulir client dan panggil `await verifyTurnstileToken(token, requestIp)` di dalam Server Action.
+- **Ancaman yang ditangani:** Pembuatan akun otomatis, credential stuffing, dan spam pada endpoint autentikasi.
+- **Cara kerja:** Form login dan registrasi menggunakan widget Turnstile. Token yang dikirim pengguna diverifikasi di sisi server melalui API Cloudflare di `https://challenges.cloudflare.com/turnstile/v0/siteverify` sebelum kredensial diproses.
+- **Lokasi implementasi:** `src/components/ui/turnstile.tsx`, `src/lib/security/turnstile.ts`, `src/app/(auth)/actions.ts`.
+- **Cara penggunaan:** Pasang `<Turnstile />` pada formulir dan panggil `await verifyTurnstileToken(token, requestIp)` di Server Actions.
 
-### 5. Filter Email Palsu & Verifikasi 6-Digit OTP Kriptografis
+### 5. Pembatasan Email Gmail dan Verifikasi OTP 6 Digit
 
-- **Ancaman yang Dicegah**: Pembuatan ribuan akun sampah menggunakan layanan email sekali pakai (*disposable/temp mail*) dan pemalsuan identitas.
-- **Cara Kerja**: Validasi Zod membatasi pendaftaran hanya untuk alamat berakhiran `@gmail.com`. Akun yang baru didaftarkan wajib memasukkan kode OTP 6-digit yang dihasilkan melalui `randomInt`, di-hash dengan SHA-256 di database, dan dikirimkan via SMTP Gmail aman. Akun yang belum terverifikasi diblokir dari area akun.
-- **Lokasi Implementasi**: `src/lib/validation/auth.ts`, `src/lib/security/otp.ts`, `src/lib/email/sender.ts`, `src/app/(auth)/verify-otp/`.
-- **Cara Memakai**: Dijalankan otomatis di `registerAction` dan dilindungi oleh guard `requireUser()`.
+- **Ancaman yang ditangani:** Pendaftaran menggunakan email sekali pakai, pembuatan akun otomatis, dan penggunaan akun yang belum terverifikasi.
+- **Cara kerja:** Validasi Zod membatasi pendaftaran ke alamat `@gmail.com`. Akun baru harus memverifikasi kode OTP 6 digit yang dibuat dengan `randomInt`, di-hash menggunakan SHA-256 di database, lalu dikirim melalui Gmail SMTP. Akun yang belum terverifikasi tidak dapat mengakses area pembeli atau penjual.
+- **Lokasi implementasi:** `src/lib/validation/auth.ts`, `src/lib/security/otp.ts`, `src/lib/email/sender.ts`, `src/app/(auth)/verify-otp/`.
+- **Cara penggunaan:** Proses verifikasi dijalankan melalui `registerAction` dan diberlakukan melalui `requireUser()`.
 
-### 6. Anti-Spoofing IP Edge & Deteksi Klien Riil
+### 6. Resolusi IP Klien dan Perlindungan Header Edge
 
-- **Ancaman yang Dicegah**: Penyerang memalsukan alamat IP melalui manipulasi header `X-Forwarded-For` untuk mengelabui sistem pembatas rate limit.
-- **Cara Kerja**: Sistem membaca alamat IP dengan memprioritaskan header terenkripsi resmi `cf-connecting-ip` dari jaringan edge Cloudflare sebelum memeriksa header proxy sekunder.
-- **Lokasi Implementasi**: `src/lib/security/request.ts`.
-- **Cara Memakai**: Panggil `const clientIp = await getRequestIp();` di setiap server action dan pencatatan audit log.
+- **Ancaman yang ditangani:** Pengelabuan IP dan upaya melewati rate limit melalui header `X-Forwarded-For` palsu.
+- **Cara kerja:** Sistem menentukan IP klien dengan urutan prioritas header yang ketat. Header `cf-connecting-ip` dari Cloudflare diprioritaskan sebelum header proxy standar.
+- **Lokasi implementasi:** `src/lib/security/request.ts`.
+- **Cara penggunaan:** Panggil `const clientIp = await getRequestIp();` di Server Actions dan pencatatan audit.
 
-### 7. Verifikasi Tanda Tangan Webhook SHA-512 & Idempotensi Mutlak
+### 7. Verifikasi Webhook SHA-512 dan Pemrosesan Idempoten
 
-- **Ancaman yang Dicegah**: Serangan manipulasi notifikasi pembayaran fiktif dan pemrosesan ganda (*double grant*) akibat pengiriman ulang webhook jaringan.
-- **Cara Kerja**: Payload webhook Midtrans diverifikasi dengan menghitung hash SHA-512 (`order_id + status_code + gross_amount + MIDTRANS_SERVER_KEY`) dan dibandingkan menggunakan `crypto.timingSafeEqual`. Pemrosesan dijalankan dalam `$transaction` yang mencatat `PaymentEvent` dengan constraint unik `@@unique([provider, providerEventId])`.
-- **Lokasi Implementasi**: `src/app/api/payments/midtrans/route.ts`.
-- **Cara Memakai**: Aktif secara otomatis pada endpoint `POST /api/payments/midtrans`.
+- **Ancaman yang ditangani:** Notifikasi pembayaran palsu dan pemrosesan pesanan berulang akibat webhook yang dikirim lebih dari sekali.
+- **Cara kerja:** Payload webhook Midtrans diverifikasi dengan menghitung hash SHA-512 dari `order_id + status_code + gross_amount + MIDTRANS_SERVER_KEY`. Hasilnya dibandingkan menggunakan `crypto.timingSafeEqual`. Pemrosesan berlangsung di dalam `$transaction` atomik, sementara catatan `PaymentEvent` menggunakan `@@unique([provider, providerEventId])` untuk mencegah pemrosesan event yang sama berulang kali.
+- **Lokasi implementasi:** `src/app/api/payments/midtrans/route.ts`.
+- **Cara penggunaan:** Mekanisme ini diterapkan otomatis pada endpoint `POST /api/payments/midtrans`.
 
-### 8. Verifikasi Magic Byte Signature pada File Unggahan
+### 8. Validasi Gambar Menggunakan Magic Byte
 
-- **Ancaman yang Dicegah**: Pengunggahan file berbahaya (seperti skrip executable atau web shell PHP) yang disamarkan dengan ekstensi gambar palsu.
-- **Cara Kerja**: Server tidak memercayai ekstensi file atau header `Content-Type` dari peramban. Sistem membaca 12 byte awal file buffer untuk memvalidasi tanda tangan byte asli gambar (JPEG `0xFF 0xD8 0xFF`, PNG `0x89 0x50 0x4E 0x47`, WebP `RIFF...WEBP`) serta membatasi ukuran maksimal 5MB.
-- **Lokasi Implementasi**: `src/lib/storage/product-image.ts`.
-- **Cara Memakai**: Dijalankan secara otomatis di dalam `uploadProductImageAction`.
+- **Ancaman yang ditangani:** Unggahan file berbahaya yang menyamar sebagai gambar dengan mengganti ekstensi file, misalnya skrip executable yang diberi nama `.jpg`.
+- **Cara kerja:** Server tidak hanya mengandalkan ekstensi atau MIME type dari peramban. Sistem memeriksa 12 byte pertama dari buffer file untuk memastikan tanda tangan gambar sesuai: JPEG (`0xFF 0xD8 0xFF`), PNG (`0x89 0x50 0x4E 0x47`), dan WebP (`RIFF...WEBP`). Ukuran unggahan dibatasi maksimal 5MB.
+- **Lokasi implementasi:** `src/lib/storage/product-image.ts`.
+- **Cara penggunaan:** Validasi dijalankan di dalam `uploadProductImageAction`.
 
-### 9. Pembatas Percobaan (Rate Limiting) dengan Hash SHA-256
+### 9. Rate Limiting Berbasis Database dengan SHA-256
 
-- **Ancaman yang Dicegah**: Serangan tebak kata sandi (*brute-force*), enumerasi kode OTP, dan kelebihan beban server (*denial of service*).
-- **Cara Kerja**: Setiap aksi autentikasi dibatasi oleh `consumeAuthRateLimit` yang mencatat percobaan ke tabel PostgreSQL. Kunci identifier di-hash dengan SHA-256 sehingga alamat IP dan email pengguna tidak tersimpan dalam bentuk teks polos. Data kedaluwarsa dibersihkan otomatis secara probabilistik (peluang 5% per request).
-- **Lokasi Implementasi**: `src/lib/security/rate-limit.ts`.
-- **Cara Memakai**: Panggil `await consumeAuthRateLimit(key, options)` sebelum mengeksekusi logika autentikasi sensitif.
+- **Ancaman yang ditangani:** Percobaan menebak password secara berulang, enumerasi OTP, dan penggunaan sumber daya server secara berlebihan.
+- **Cara kerja:** `consumeAuthRateLimit` mencatat percobaan autentikasi ke PostgreSQL. Identifier di-hash dengan SHA-256 sebelum disimpan, sehingga alamat IP dan email tidak dicatat sebagai teks biasa. Data kedaluwarsa dibersihkan secara probabilistik, dengan peluang 5% pada setiap request.
+- **Lokasi implementasi:** `src/lib/security/rate-limit.ts`.
+- **Cara penggunaan:** Jalankan `await consumeAuthRateLimit(key, options)` sebelum memproses aksi sensitif.
 
-### 10. Header Keamanan HTTP & Konfigurasi Hardened
+### 10. Header Keamanan HTTP dan Konfigurasi Default
 
-- **Ancaman yang Dicegah**: Serangan Cross-Site Scripting (XSS), Clickjacking, pembajakan iframe, MIME sniffing, dan downgrade SSL.
-- **Cara Kerja**: File `next.config.ts` menyuntikkan header keamanan secara global ke seluruh respons HTTP: HSTS durasi 2 tahun (`max-age=63072000; includeSubDomains; preload`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, dan `Cross-Origin-Opener-Policy: same-origin-allow-popups`. Header identitas `x-powered-by` dimatikan secara permanen.
-- **Lokasi Implementasi**: `next.config.ts`.
-- **Cara Memakai**: Diterapkan secara otomatis oleh server Next.js pada setiap respons halaman dan API.
+- **Ancaman yang ditangani:** Cross-Site Scripting (XSS), clickjacking, MIME sniffing, dan serangan SSL-stripping.
+- **Cara kerja:** `next.config.ts` menerapkan header keamanan pada respons HTTP, termasuk HSTS (`max-age=63072000; includeSubDomains; preload`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, dan `Cross-Origin-Opener-Policy: same-origin-allow-popups`. Pengaturan `poweredByHeader` juga dinonaktifkan.
+- **Lokasi implementasi:** `next.config.ts`.
+- **Cara penggunaan:** Header ini diterapkan otomatis pada respons HTTP yang dikirim aplikasi.
 
 ---
 
-## License
+## Lisensi
 
-### EINCSHOP — Proprietary License
+### EINCSHOP — Lisensi Proprietary
 
 Copyright © 2026 EINCSHOP. All Rights Reserved.
 
-The source code in this repository is provided for viewing and reference purposes only.
+Kode sumber dalam repositori ini disediakan hanya untuk dilihat dan dijadikan referensi.
 
-No permission is granted to copy, modify, redistribute, sublicense, or use this code for commercial or public deployment without prior written permission from the copyright holder.
+Penyalinan, modifikasi, distribusi ulang, pemberian sublisensi, atau penggunaan kode ini untuk deployment komersial maupun publik memerlukan izin tertulis terlebih dahulu dari pemegang hak cipta.
 
-All rights are reserved except where otherwise permitted by applicable law.
+Seluruh hak dilindungi, kecuali jika hukum yang berlaku menentukan lain.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+PERANGKAT LUNAK INI DISEDIAKAN "APA ADANYA", TANPA JAMINAN DALAM BENTUK APA PUN.
+
