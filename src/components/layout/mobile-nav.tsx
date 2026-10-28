@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavLink } from "@/components/layout/nav-link";
@@ -24,7 +24,10 @@ type MobileNavProps = {
 
 export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
   const common = dict?.common;
+  const isEn = common?.logout === "Sign Out";
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, startTransition] = useTransition();
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -37,7 +40,7 @@ export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
 
   // 2. Deteksi klik / sentuh di luar elemen drawer (Click Outside) dan tombol Escape
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen && !showLogoutModal) return;
 
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -48,6 +51,7 @@ export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
+        setShowLogoutModal(false);
       }
     }
 
@@ -60,10 +64,24 @@ export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
       document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, showLogoutModal]);
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  // 3. Eksekusi logout aman dari modal konfirmasi
+  const executeLogout = () => {
+    if (isLoggingOut) return;
+
+    startTransition(async () => {
+      try {
+        await logoutAction();
+      } catch {
+        // Abaikan jika server action melempar NEXT_REDIRECT
+      }
+      window.location.href = "/";
+    });
   };
 
   return (
@@ -216,18 +234,18 @@ export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
               </div>
 
               {/* Tombol Logout Mobile */}
-              <form
-                action={logoutAction}
-                className="mt-2 border-t border-[var(--color-line)] pt-2"
-              >
+              <div className="mt-2 border-t border-[var(--color-line)] pt-2">
                 <button
-                  type="submit"
-                  onClick={handleClose}
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setShowLogoutModal(true);
+                  }}
                   className="w-full rounded-[var(--radius-control)] px-3 py-3 text-left text-sm text-[var(--color-danger-strong)] hover:bg-[var(--color-danger-soft)] cursor-pointer transition-colors"
                 >
                   {common?.logout || "Logout"}
                 </button>
-              </form>
+              </div>
             </>
           ) : (
             <>
@@ -247,6 +265,60 @@ export function MobileNav({ user, cartCount = 0, dict }: MobileNavProps) {
             </>
           )}
         </nav>
+      )}
+
+      {/* Modal Dialog Konfirmasi Keluar Mobile */}
+      {showLogoutModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-logout-dialog-title"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px] animate-in fade-in duration-150"
+        >
+          <div className="w-full max-w-sm rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="space-y-1.5">
+              <h3
+                id="mobile-logout-dialog-title"
+                className="text-base font-semibold text-[var(--color-ink)]"
+              >
+                {isEn ? "Confirm Sign Out" : "Konfirmasi Keluar"}
+              </h3>
+              <p className="text-xs leading-relaxed text-[var(--color-text-muted)]">
+                {isEn
+                  ? "Are you sure you want to sign out of your account?"
+                  : "Apakah Anda yakin ingin keluar dari akun Anda?"}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              {/* Tombol Batal */}
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(false)}
+                disabled={isLoggingOut}
+                className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-white px-3.5 py-2 text-xs font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer"
+              >
+                {isEn ? "Cancel" : "Batal"}
+              </button>
+
+              {/* Tombol Konfirmasi Keluar */}
+              <button
+                type="button"
+                onClick={executeLogout}
+                disabled={isLoggingOut}
+                className="rounded-[var(--radius-control)] bg-[var(--color-danger-strong)] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[var(--color-danger-strong)]/90 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {isLoggingOut
+                  ? isEn
+                    ? "Signing out..."
+                    : "Keluar..."
+                  : isEn
+                    ? "Yes, Sign Out"
+                    : "Ya, Keluar"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
