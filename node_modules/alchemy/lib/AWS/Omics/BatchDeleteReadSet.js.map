@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchDeleteReadSet.js","sourceRoot":"","sources":["../../../src/AWS/Omics/BatchDeleteReadSet.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,4BAA4B,CAAC;AACpD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAyC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,8BAA8B,CAC/B,CAAC"}

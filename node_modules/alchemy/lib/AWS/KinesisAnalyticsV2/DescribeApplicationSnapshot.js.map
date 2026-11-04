@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeApplicationSnapshot.js","sourceRoot":"","sources":["../../../src/AWS/KinesisAnalyticsV2/DescribeApplicationSnapshot.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,2BAA2B,GACtC,OAAO,CAAC,OAAO,CACb,oDAAoD,CACrD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchAssociateClientDeviceWithCoreDevice.js","sourceRoot":"","sources":["../../../src/AWS/GreengrassV2/BatchAssociateClientDeviceWithCoreDevice.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,wCAAwC,GACnD,OAAO,CAAC,OAAO,CACb,2DAA2D,CAC5D,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"AbortMultipartUpload.js","sourceRoot":"","sources":["../../../src/AWS/S3/AbortMultipartUpload.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,yBAAyB,CAAC;AAC9C,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8C5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,6BAA6B,CAC9B,CAAC"}

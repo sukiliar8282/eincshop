@@ -1,0 +1,1 @@
+{"version":3,"file":"ListMultipartUploads.js","sourceRoot":"","sources":["../../../src/AWS/Glacier/ListMultipartUploads.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8C5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,kCAAkC,CACnC,CAAC"}

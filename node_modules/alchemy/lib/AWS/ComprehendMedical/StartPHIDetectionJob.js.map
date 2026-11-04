@@ -1,0 +1,1 @@
+{"version":3,"file":"StartPHIDetectionJob.js","sourceRoot":"","sources":["../../../src/AWS/ComprehendMedical/StartPHIDetectionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,4CAA4C,CAC7C,CAAC"}

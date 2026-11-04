@@ -1,0 +1,1 @@
+{"version":3,"file":"GetShardIterator.js","sourceRoot":"","sources":["../../../src/AWS/Kinesis/GetShardIterator.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,8BAA8B,CAAC;AACxD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8C5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,8BAA8B,CAC/B,CAAC"}

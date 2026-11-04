@@ -1,0 +1,1 @@
+{"version":3,"file":"IngestKnowledgeBaseDocuments.js","sourceRoot":"","sources":["../../../src/AWS/Bedrock/IngestKnowledgeBaseDocuments.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiE5C,MAAM,CAAC,MAAM,4BAA4B,GACvC,OAAO,CAAC,OAAO,CACb,0CAA0C,CAC3C,CAAC"}

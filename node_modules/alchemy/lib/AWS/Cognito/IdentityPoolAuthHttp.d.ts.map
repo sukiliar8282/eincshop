@@ -1,0 +1,1 @@
+{"version":3,"file":"IdentityPoolAuthHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Cognito/IdentityPoolAuthHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,gBAAgB,EAGjB,MAAM,uBAAuB,CAAC;AAE/B;;;;;GAKG;AACH,eAAO,MAAM,oBAAoB,qJA6ChC,CAAC"}

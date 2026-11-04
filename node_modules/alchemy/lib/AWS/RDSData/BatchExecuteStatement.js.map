@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchExecuteStatement.js","sourceRoot":"","sources":["../../../src/AWS/RDSData/BatchExecuteStatement.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,+BAA+B,CAAC;AACzD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8D5C,MAAM,CAAC,MAAM,qBAAqB,GAAG,OAAO,CAAC,OAAO,CAClD,mCAAmC,CACpC,CAAC"}

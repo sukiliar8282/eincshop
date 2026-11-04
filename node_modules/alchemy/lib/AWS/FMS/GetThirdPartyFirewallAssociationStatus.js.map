@@ -1,0 +1,1 @@
+{"version":3,"file":"GetThirdPartyFirewallAssociationStatus.js","sourceRoot":"","sources":["../../../src/AWS/FMS/GetThirdPartyFirewallAssociationStatus.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,sCAAsC,GACjD,OAAO,CAAC,OAAO,CACb,gDAAgD,CACjD,CAAC"}

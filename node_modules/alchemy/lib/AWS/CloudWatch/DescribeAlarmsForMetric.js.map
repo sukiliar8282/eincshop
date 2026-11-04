@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeAlarmsForMetric.js","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/DescribeAlarmsForMetric.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAC9D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA0C5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,wCAAwC,CACzC,CAAC"}

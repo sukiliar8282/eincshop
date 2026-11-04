@@ -1,0 +1,1 @@
+{"version":3,"file":"StartKeyPhrasesDetectionJob.js","sourceRoot":"","sources":["../../../src/AWS/Comprehend/StartKeyPhrasesDetectionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA+D5C,MAAM,CAAC,MAAM,2BAA2B,GACtC,OAAO,CAAC,OAAO,CACb,4CAA4C,CAC7C,CAAC"}

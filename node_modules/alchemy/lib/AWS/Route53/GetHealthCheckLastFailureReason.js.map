@@ -1,0 +1,1 @@
+{"version":3,"file":"GetHealthCheckLastFailureReason.js","sourceRoot":"","sources":["../../../src/AWS/Route53/GetHealthCheckLastFailureReason.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,+BAA+B,GAC1C,OAAO,CAAC,OAAO,CACb,6CAA6C,CAC9C,CAAC"}

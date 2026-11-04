@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetStandardsControlAssociations.js","sourceRoot":"","sources":["../../../src/AWS/SecurityHub/BatchGetStandardsControlAssociations.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,oCAAoC,GAC/C,OAAO,CAAC,OAAO,CACb,sDAAsD,CACvD,CAAC"}

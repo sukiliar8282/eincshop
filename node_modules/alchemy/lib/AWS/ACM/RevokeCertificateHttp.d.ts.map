@@ -1,0 +1,1 @@
+{"version":3,"file":"RevokeCertificateHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/ACM/RevokeCertificateHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,iBAAiB,EAElB,MAAM,wBAAwB,CAAC;AAEhC,eAAO,MAAM,qBAAqB,sJAOjC,CAAC"}

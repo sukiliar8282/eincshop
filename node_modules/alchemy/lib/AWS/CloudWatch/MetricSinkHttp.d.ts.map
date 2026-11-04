@@ -1,0 +1,1 @@
+{"version":3,"file":"MetricSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/MetricSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EACL,UAAU,EAGX,MAAM,iBAAiB,CAAC;AACzB,OAAO,EAAE,aAAa,EAAE,MAAM,oBAAoB,CAAC;AAWnD,eAAO,MAAM,cAAc,+CA0C1B,CAAC"}

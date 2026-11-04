@@ -1,0 +1,1 @@
+{"version":3,"file":"GetFaceLivenessSessionResults.js","sourceRoot":"","sources":["../../../src/AWS/Rekognition/GetFaceLivenessSessionResults.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,+CAA+C,CAChD,CAAC"}

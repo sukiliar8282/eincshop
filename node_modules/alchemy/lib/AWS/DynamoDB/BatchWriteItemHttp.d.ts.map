@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchWriteItemHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/BatchWriteItemHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,cAAc,EAIf,MAAM,qBAAqB,CAAC;AAE7B,eAAO,MAAM,kBAAkB,mJA8D9B,CAAC"}

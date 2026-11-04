@@ -1,0 +1,1 @@
+{"version":3,"file":"GetSubscriptionAttributes.js","sourceRoot":"","sources":["../../../src/AWS/SNS/GetSubscriptionAttributes.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,mCAAmC,CACpC,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetRecordHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/SageMaker/BatchGetRecordHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EACL,cAAc,EAEf,MAAM,qBAAqB,CAAC;AAG7B,eAAO,MAAM,kBAAkB,mJAoB9B,CAAC"}

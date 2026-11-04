@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchDisassociateClientDeviceFromCoreDevice.js","sourceRoot":"","sources":["../../../src/AWS/GreengrassV2/BatchDisassociateClientDeviceFromCoreDevice.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,2CAA2C,GACtD,OAAO,CAAC,OAAO,CACb,8DAA8D,CAC/D,CAAC"}

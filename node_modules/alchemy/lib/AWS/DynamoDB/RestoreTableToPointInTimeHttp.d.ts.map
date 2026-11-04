@@ -1,0 +1,1 @@
+{"version":3,"file":"RestoreTableToPointInTimeHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/RestoreTableToPointInTimeHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,yBAAyB,EAE1B,MAAM,gCAAgC,CAAC;AAGxC,eAAO,MAAM,6BAA6B,8JAmDzC,CAAC"}

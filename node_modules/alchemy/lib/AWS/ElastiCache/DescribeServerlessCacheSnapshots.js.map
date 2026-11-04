@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeServerlessCacheSnapshots.js","sourceRoot":"","sources":["../../../src/AWS/ElastiCache/DescribeServerlessCacheSnapshots.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,gCAAgC,GAC3C,OAAO,CAAC,OAAO,CACb,kDAAkD,CACnD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"AddPermission.js","sourceRoot":"","sources":["../../../src/AWS/SNS/AddPermission.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,aAAa,GAAG,OAAO,CAAC,OAAO,CAC1C,uBAAuB,CACxB,CAAC"}

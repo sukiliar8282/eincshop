@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchDeleteDevicePositionHistory.js","sourceRoot":"","sources":["../../../src/AWS/Location/BatchDeleteDevicePositionHistory.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,gCAAgC,GAC3C,OAAO,CAAC,OAAO,CACb,+CAA+C,CAChD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"InvokeDataAutomationLibraryIngestionJob.js","sourceRoot":"","sources":["../../../src/AWS/BedrockDataAutomation/InvokeDataAutomationLibraryIngestionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiE5C,MAAM,CAAC,MAAM,uCAAuC,GAClD,OAAO,CAAC,OAAO,CACb,mEAAmE,CACpE,CAAC"}

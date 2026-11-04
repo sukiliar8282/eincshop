@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetServiceLevelObjectiveBudgetReportHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/ApplicationSignals/BatchGetServiceLevelObjectiveBudgetReportHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EAAE,yCAAyC,EAAE,MAAM,gDAAgD,CAAC;AAG3G,eAAO,MAAM,6CAA6C,8KAWzD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetApplicationRevisions.js","sourceRoot":"","sources":["../../../src/AWS/CodeDeploy/BatchGetApplicationRevisions.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,4BAA4B,GACvC,OAAO,CAAC,OAAO,CACb,6CAA6C,CAC9C,CAAC"}

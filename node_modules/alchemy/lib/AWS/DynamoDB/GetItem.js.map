@@ -1,0 +1,1 @@
+{"version":3,"file":"GetItem.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/GetItem.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,OAAO,GAAG,OAAO,CAAC,OAAO,CAAU,sBAAsB,CAAC,CAAC"}

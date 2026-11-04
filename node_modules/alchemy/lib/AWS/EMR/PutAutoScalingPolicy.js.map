@@ -1,0 +1,1 @@
+{"version":3,"file":"PutAutoScalingPolicy.js","sourceRoot":"","sources":["../../../src/AWS/EMR/PutAutoScalingPolicy.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,8BAA8B,CAC/B,CAAC"}

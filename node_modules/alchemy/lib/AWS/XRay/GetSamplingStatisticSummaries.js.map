@@ -1,0 +1,1 @@
+{"version":3,"file":"GetSamplingStatisticSummaries.js","sourceRoot":"","sources":["../../../src/AWS/XRay/GetSamplingStatisticSummaries.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAyC5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,wCAAwC,CACzC,CAAC"}

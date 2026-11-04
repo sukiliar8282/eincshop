@@ -1,0 +1,1 @@
+{"version":3,"file":"SendBinding.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/Email/SendBinding.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EAAE,MAAM,EAAE,iBAAiB,EAAE,MAAM,sBAAsB,CAAC;AACjE,OAAO,EACL,IAAI,EAIL,MAAM,WAAW,CAAC;AAGnB,eAAO,MAAM,WAAW,2DAiDvB,CAAC"}

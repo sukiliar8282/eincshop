@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetCustomDataIdentifiers.js","sourceRoot":"","sources":["../../../src/AWS/Macie2/BatchGetCustomDataIdentifiers.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiC5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,0CAA0C,CAC3C,CAAC"}

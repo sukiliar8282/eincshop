@@ -1,0 +1,1 @@
+{"version":3,"file":"ListDomains.js","sourceRoot":"","sources":["../../../src/AWS/Route53Domains/ListDomains.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,WAAW,GAAG,OAAO,CAAC,OAAO,CACxC,gCAAgC,CACjC,CAAC"}

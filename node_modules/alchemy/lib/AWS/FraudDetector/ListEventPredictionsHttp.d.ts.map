@@ -1,0 +1,1 @@
+{"version":3,"file":"ListEventPredictionsHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/FraudDetector/ListEventPredictionsHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,oBAAoB,EAAE,MAAM,2BAA2B,CAAC;AAEjE;;;;;GAKG;AACH,eAAO,MAAM,wBAAwB,yJAkCpC,CAAC"}

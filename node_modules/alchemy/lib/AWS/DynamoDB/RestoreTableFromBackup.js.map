@@ -1,0 +1,1 @@
+{"version":3,"file":"RestoreTableFromBackup.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/RestoreTableFromBackup.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,sBAAsB,GAAG,OAAO,CAAC,OAAO,CACnD,qCAAqC,CACtC,CAAC"}

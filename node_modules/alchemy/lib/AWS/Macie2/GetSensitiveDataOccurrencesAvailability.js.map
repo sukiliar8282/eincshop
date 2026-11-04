@@ -1,0 +1,1 @@
+{"version":3,"file":"GetSensitiveDataOccurrencesAvailability.js","sourceRoot":"","sources":["../../../src/AWS/Macie2/GetSensitiveDataOccurrencesAvailability.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiC5C,MAAM,CAAC,MAAM,uCAAuC,GAClD,OAAO,CAAC,OAAO,CACb,oDAAoD,CACrD,CAAC"}

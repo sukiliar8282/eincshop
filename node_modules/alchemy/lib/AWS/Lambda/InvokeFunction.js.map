@@ -1,0 +1,1 @@
+{"version":3,"file":"InvokeFunction.js","sourceRoot":"","sources":["../../../src/AWS/Lambda/InvokeFunction.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,MAAM,6BAA6B,CAAC;AACtD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoB5C,MAAM,CAAC,MAAM,cAAc,GAAG,OAAO,CAAC,OAAO,CAC3C,2BAA2B,CAC5B,CAAC"}

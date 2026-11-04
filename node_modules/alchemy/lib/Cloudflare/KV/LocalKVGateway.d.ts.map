@@ -1,0 +1,1 @@
+{"version":3,"file":"LocalKVGateway.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/KV/LocalKVGateway.ts"],"names":[],"mappings":"AAsBA,OAAO,KAAK,KAAK,OAAO,MAAM,gBAAgB,CAAC;AAG/C,OAAO,KAAK,EAAE,sBAAsB,EAAE,MAAM,uBAAuB,CAAC;AAepE;;;;GAIG;AACH,eAAO,MAAM,2BAA2B,gBACzB,MAAM;AACnB;;;;GAIG;SACM,OAAO,CAAC,OAAO,CAAC,KAAK,CAAC,KAC9B,UAAU,CAAC,OAAO,sBAAsB,CAgC1C,CAAC"}

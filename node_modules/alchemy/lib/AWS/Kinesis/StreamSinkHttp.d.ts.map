@@ -1,0 +1,1 @@
+{"version":3,"file":"StreamSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Kinesis/StreamSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,UAAU,EAAE,MAAM,iBAAiB,CAAC;AAC7C,OAAO,EAAE,UAAU,EAAyB,MAAM,iBAAiB,CAAC;AAKpE,eAAO,MAAM,cAAc,4CA6C1B,CAAC"}

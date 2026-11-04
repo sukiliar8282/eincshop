@@ -1,0 +1,1 @@
+{"version":3,"file":"TableSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/TableSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,cAAc,EAAE,MAAM,qBAAqB,CAAC;AAErD,OAAO,EAAE,SAAS,EAAuB,MAAM,gBAAgB,CAAC;AA2ChE,eAAO,MAAM,aAAa,+CAsCzB,CAAC"}

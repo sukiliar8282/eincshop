@@ -1,0 +1,1 @@
+{"version":3,"file":"GetHLSStreamingSessionURL.js","sourceRoot":"","sources":["../../../src/AWS/KinesisVideo/GetHLSStreamingSessionURL.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqE5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,4CAA4C,CAC7C,CAAC"}

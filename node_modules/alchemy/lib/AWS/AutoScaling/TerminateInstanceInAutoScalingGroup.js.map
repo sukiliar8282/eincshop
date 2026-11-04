@@ -1,0 +1,1 @@
+{"version":3,"file":"TerminateInstanceInAutoScalingGroup.js","sourceRoot":"","sources":["../../../src/AWS/AutoScaling/TerminateInstanceInAutoScalingGroup.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqD5C,MAAM,CAAC,MAAM,mCAAmC,GAC9C,OAAO,CAAC,OAAO,CACb,qDAAqD,CACtD,CAAC"}

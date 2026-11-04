@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteApplicationSnapshot.js","sourceRoot":"","sources":["../../../src/AWS/KinesisAnalyticsV2/DeleteApplicationSnapshot.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,kDAAkD,CACnD,CAAC"}

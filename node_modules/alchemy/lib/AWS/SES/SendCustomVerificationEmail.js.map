@@ -1,0 +1,1 @@
+{"version":3,"file":"SendCustomVerificationEmail.js","sourceRoot":"","sources":["../../../src/AWS/SES/SendCustomVerificationEmail.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmF5C,MAAM,CAAC,MAAM,2BAA2B,GACtC,OAAO,CAAC,OAAO,CACb,qCAAqC,CACtC,CAAC"}

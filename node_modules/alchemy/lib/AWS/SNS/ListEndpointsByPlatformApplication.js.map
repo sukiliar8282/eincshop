@@ -1,0 +1,1 @@
+{"version":3,"file":"ListEndpointsByPlatformApplication.js","sourceRoot":"","sources":["../../../src/AWS/SNS/ListEndpointsByPlatformApplication.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,kCAAkC,GAC7C,OAAO,CAAC,OAAO,CACb,4CAA4C,CAC7C,CAAC"}

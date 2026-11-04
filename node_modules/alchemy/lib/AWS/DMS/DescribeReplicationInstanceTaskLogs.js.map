@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeReplicationInstanceTaskLogs.js","sourceRoot":"","sources":["../../../src/AWS/DMS/DescribeReplicationInstanceTaskLogs.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,mCAAmC,GAC9C,OAAO,CAAC,OAAO,CACb,6CAA6C,CAC9C,CAAC"}

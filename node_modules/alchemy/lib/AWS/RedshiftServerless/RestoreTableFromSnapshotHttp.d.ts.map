@@ -1,0 +1,1 @@
+{"version":3,"file":"RestoreTableFromSnapshotHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/RedshiftServerless/RestoreTableFromSnapshotHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EAAE,wBAAwB,EAAE,MAAM,+BAA+B,CAAC;AAEzE,eAAO,MAAM,4BAA4B,6JAaxC,CAAC"}

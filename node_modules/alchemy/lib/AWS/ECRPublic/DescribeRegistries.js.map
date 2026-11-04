@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeRegistries.js","sourceRoot":"","sources":["../../../src/AWS/ECRPublic/DescribeRegistries.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,kCAAkC,CACnC,CAAC"}

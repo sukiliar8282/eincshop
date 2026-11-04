@@ -1,0 +1,1 @@
+{"version":3,"file":"CheckDomainTransferability.js","sourceRoot":"","sources":["../../../src/AWS/Route53Domains/CheckDomainTransferability.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiD5C,MAAM,CAAC,MAAM,0BAA0B,GACrC,OAAO,CAAC,OAAO,CACb,+CAA+C,CAChD,CAAC"}

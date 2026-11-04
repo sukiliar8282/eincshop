@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeReplicationConfigurations.js","sourceRoot":"","sources":["../../../src/AWS/EFS/DescribeReplicationConfigurations.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkD5C,MAAM,CAAC,MAAM,iCAAiC,GAC5C,OAAO,CAAC,OAAO,CACb,2CAA2C,CAC5C,CAAC"}

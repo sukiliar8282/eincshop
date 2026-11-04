@@ -1,0 +1,1 @@
+{"version":3,"file":"GetPermissionPolicy.js","sourceRoot":"","sources":["../../../src/AWS/WAFv2/GetPermissionPolicy.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,mBAAmB,GAAG,OAAO,CAAC,OAAO,CAChD,+BAA+B,CAChC,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetIdentityProviderHttp.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/Access/GetIdentityProviderHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAQtC,OAAO,EAAE,qBAAqB,EAAE,MAAM,6BAA6B,CAAC;AAGpE,OAAO,EAEL,mBAAmB,EACpB,MAAM,0BAA0B,CAAC;AAoBlC;;;;;;;;;GASG;AACH,eAAO,MAAM,uBAAuB,gEAuEnC,CAAC"}

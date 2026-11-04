@@ -1,0 +1,1 @@
+{"version":3,"file":"GetComplianceDetailsByConfigRule.js","sourceRoot":"","sources":["../../../src/AWS/Config/GetComplianceDetailsByConfigRule.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAgD5C,MAAM,CAAC,MAAM,gCAAgC,GAC3C,OAAO,CAAC,OAAO,CACb,6CAA6C,CAC9C,CAAC"}

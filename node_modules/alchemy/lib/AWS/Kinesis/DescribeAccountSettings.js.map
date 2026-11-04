@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeAccountSettings.js","sourceRoot":"","sources":["../../../src/AWS/Kinesis/DescribeAccountSettings.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,8BAA8B,CAAC;AACxD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,qCAAqC,CACtC,CAAC"}

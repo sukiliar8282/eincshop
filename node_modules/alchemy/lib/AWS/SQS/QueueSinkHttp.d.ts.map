@@ -1,0 +1,1 @@
+{"version":3,"file":"QueueSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/SQS/QueueSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAMtC,OAAO,EAAE,SAAS,EAAuB,MAAM,gBAAgB,CAAC;AAChE,OAAO,EAAE,gBAAgB,EAAE,MAAM,uBAAuB,CAAC;AAyBzD,eAAO,MAAM,aAAa,iDA4CzB,CAAC"}

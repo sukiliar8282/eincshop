@@ -1,0 +1,10 @@
+import * as deadline from "@distilled.cloud/aws/deadline";
+import * as Layer from "effect/Layer";
+import { makeDeadlineQueueHttpBinding } from "./BindingHttp.js";
+import { ListTasks } from "./ListTasks.js";
+export const ListTasksHttp = Layer.effect(ListTasks, makeDeadlineQueueHttpBinding({
+    tag: "AWS.Deadline.ListTasks",
+    operation: deadline.listTasks,
+    actions: ["deadline:ListTasks"],
+}));
+//# sourceMappingURL=ListTasksHttp.js.map

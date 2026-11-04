@@ -1,0 +1,1 @@
+{"version":3,"file":"GetDashboard.js","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/GetDashboard.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAC9D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,YAAY,GAAG,OAAO,CAAC,OAAO,CACzC,6BAA6B,CAC9B,CAAC"}

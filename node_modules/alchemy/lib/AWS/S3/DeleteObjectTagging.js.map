@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteObjectTagging.js","sourceRoot":"","sources":["../../../src/AWS/S3/DeleteObjectTagging.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,yBAAyB,CAAC;AAC9C,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAExC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,mBAAmB,GAAG,OAAO,CAAC,OAAO,CAChD,4BAA4B,CAC7B,CAAC"}

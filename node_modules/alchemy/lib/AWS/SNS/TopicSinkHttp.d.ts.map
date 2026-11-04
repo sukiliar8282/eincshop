@@ -1,0 +1,1 @@
+{"version":3,"file":"TopicSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/SNS/TopicSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,YAAY,EAAE,MAAM,mBAAmB,CAAC;AAEjD,OAAO,EAAE,SAAS,EAAuB,MAAM,gBAAgB,CAAC;AAyBhE,eAAO,MAAM,aAAa,6CA6CzB,CAAC"}

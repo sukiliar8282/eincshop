@@ -1,0 +1,39 @@
+import * as emrc from "@distilled.cloud/aws/emr-containers";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as Binding from "../../Binding.js";
+import { toWireSeconds } from "../../Util/Duration.js";
+import { isBindingHost } from "../Lambda/Function.js";
+import { virtualClusterPolicyStatement } from "./BindingHttp.js";
+import { GetManagedEndpointSessionCredentials, } from "./GetManagedEndpointSessionCredentials.js";
+export const GetManagedEndpointSessionCredentialsHttp = Layer.effect(GetManagedEndpointSessionCredentials, Effect.gen(function* () {
+    const op = yield* emrc.getManagedEndpointSessionCredentials;
+    // Bespoke (not the shared builder): the request addresses the cluster as
+    // `virtualClusterIdentifier` (not `virtualClusterId`) and carries a
+    // `duration` that converts to the wire's `durationInSeconds`.
+    return Effect.fn(function* (virtualCluster) {
+        const VirtualClusterId = yield* virtualCluster.virtualClusterId;
+        if (!globalThis.__ALCHEMY_RUNTIME__) {
+            const host = yield* Binding.Host;
+            if (isBindingHost(host)) {
+                yield* host.bind `Allow(${host}, AWS.EMRContainers.GetManagedEndpointSessionCredentials(${virtualCluster}))`({
+                    policyStatements: [
+                        virtualClusterPolicyStatement(virtualCluster, [
+                            "emr-containers:GetManagedEndpointSessionCredentials",
+                            "emr-containers:DescribeManagedEndpoint",
+                        ]),
+                    ],
+                });
+            }
+        }
+        return Effect.fn(`AWS.EMRContainers.GetManagedEndpointSessionCredentials(${virtualCluster.LogicalId})`)(function* (request) {
+            const { duration, ...rest } = request;
+            return yield* op({
+                ...rest,
+                durationInSeconds: toWireSeconds(duration),
+                virtualClusterIdentifier: yield* VirtualClusterId,
+            });
+        });
+    });
+}));
+//# sourceMappingURL=GetManagedEndpointSessionCredentialsHttp.js.map

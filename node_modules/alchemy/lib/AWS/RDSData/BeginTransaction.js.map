@@ -1,0 +1,1 @@
+{"version":3,"file":"BeginTransaction.js","sourceRoot":"","sources":["../../../src/AWS/RDSData/BeginTransaction.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,+BAA+B,CAAC;AACzD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmE5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,8BAA8B,CAC/B,CAAC"}

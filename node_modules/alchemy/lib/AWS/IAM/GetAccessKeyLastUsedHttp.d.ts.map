@@ -1,0 +1,1 @@
+{"version":3,"file":"GetAccessKeyLastUsedHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/IAM/GetAccessKeyLastUsedHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,oBAAoB,EAAE,MAAM,2BAA2B,CAAC;AAEjE;;;;GAIG;AACH,eAAO,MAAM,wBAAwB,yJAgCpC,CAAC"}

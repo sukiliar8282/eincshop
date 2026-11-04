@@ -1,0 +1,1 @@
+{"version":3,"file":"ListCisScanResultsAggregatedByTargetResource.js","sourceRoot":"","sources":["../../../src/AWS/Inspector2/ListCisScanResultsAggregatedByTargetResource.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiC5C,MAAM,CAAC,MAAM,4CAA4C,GACvD,OAAO,CAAC,OAAO,CACb,6DAA6D,CAC9D,CAAC"}

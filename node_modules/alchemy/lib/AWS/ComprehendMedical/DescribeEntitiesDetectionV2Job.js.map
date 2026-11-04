@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeEntitiesDetectionV2Job.js","sourceRoot":"","sources":["../../../src/AWS/ComprehendMedical/DescribeEntitiesDetectionV2Job.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkC5C,MAAM,CAAC,MAAM,8BAA8B,GACzC,OAAO,CAAC,OAAO,CACb,sDAAsD,CACvD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetHealthEvent.js","sourceRoot":"","sources":["../../../src/AWS/InternetMonitor/GetHealthEvent.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,sCAAsC,CAAC;AAC3D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAyC5C,MAAM,CAAC,MAAM,cAAc,GAAG,OAAO,CAAC,OAAO,CAC3C,oCAAoC,CACrC,CAAC"}

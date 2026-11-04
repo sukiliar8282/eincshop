@@ -1,0 +1,1 @@
+{"version":3,"file":"GetTableMetadataLocation.js","sourceRoot":"","sources":["../../../src/AWS/S3Tables/GetTableMetadataLocation.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,wBAAwB,GACnC,OAAO,CAAC,OAAO,CACb,uCAAuC,CACxC,CAAC"}

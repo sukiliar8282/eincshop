@@ -1,0 +1,1 @@
+{"version":3,"file":"StartSpeechSynthesisStream.js","sourceRoot":"","sources":["../../../src/AWS/Polly/StartSpeechSynthesisStream.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwD5C,MAAM,CAAC,MAAM,0BAA0B,GACrC,OAAO,CAAC,OAAO,CACb,sCAAsC,CACvC,CAAC"}

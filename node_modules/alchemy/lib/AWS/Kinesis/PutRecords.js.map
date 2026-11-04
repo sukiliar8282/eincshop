@@ -1,0 +1,1 @@
+{"version":3,"file":"PutRecords.js","sourceRoot":"","sources":["../../../src/AWS/Kinesis/PutRecords.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,8BAA8B,CAAC;AACxD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8C5C,MAAM,CAAC,MAAM,UAAU,GAAG,OAAO,CAAC,OAAO,CAAa,wBAAwB,CAAC,CAAC"}

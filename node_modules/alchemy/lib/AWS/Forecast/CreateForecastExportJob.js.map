@@ -1,0 +1,1 @@
+{"version":3,"file":"CreateForecastExportJob.js","sourceRoot":"","sources":["../../../src/AWS/Forecast/CreateForecastExportJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,sCAAsC,CACvC,CAAC"}

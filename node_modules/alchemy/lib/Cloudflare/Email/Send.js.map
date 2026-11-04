@@ -1,0 +1,1 @@
+{"version":3,"file":"Send.js","sourceRoot":"","sources":["../../../src/Cloudflare/Email/Send.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,IAAI,MAAM,aAAa,CAAC;AACpC,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,IAAI,GAAG,OAAO,CAAC,OAAO,CAAO,4BAA4B,CAAC,CAAC;AAmBxE,MAAM,OAAO,cAAe,SAAQ,IAAI,CAAC,WAAW,CAAC,gBAAgB,CAGnE;CAAG"}

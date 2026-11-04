@@ -1,0 +1,1 @@
+{"version":3,"file":"GetManagedThingState.js","sourceRoot":"","sources":["../../../src/AWS/IoTManagedIntegrations/GetManagedThingState.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,iDAAiD,CAClD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetOrganizationStatistics.js","sourceRoot":"","sources":["../../../src/AWS/GuardDuty/GetOrganizationStatistics.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkC5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,yCAAyC,CAC1C,CAAC"}

@@ -1,0 +1,27 @@
+export * from "./DeregisterInstance.js";
+export * from "./DeregisterInstanceHttp.js";
+export * from "./DiscoverInstances.js";
+export * from "./DiscoverInstancesHttp.js";
+export * from "./DiscoverInstancesRevision.js";
+export * from "./DiscoverInstancesRevisionHttp.js";
+export * from "./GetInstance.js";
+export * from "./GetInstanceHttp.js";
+export * from "./GetInstancesHealthStatus.js";
+export * from "./GetInstancesHealthStatusHttp.js";
+export * from "./GetOperation.js";
+export * from "./GetOperationHttp.js";
+export * from "./GetServiceAttributes.js";
+export * from "./GetServiceAttributesHttp.js";
+export * from "./HttpNamespace.js";
+export * from "./InstanceRegistration.js";
+export * from "./ListInstances.js";
+export * from "./ListInstancesHttp.js";
+export * from "./PrivateDnsNamespace.js";
+export * from "./PublicDnsNamespace.js";
+export * from "./RegisterInstance.js";
+export * from "./RegisterInstanceHttp.js";
+export * from "./Service.js";
+export * from "./UpdateInstanceCustomHealthStatus.js";
+export * from "./UpdateInstanceCustomHealthStatusHttp.js";
+export { awaitOperation, CloudMapOperationFailed } from "./internal.js";
+//# sourceMappingURL=index.js.map

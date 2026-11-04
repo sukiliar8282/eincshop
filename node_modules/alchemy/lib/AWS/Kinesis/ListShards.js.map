@@ -1,0 +1,1 @@
+{"version":3,"file":"ListShards.js","sourceRoot":"","sources":["../../../src/AWS/Kinesis/ListShards.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,8BAA8B,CAAC;AACxD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAuC5C,MAAM,CAAC,MAAM,UAAU,GAAG,OAAO,CAAC,OAAO,CAAa,wBAAwB,CAAC,CAAC"}

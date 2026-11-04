@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteDBClusterSnapshot.js","sourceRoot":"","sources":["../../../src/AWS/DocDB/DeleteDBClusterSnapshot.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,mCAAmC,CACpC,CAAC"}

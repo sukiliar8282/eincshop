@@ -1,0 +1,1 @@
+{"version":3,"file":"ListTagsForResourceHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Kinesis/ListTagsForResourceHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,mBAAmB,EAGpB,MAAM,0BAA0B,CAAC;AAElC,eAAO,MAAM,uBAAuB,wJAiCnC,CAAC"}

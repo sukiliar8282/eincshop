@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeCertificateAuthorityAuditReport.js","sourceRoot":"","sources":["../../../src/AWS/ACMPCA/DescribeCertificateAuthorityAuditReport.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsD5C,MAAM,CAAC,MAAM,uCAAuC,GAClD,OAAO,CAAC,OAAO,CACb,oDAAoD,CACrD,CAAC"}

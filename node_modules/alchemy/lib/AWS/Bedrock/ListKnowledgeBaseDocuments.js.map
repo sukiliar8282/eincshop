@@ -1,0 +1,1 @@
+{"version":3,"file":"ListKnowledgeBaseDocuments.js","sourceRoot":"","sources":["../../../src/AWS/Bedrock/ListKnowledgeBaseDocuments.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA+C5C,MAAM,CAAC,MAAM,0BAA0B,GACrC,OAAO,CAAC,OAAO,CACb,wCAAwC,CACzC,CAAC"}

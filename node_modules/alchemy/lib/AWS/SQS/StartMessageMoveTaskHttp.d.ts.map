@@ -1,0 +1,1 @@
+{"version":3,"file":"StartMessageMoveTaskHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/SQS/StartMessageMoveTaskHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAMtC,OAAO,EACL,oBAAoB,EAErB,MAAM,2BAA2B,CAAC;AAOnC,eAAO,MAAM,wBAAwB,yJAyDpC,CAAC"}

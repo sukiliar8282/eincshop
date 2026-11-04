@@ -1,0 +1,41 @@
+import * as Effect from "effect/Effect";
+import type { Rule } from "./Rule.ts";
+/**
+ * Shared scaffolding for the Recycle Bin (rbin) HTTP bindings.
+ *
+ * NOT exported from `index.ts` — every thin `{Op}Http.ts` in this service is
+ * a `Layer.effect(Cap, make…HttpBinding({ … }))` over one of the two builders
+ * below. Everything except the operation and the IAM action list is
+ * boilerplate.
+ */
+/**
+ * Build the impl Effect for a Recycle Bin operation scoped to a retention
+ * {@link Rule}: the deploy-time half grants `actions` on the bound rule's
+ * ARN, and the runtime half injects the rule's `Identifier` into every
+ * request.
+ */
+export declare const makeRbinRuleHttpBinding: <I extends {
+    Identifier: string;
+}, A, E, R>(options: {
+    /** Fully-qualified binding tag, e.g. `AWS.Rbin.GetRule`. */
+    tag: string;
+    /** The distilled operation. */
+    operation: Effect.Effect<(input: I) => Effect.Effect<A, E>, never, R>;
+    /** IAM actions granted on the retention rule ARN. */
+    actions: readonly string[];
+}) => Effect.Effect<(rule: Rule) => Effect.Effect<(request?: Omit<I, "Identifier"> | undefined) => Effect.Effect<A, E, never>, never, never>, never, R>;
+/**
+ * Build the impl Effect for an account-level Recycle Bin operation
+ * (enumerating the Region's retention rules). The deploy-time half grants
+ * `actions` on `*` — `rbin:ListRules` is a list action that is not scoped to
+ * a single rule resource.
+ */
+export declare const makeRbinAccountHttpBinding: <I, A, E, R>(options: {
+    /** Fully-qualified binding tag, e.g. `AWS.Rbin.ListRules`. */
+    tag: string;
+    /** The distilled operation, invoked with the caller's request as-is. */
+    operation: Effect.Effect<(input: I) => Effect.Effect<A, E>, never, R>;
+    /** IAM actions granted on `*`. */
+    actions: readonly string[];
+}) => Effect.Effect<() => Effect.Effect<(request: I) => Effect.Effect<A, E, never>, never, never>, never, R>;
+//# sourceMappingURL=BindingHttp.d.ts.map

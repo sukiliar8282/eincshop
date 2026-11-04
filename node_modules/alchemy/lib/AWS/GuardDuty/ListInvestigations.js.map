@@ -1,0 +1,1 @@
+{"version":3,"file":"ListInvestigations.js","sourceRoot":"","sources":["../../../src/AWS/GuardDuty/ListInvestigations.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,kCAAkC,CACnC,CAAC"}

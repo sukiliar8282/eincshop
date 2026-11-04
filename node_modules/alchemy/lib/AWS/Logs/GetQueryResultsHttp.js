@@ -1,0 +1,12 @@
+import * as Logs from "@distilled.cloud/aws/cloudwatch-logs";
+import * as Layer from "effect/Layer";
+import { makeLogGroupHttpBinding } from "./BindingHttp.js";
+import { GetQueryResults } from "./GetQueryResults.js";
+export const GetQueryResultsHttp = Layer.effect(GetQueryResults, makeLogGroupHttpBinding({
+    tag: "AWS.Logs.GetQueryResults",
+    operation: Logs.getQueryResults,
+    actions: ["logs:GetQueryResults"],
+    // Scoped by the query id returned from StartQuery.
+    injectLogGroupName: false,
+}));
+//# sourceMappingURL=GetQueryResultsHttp.js.map

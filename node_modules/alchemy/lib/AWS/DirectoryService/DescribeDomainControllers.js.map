@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeDomainControllers.js","sourceRoot":"","sources":["../../../src/AWS/DirectoryService/DescribeDomainControllers.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,gDAAgD,CACjD,CAAC"}

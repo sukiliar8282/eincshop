@@ -1,0 +1,1 @@
+{"version":3,"file":"GetEc2DeepInspectionConfiguration.js","sourceRoot":"","sources":["../../../src/AWS/Inspector2/GetEc2DeepInspectionConfiguration.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkC5C,MAAM,CAAC,MAAM,iCAAiC,GAC5C,OAAO,CAAC,OAAO,CACb,kDAAkD,CACnD,CAAC"}

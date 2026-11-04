@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeInstanceStatus.js","sourceRoot":"","sources":["../../../src/AWS/EC2/DescribeInstanceStatus.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmD5C,MAAM,CAAC,MAAM,sBAAsB,GAAG,OAAO,CAAC,OAAO,CACnD,gCAAgC,CACjC,CAAC"}

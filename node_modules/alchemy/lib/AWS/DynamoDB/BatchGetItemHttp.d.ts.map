@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetItemHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/BatchGetItemHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,YAAY,EAGb,MAAM,mBAAmB,CAAC;AAE3B,eAAO,MAAM,gBAAgB,iJA8D5B,CAAC"}

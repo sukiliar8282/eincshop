@@ -1,0 +1,1 @@
+{"version":3,"file":"GetSMSAttributes.js","sourceRoot":"","sources":["../../../src/AWS/SNS/GetSMSAttributes.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6B5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,0BAA0B,CAC3B,CAAC"}

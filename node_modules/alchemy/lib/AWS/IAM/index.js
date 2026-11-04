@@ -1,0 +1,47 @@
+export { AccessKey, AccessKeyProvider } from "./AccessKey.js";
+export { AccountAlias, AccountAliasProvider } from "./AccountAlias.js";
+// Runtime bindings (audit/insight surface). The shared `BindingHttp.ts`
+// scaffolding is intentionally NOT exported.
+export { GenerateCredentialReport } from "./GenerateCredentialReport.js";
+export { GenerateCredentialReportHttp } from "./GenerateCredentialReportHttp.js";
+export { GenerateServiceLastAccessedDetails } from "./GenerateServiceLastAccessedDetails.js";
+export { GenerateServiceLastAccessedDetailsHttp } from "./GenerateServiceLastAccessedDetailsHttp.js";
+export { GetAccessKeyLastUsed } from "./GetAccessKeyLastUsed.js";
+export { GetAccessKeyLastUsedHttp } from "./GetAccessKeyLastUsedHttp.js";
+export { GetAccountAuthorizationDetails } from "./GetAccountAuthorizationDetails.js";
+export { GetAccountAuthorizationDetailsHttp } from "./GetAccountAuthorizationDetailsHttp.js";
+export { GetAccountSummary } from "./GetAccountSummary.js";
+export { GetAccountSummaryHttp } from "./GetAccountSummaryHttp.js";
+export { GetContextKeysForCustomPolicy } from "./GetContextKeysForCustomPolicy.js";
+export { GetContextKeysForCustomPolicyHttp } from "./GetContextKeysForCustomPolicyHttp.js";
+export { GetContextKeysForPrincipalPolicy } from "./GetContextKeysForPrincipalPolicy.js";
+export { GetContextKeysForPrincipalPolicyHttp } from "./GetContextKeysForPrincipalPolicyHttp.js";
+export { GetCredentialReport } from "./GetCredentialReport.js";
+export { GetCredentialReportHttp } from "./GetCredentialReportHttp.js";
+export { GetServiceLastAccessedDetails } from "./GetServiceLastAccessedDetails.js";
+export { GetServiceLastAccessedDetailsHttp } from "./GetServiceLastAccessedDetailsHttp.js";
+export { GetServiceLastAccessedDetailsWithEntities } from "./GetServiceLastAccessedDetailsWithEntities.js";
+export { GetServiceLastAccessedDetailsWithEntitiesHttp } from "./GetServiceLastAccessedDetailsWithEntitiesHttp.js";
+export { ListPoliciesGrantingServiceAccess } from "./ListPoliciesGrantingServiceAccess.js";
+export { ListPoliciesGrantingServiceAccessHttp } from "./ListPoliciesGrantingServiceAccessHttp.js";
+export { SimulateCustomPolicy } from "./SimulateCustomPolicy.js";
+export { SimulateCustomPolicyHttp } from "./SimulateCustomPolicyHttp.js";
+export { SimulatePrincipalPolicy } from "./SimulatePrincipalPolicy.js";
+export { SimulatePrincipalPolicyHttp } from "./SimulatePrincipalPolicyHttp.js";
+export { AccountPasswordPolicy, AccountPasswordPolicyProvider, } from "./AccountPasswordPolicy.js";
+export { Group, GroupProvider } from "./Group.js";
+export { GroupMembership, GroupMembershipProvider } from "./GroupMembership.js";
+export { InstanceProfile, InstanceProfileProvider } from "./InstanceProfile.js";
+export { LoginProfile, LoginProfileProvider } from "./LoginProfile.js";
+export { OpenIDConnectProvider, OpenIDConnectProviderProvider, } from "./OpenIDConnectProvider.js";
+export { normalizePolicyDocument, Policy, PolicyProvider, stringifyPolicyDocument, } from "./Policy.js";
+export { Role, RoleProvider } from "./Role.js";
+export { SAMLProvider, SAMLProviderProvider } from "./SAMLProvider.js";
+export { ServerCertificate, ServerCertificateProvider, } from "./ServerCertificate.js";
+export { ServiceLinkedRole, ServiceLinkedRoleDeletionFailed, ServiceLinkedRoleProvider, } from "./ServiceLinkedRole.js";
+export { ServiceSpecificCredential, ServiceSpecificCredentialProvider, } from "./ServiceSpecificCredential.js";
+export { SigningCertificate, SigningCertificateProvider, } from "./SigningCertificate.js";
+export { SSHPublicKey, SSHPublicKeyProvider } from "./SSHPublicKey.js";
+export { User, UserProvider } from "./User.js";
+export { VirtualMFADevice, VirtualMFADeviceProvider, } from "./VirtualMFADevice.js";
+//# sourceMappingURL=index.js.map

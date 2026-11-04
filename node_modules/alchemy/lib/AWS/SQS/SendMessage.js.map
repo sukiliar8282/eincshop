@@ -1,0 +1,1 @@
+{"version":3,"file":"SendMessage.js","sourceRoot":"","sources":["../../../src/AWS/SQS/SendMessage.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8D5C,MAAM,CAAC,MAAM,WAAW,GAAG,OAAO,CAAC,OAAO,CAAc,qBAAqB,CAAC,CAAC"}

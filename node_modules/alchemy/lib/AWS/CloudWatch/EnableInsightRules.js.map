@@ -1,0 +1,1 @@
+{"version":3,"file":"EnableInsightRules.js","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/EnableInsightRules.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAC9D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,mCAAmC,CACpC,CAAC"}

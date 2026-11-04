@@ -1,0 +1,1 @@
+{"version":3,"file":"Providers.d.ts","sourceRoot":"","sources":["../../src/Docker/Providers.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,KAAK,QAAQ,MAAM,gBAAgB,CAAC;;AAW3C,qBAAa,SAAU,SAAQ,cAE9B;CAAG;AAEJ,MAAM,MAAM,oBAAoB,GAAG,KAAK,CAAC,QAAQ,CAAC,UAAU,CAAC,OAAO,SAAS,CAAC,CAAC,CAAC;AAEhF;;;;;GAKG;AACH,eAAO,MAAM,SAAS,yEA2BnB,CAAC"}

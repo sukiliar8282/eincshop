@@ -1,0 +1,1 @@
+{"version":3,"file":"ListAWSServiceAccessForOrganization.js","sourceRoot":"","sources":["../../../src/AWS/Organizations/ListAWSServiceAccessForOrganization.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkC5C,MAAM,CAAC,MAAM,mCAAmC,GAC9C,OAAO,CAAC,OAAO,CACb,uDAAuD,CACxD,CAAC"}

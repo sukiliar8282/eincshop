@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeAlarmsHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/DescribeAlarmsHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAGtC,OAAO,EACL,cAAc,EAEf,MAAM,qBAAqB,CAAC;AAE7B,eAAO,MAAM,kBAAkB,mJA0C9B,CAAC"}

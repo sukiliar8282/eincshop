@@ -1,0 +1,1 @@
+{"version":3,"file":"GetRateBasedStatementManagedKeys.js","sourceRoot":"","sources":["../../../src/AWS/WAFv2/GetRateBasedStatementManagedKeys.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,gCAAgC,GAC3C,OAAO,CAAC,OAAO,CACb,4CAA4C,CAC7C,CAAC"}

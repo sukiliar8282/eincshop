@@ -1,0 +1,1 @@
+{"version":3,"file":"PresignGetObjectHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/S3/PresignGetObjectHttp.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,WAAW,MAAM,kCAAkC,CAAC;AAErE,OAAO,KAAK,KAAK,MAAM,MAAM,6BAA6B,CAAC;AAE3D,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,gBAAgB,EAEjB,MAAM,uBAAuB,CAAC;AAE/B,eAAO,MAAM,oBAAoB,+EAqChC,CAAC"}

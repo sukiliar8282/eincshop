@@ -1,0 +1,1 @@
+{"version":3,"file":"RestoreTableFromBackupHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/RestoreTableFromBackupHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EACL,sBAAsB,EAEvB,MAAM,6BAA6B,CAAC;AAGrC,eAAO,MAAM,0BAA0B,2JAiDtC,CAAC"}

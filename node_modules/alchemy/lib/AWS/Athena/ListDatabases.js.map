@@ -1,0 +1,1 @@
+{"version":3,"file":"ListDatabases.js","sourceRoot":"","sources":["../../../src/AWS/Athena/ListDatabases.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkC5C,MAAM,CAAC,MAAM,aAAa,GAAG,OAAO,CAAC,OAAO,CAC1C,0BAA0B,CAC3B,CAAC"}

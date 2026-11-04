@@ -1,0 +1,1 @@
+{"version":3,"file":"ListWorkflowRuns.js","sourceRoot":"","sources":["../../../src/AWS/MWAAServerless/ListWorkflowRuns.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,qCAAqC,CACtC,CAAC"}

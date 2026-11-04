@@ -1,0 +1,1 @@
+{"version":3,"file":"AppIdentity.d.ts","sourceRoot":"","sources":["../../../src/Prisma/Internal/AppIdentity.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAExC,4EAA4E;AAC5E,eAAO,MAAM,0BAA0B,QAChC;IACH,EAAE,EAAE,MAAM,CAAC;IACX,SAAS,EAAE,MAAM,CAAC;IAClB,MAAM,EAAE;QAAE,EAAE,EAAE,MAAM,CAAA;KAAE,CAAC;CACxB,aACU,MAAM,YACP,MAAM,2EAQX,CAAC"}

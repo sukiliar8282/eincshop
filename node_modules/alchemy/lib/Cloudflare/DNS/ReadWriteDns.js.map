@@ -1,0 +1,1 @@
+{"version":3,"file":"ReadWriteDns.js","sourceRoot":"","sources":["../../../src/Cloudflare/DNS/ReadWriteDns.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAE5C,OAAO,EAAsB,MAAM,cAAc,CAAC;AAClD,OAAO,EAAuB,MAAM,eAAe,CAAC;AA2DpD,MAAM,CAAC,MAAM,YAAY,GAAG,OAAO,CAAC,OAAO,CACzC,6BAA6B,CAC9B,CAAC"}

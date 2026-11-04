@@ -1,0 +1,1 @@
+{"version":3,"file":"UserPoolAuthHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Cognito/UserPoolAuthHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAItC,OAAO,EAAE,YAAY,EAA2B,MAAM,mBAAmB,CAAC;AAO1E;;;;;GAKG;AACH,eAAO,MAAM,gBAAgB,iJA6G5B,CAAC"}

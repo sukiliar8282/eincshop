@@ -1,0 +1,1 @@
+{"version":3,"file":"ConnectHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/RDS/ConnectHttp.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,WAAW,MAAM,kCAAkC,CAAC;AACrE,OAAO,KAAK,KAAK,MAAM,MAAM,6BAA6B,CAAC;AAG3D,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAOtC,OAAO,EACL,OAAO,EAGR,MAAM,cAAc,CAAC;AA0CtB,eAAO,MAAM,WAAW,6HAkKvB,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ListCostAllocationTagBackfillHistory.js","sourceRoot":"","sources":["../../../src/AWS/CostExplorer/ListCostAllocationTagBackfillHistory.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,oCAAoC,GAC/C,OAAO,CAAC,OAAO,CACb,uDAAuD,CACxD,CAAC"}

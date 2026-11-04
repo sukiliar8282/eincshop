@@ -1,0 +1,1 @@
+{"version":3,"file":"CopyObject.js","sourceRoot":"","sources":["../../../src/AWS/S3/CopyObject.ts"],"names":[],"mappings":"AAAA,cAAc;AACd,OAAO,KAAK,EAAE,MAAM,yBAAyB,CAAC;AAC9C,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA0C5C,MAAM,CAAC,MAAM,UAAU,GAAG,OAAO,CAAC,OAAO,CAAa,mBAAmB,CAAC,CAAC"}

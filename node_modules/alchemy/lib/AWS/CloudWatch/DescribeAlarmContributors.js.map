@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeAlarmContributors.js","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/DescribeAlarmContributors.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAC9D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmD5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,0CAA0C,CAC3C,CAAC"}

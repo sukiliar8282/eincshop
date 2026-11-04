@@ -1,0 +1,1 @@
+{"version":3,"file":"GitHubRepositoryEventSource.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/Workers/GitHubRepositoryEventSource.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,qBAAqB,EAMtB,MAAM,uCAAuC,CAAC;AAI/C,OAAO,EAAiB,MAAM,EAAE,MAAM,aAAa,CAAC;AAEpD;;;;;;;;;;;;;;;;GAgBG;AACH,eAAO,MAAM,+BAA+B,wDAiE3C,CAAC"}

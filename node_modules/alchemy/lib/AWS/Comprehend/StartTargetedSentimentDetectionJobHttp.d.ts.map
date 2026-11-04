@@ -1,0 +1,1 @@
+{"version":3,"file":"StartTargetedSentimentDetectionJobHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Comprehend/StartTargetedSentimentDetectionJobHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EAAE,kCAAkC,EAAE,MAAM,yCAAyC,CAAC;AAE7F,eAAO,MAAM,sCAAsC,uKAOlD,CAAC"}

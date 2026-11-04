@@ -1,0 +1,1 @@
+{"version":3,"file":"ListManagedMicrovmImageVersions.js","sourceRoot":"","sources":["../../../src/AWS/Lambda/ListManagedMicrovmImageVersions.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA0B5C,MAAM,CAAC,MAAM,+BAA+B,GAC1C,OAAO,CAAC,OAAO,CACb,4CAA4C,CAC7C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"RecordsSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Timestream/RecordsSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,WAAW,EAGZ,MAAM,kBAAkB,CAAC;AAE1B,OAAO,EAAE,YAAY,EAAE,MAAM,mBAAmB,CAAC;AAiBjD,eAAO,MAAM,eAAe,+CAkE3B,CAAC"}

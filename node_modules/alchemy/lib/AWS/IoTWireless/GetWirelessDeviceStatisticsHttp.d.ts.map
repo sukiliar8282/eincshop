@@ -1,0 +1,1 @@
+{"version":3,"file":"GetWirelessDeviceStatisticsHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/IoTWireless/GetWirelessDeviceStatisticsHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,2BAA2B,EAE5B,MAAM,kCAAkC,CAAC;AAE1C,eAAO,MAAM,+BAA+B,gKAc3C,CAAC"}

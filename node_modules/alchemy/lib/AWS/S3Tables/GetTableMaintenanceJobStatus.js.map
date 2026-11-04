@@ -1,0 +1,1 @@
+{"version":3,"file":"GetTableMaintenanceJobStatus.js","sourceRoot":"","sources":["../../../src/AWS/S3Tables/GetTableMaintenanceJobStatus.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,4BAA4B,GACvC,OAAO,CAAC,OAAO,CACb,2CAA2C,CAC5C,CAAC"}

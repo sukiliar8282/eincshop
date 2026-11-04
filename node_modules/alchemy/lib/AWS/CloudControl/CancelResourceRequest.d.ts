@@ -1,0 +1,27 @@
+import type * as cloudcontrol from "@distilled.cloud/aws/cloudcontrol";
+import type * as Effect from "effect/Effect";
+import * as Binding from "../../Binding.ts";
+/**
+ * Runtime binding for `cloudformation:CancelResourceRequest`.
+ *
+ * Cancels a resource operation request that is still `PENDING` or
+ * `IN_PROGRESS` — the companion to {@link CreateResource} /
+ * {@link UpdateResource} / {@link DeleteResource} for aborting slow or
+ * mistaken provisioning operations.
+ * ### Tracking Requests
+ * **Example:** Cancel an in-flight operation
+ * ```typescript
+ * const cancelResourceRequest = yield* CloudControl.CancelResourceRequest();
+ *
+ * // runtime
+ * yield* cancelResourceRequest({
+ *   RequestToken: created.ProgressEvent!.RequestToken!,
+ * });
+ * ```
+ *
+ * @binding
+ */
+export interface CancelResourceRequest extends Binding.Service<CancelResourceRequest, "AWS.CloudControl.CancelResourceRequest", () => Effect.Effect<(request: cloudcontrol.CancelResourceRequestInput) => Effect.Effect<cloudcontrol.CancelResourceRequestOutput, cloudcontrol.CancelResourceRequestError>>> {
+}
+export declare const CancelResourceRequest: CancelResourceRequest;
+//# sourceMappingURL=CancelResourceRequest.d.ts.map

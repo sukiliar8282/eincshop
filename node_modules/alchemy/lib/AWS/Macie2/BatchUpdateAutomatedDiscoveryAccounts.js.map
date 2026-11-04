@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchUpdateAutomatedDiscoveryAccounts.js","sourceRoot":"","sources":["../../../src/AWS/Macie2/BatchUpdateAutomatedDiscoveryAccounts.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,qCAAqC,GAChD,OAAO,CAAC,OAAO,CACb,kDAAkD,CACnD,CAAC"}

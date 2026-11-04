@@ -1,0 +1,1 @@
+{"version":3,"file":"ListTargetedSentimentDetectionJobs.js","sourceRoot":"","sources":["../../../src/AWS/Comprehend/ListTargetedSentimentDetectionJobs.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqC5C,MAAM,CAAC,MAAM,kCAAkC,GAC7C,OAAO,CAAC,OAAO,CACb,mDAAmD,CACpD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"StartDominantLanguageDetectionJob.js","sourceRoot":"","sources":["../../../src/AWS/Comprehend/StartDominantLanguageDetectionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA+D5C,MAAM,CAAC,MAAM,iCAAiC,GAC5C,OAAO,CAAC,OAAO,CACb,kDAAkD,CACnD,CAAC"}

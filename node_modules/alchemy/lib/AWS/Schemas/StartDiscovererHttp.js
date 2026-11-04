@@ -1,0 +1,12 @@
+import * as schemas from "@distilled.cloud/aws/schemas";
+import * as Layer from "effect/Layer";
+import { makeSchemasDiscovererHttpBinding } from "./BindingHttp.js";
+import { StartDiscoverer } from "./StartDiscoverer.js";
+export const StartDiscovererHttp = Layer.effect(StartDiscoverer, makeSchemasDiscovererHttpBinding({
+    tag: "AWS.Schemas.StartDiscoverer",
+    operation: schemas.startDiscoverer,
+    actions: ["schemas:StartDiscoverer"],
+    // StartDiscoverer re-enables the discoverer's managed EventBridge rule.
+    ruleActions: ["events:EnableRule"],
+}));
+//# sourceMappingURL=StartDiscovererHttp.js.map

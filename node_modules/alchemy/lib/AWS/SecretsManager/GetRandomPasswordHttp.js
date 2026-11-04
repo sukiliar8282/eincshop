@@ -1,0 +1,10 @@
+import * as secretsmanager from "@distilled.cloud/aws/secrets-manager";
+import * as Layer from "effect/Layer";
+import { makeSecretsManagerAccountHttpBinding } from "./BindingHttp.js";
+import { GetRandomPassword } from "./GetRandomPassword.js";
+export const GetRandomPasswordHttp = Layer.effect(GetRandomPassword, makeSecretsManagerAccountHttpBinding({
+    tag: "AWS.SecretsManager.GetRandomPassword",
+    operation: secretsmanager.getRandomPassword,
+    actions: ["secretsmanager:GetRandomPassword"],
+}));
+//# sourceMappingURL=GetRandomPasswordHttp.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"internal.d.ts","sourceRoot":"","sources":["../../../src/AWS/IoTWireless/internal.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,IAAI,MAAM,mCAAmC,CAAC;AAC1D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAGxC;;;;GAIG;AACH,eAAO,MAAM,mBAAmB,QAAS,MAAM,gKAI5C,CAAC;AAEJ;;;GAGG;AACH,eAAO,MAAM,mBAAmB,6MAY9B,CAAC;AAoBH,eAAO,MAAM,SAAS,MAAO,OAAO,KAAK,OAAO,YACe,CAAC"}

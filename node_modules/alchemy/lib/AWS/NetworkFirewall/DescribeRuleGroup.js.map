@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeRuleGroup.js","sourceRoot":"","sources":["../../../src/AWS/NetworkFirewall/DescribeRuleGroup.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,iBAAiB,GAAG,OAAO,CAAC,OAAO,CAC9C,uCAAuC,CACxC,CAAC"}

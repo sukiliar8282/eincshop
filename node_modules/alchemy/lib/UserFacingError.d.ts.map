@@ -1,0 +1,1 @@
+{"version":3,"file":"UserFacingError.d.ts","sourceRoot":"","sources":["../src/UserFacingError.ts"],"names":[],"mappings":"AAEA;;;;;;;;;;;;;;;;;GAiBG;AACH,eAAO,MAAM,eAAe,EAAE,OAAO,MAEpC,CAAC;AAEF,gFAAgF;AAChF,MAAM,WAAW,eAAe;IAC9B,QAAQ,CAAC,CAAC,eAAe,CAAC,EAAE,IAAI,CAAC;IACjC,QAAQ,CAAC,OAAO,EAAE,MAAM,CAAC;CAC1B;AAED,eAAO,MAAM,YAAY,UAAW,OAAO,KAAG,KAAK,IAAI,eAIpB,CAAC"}

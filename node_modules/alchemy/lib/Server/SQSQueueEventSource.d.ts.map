@@ -1,0 +1,1 @@
+{"version":3,"file":"SQSQueueEventSource.d.ts","sourceRoot":"","sources":["../../src/Server/SQSQueueEventSource.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAGtC,OAAO,EAAE,cAAc,EAAE,MAAM,uBAAuB,CAAC;AACvD,OAAO,KAAK,GAAG,MAAM,qBAAqB,CAAC;AAE3C,OAAO,EAAE,UAAU,EAAE,MAAM,cAAc,CAAC;AAE1C,eAAO,MAAM,mBAAmB,qHAwE/B,CAAC"}

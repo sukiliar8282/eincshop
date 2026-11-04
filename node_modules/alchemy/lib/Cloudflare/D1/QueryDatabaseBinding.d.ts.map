@@ -1,0 +1,1 @@
+{"version":3,"file":"QueryDatabaseBinding.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/D1/QueryDatabaseBinding.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EAAE,MAAM,EAAE,iBAAiB,EAAE,MAAM,sBAAsB,CAAC;AAEjE,OAAO,EAGL,aAAa,EACd,MAAM,oBAAoB,CAAC;AAE5B,eAAO,MAAM,oBAAoB,oEAuChC,CAAC"}

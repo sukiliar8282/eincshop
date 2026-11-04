@@ -1,0 +1,1 @@
+{"version":3,"file":"Scan.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/Scan.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,QAAQ,MAAM,+BAA+B,CAAC;AAC1D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,IAAI,GAAG,OAAO,CAAC,OAAO,CAAO,mBAAmB,CAAC,CAAC"}

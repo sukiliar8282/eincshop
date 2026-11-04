@@ -1,0 +1,1 @@
+{"version":3,"file":"GetAuthorizationTokenHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/CodeArtifact/GetAuthorizationTokenHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,qBAAqB,EAEtB,MAAM,4BAA4B,CAAC;AAEpC;;;;;GAKG;AACH,eAAO,MAAM,yBAAyB,0JAgDrC,CAAC"}

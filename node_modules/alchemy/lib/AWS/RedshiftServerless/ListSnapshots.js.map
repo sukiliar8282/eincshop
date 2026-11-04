@@ -1,0 +1,1 @@
+{"version":3,"file":"ListSnapshots.js","sourceRoot":"","sources":["../../../src/AWS/RedshiftServerless/ListSnapshots.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAgC5C,MAAM,CAAC,MAAM,aAAa,GAAG,OAAO,CAAC,OAAO,CAC1C,sCAAsC,CACvC,CAAC"}

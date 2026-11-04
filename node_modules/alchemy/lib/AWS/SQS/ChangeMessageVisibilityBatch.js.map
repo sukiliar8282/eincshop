@@ -1,0 +1,1 @@
+{"version":3,"file":"ChangeMessageVisibilityBatch.js","sourceRoot":"","sources":["../../../src/AWS/SQS/ChangeMessageVisibilityBatch.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoD5C,MAAM,CAAC,MAAM,4BAA4B,GACvC,OAAO,CAAC,OAAO,CACb,sCAAsC,CACvC,CAAC"}

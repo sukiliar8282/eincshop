@@ -1,0 +1,1 @@
+{"version":3,"file":"TransactGetItemsHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/TransactGetItemsHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAGtC,OAAO,EACL,gBAAgB,EAGjB,MAAM,uBAAuB,CAAC;AAE/B,eAAO,MAAM,oBAAoB,qJAmEhC,CAAC"}

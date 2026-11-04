@@ -1,0 +1,1 @@
+{"version":3,"file":"ListManagedNotificationChannelAssociations.js","sourceRoot":"","sources":["../../../src/AWS/Notifications/ListManagedNotificationChannelAssociations.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,0CAA0C,GACrD,OAAO,CAAC,OAAO,CACb,8DAA8D,CAC/D,CAAC"}

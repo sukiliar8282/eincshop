@@ -1,0 +1,1 @@
+{"version":3,"file":"UpdateDomainNameservers.js","sourceRoot":"","sources":["../../../src/AWS/Route53Domains/UpdateDomainNameservers.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwD5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,4CAA4C,CAC7C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ConnectHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DSQL/ConnectHttp.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,WAAW,MAAM,kCAAkC,CAAC;AACrE,OAAO,KAAK,KAAK,MAAM,MAAM,6BAA6B,CAAC;AAE3D,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAOtC,OAAO,EAAE,OAAO,EAAyC,MAAM,cAAc,CAAC;AAI9E;;;;;;GAMG;AACH,eAAO,MAAM,WAAW,sEAmEvB,CAAC"}

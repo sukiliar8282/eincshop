@@ -1,0 +1,1 @@
+{"version":3,"file":"APIKeysHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/WAFv2/APIKeysHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EACL,YAAY,EACZ,YAAY,EACZ,kBAAkB,EAClB,WAAW,EACZ,MAAM,cAAc,CAAC;AAGtB,eAAO,MAAM,gBAAgB,iJAO5B,CAAC;AAEF,eAAO,MAAM,sBAAsB,uJAOlC,CAAC;AAEF,eAAO,MAAM,eAAe,gJAO3B,CAAC;AAEF,eAAO,MAAM,gBAAgB,iJAO5B,CAAC"}

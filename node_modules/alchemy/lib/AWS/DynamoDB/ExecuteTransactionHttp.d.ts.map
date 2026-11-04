@@ -1,0 +1,1 @@
+{"version":3,"file":"ExecuteTransactionHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/ExecuteTransactionHttp.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,kBAAkB,EAGnB,MAAM,yBAAyB,CAAC;AAEjC,eAAO,MAAM,sBAAsB,uJAqClC,CAAC"}

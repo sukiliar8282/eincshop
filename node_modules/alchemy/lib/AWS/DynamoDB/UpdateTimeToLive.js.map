@@ -1,0 +1,1 @@
+{"version":3,"file":"UpdateTimeToLive.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/UpdateTimeToLive.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,+BAA+B,CAChC,CAAC"}

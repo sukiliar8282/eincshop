@@ -1,0 +1,25 @@
+import * as Effect from "effect/Effect";
+/**
+ * Shared HTTP scaffolding for the geo-places runtime bindings.
+ *
+ * NOT exported from `index.ts` — every `{Op}Http.ts` in this service is a
+ * thin `Layer.effect(Cap, makeGeoPlacesHttpBinding({ … }))` over the builder
+ * below. Everything except the operation and the IAM action is boilerplate.
+ *
+ * geo-places is a standalone, pay-per-call Amazon Location API with no
+ * resource to manage: every action authorizes account-wide through the
+ * singleton `provider/default`, so the builder always grants on
+ * `Resource: ["*"]` and the capability takes no arguments.
+ */
+export declare const makeGeoPlacesHttpBinding: <I extends object, A, E, R>(options: {
+    /**
+     * Short capability name used in the binding sid and runtime span, e.g.
+     * `"Geocode"`.
+     */
+    capability: string;
+    /** IAM actions granted on `Resource: ["*"]`. */
+    iamActions: readonly string[];
+    /** The distilled operation implementing the capability. */
+    operation: Effect.Effect<(input: I) => Effect.Effect<A, E>, never, R>;
+}) => Effect.Effect<() => Effect.Effect<(request: I) => Effect.Effect<A, E, never>, never, never>, never, R>;
+//# sourceMappingURL=BindingHttp.d.ts.map

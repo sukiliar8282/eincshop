@@ -1,0 +1,1 @@
+{"version":3,"file":"HttpClient.d.ts","sourceRoot":"","sources":["../../../src/Prisma/Internal/HttpClient.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,aAAa,MAAM,gBAAgB,CAAC;AAEhD,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAE9D,+EAA+E;AAC/E,eAAO,MAAM,oBAAoB,kDAA+B,CAAC;;AAEjE;;;;;;;;;GASG;AACH,qBAAa,kBAAmB,SAAQ,uBAGN;CAAG;AAErC,eAAO,MAAM,sBAAsB,+CAKQ,CAAC"}

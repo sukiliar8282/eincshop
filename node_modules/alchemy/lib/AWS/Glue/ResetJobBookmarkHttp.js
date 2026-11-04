@@ -1,0 +1,13 @@
+import * as glue from "@distilled.cloud/aws/glue";
+import * as Layer from "effect/Layer";
+import { makeGlueJobHttpBinding } from "./BindingHttp.js";
+import { ResetJobBookmark } from "./ResetJobBookmark.js";
+export const ResetJobBookmarkHttp = Layer.effect(ResetJobBookmark, makeGlueJobHttpBinding({
+    tag: "AWS.Glue.ResetJobBookmark",
+    operation: glue.resetJobBookmark,
+    actions: ["glue:ResetJobBookmark"],
+    // Glue evaluates bookmark actions without a resource — an ARN-scoped
+    // grant never matches (verified live via the IAM policy simulator).
+    anyResource: true,
+}));
+//# sourceMappingURL=ResetJobBookmarkHttp.js.map

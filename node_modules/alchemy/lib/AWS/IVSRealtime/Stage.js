@@ -1,0 +1,186 @@
+import * as ivsrealtime from "@distilled.cloud/aws/ivs-realtime";
+import * as Data from "effect/Data";
+import * as Effect from "effect/Effect";
+import * as Stream from "effect/Stream";
+import { Unowned } from "../../AdoptPolicy.js";
+import { createPhysicalName } from "../../PhysicalName.js";
+import * as Provider from "../../Provider.js";
+import { Resource } from "../../Resource.js";
+import { createInternalTags, hasAlchemyTags } from "../../Tags.js";
+import { toWireSeconds } from "../../Util/Duration.js";
+import { retryWhileConflict, retryWhileThrottled, syncIvsRealtimeTags, toTagRecord, } from "./internal.js";
+/**
+ * An Amazon IVS Real-Time stage — a virtual space where participants
+ * exchange audio and video in real time (sub-300ms latency).
+ *
+ * Participants join a stage with participant tokens minted at runtime via
+ * `CreateParticipantToken`; publishers can also ingest via the stage's
+ * WHIP/RTMP endpoints.
+ * ### Creating Stages
+ * **Example:** Basic Stage
+ * ```typescript
+ * import * as IVSRealtime from "alchemy/AWS/IVSRealtime";
+ *
+ * const stage = yield* IVSRealtime.Stage("VideoRoom");
+ * ```
+ *
+ * **Example:** Named Stage with Tags
+ * ```typescript
+ * const stage = yield* IVSRealtime.Stage("VideoRoom", {
+ *   stageName: "my-video-room",
+ *   tags: { team: "media" },
+ * });
+ * ```
+ *
+ * @resource
+ */
+export const Stage = Resource("AWS.IVSRealtime.Stage");
+/**
+ * Raised when the IVS Real-Time API returns a stage missing its ARN or
+ * name.
+ */
+export class IvsRealtimeStageIncomplete extends Data.TaggedError("IvsRealtimeStageIncomplete") {
+}
+/**
+ * Convert the recording configuration prop shape (Duration-typed reconnect
+ * window) to the wire shape the IVS Real-Time API expects (whole seconds).
+ */
+const toWireRecordingConfig = (config) => config === undefined
+    ? undefined
+    : {
+        storageConfigurationArn: config.storageConfigurationArn,
+        mediaTypes: config.mediaTypes,
+        recordingReconnectWindowSeconds: toWireSeconds(config.recordingReconnectWindow),
+        recordParticipantReplicas: config.recordParticipantReplicas,
+    };
+/** Deep-equality on the recording configuration's user-specified fields. */
+const recordingConfigDrifted = (desired, observed) => {
+    if (desired === undefined)
+        return false; // unspecified — leave alone
+    if (observed === undefined)
+        return true;
+    if (desired.storageConfigurationArn !== observed.storageConfigurationArn) {
+        return true;
+    }
+    if (desired.mediaTypes !== undefined &&
+        JSON.stringify(desired.mediaTypes) !== JSON.stringify(observed.mediaTypes)) {
+        return true;
+    }
+    if (desired.recordingReconnectWindowSeconds !== undefined &&
+        desired.recordingReconnectWindowSeconds !==
+            observed.recordingReconnectWindowSeconds) {
+        return true;
+    }
+    if (desired.recordParticipantReplicas !== undefined &&
+        desired.recordParticipantReplicas !== observed.recordParticipantReplicas) {
+        return true;
+    }
+    return false;
+};
+export const StageProvider = () => Provider.effect(Stage, Effect.gen(function* () {
+    const toName = (id, props) => props.stageName
+        ? Effect.succeed(props.stageName)
+        : createPhysicalName({ id, maxLength: 128 });
+    const toAttrs = Effect.fn(function* (stage) {
+        if (!stage.name) {
+            return yield* Effect.fail(new IvsRealtimeStageIncomplete({
+                message: "IVS Real-Time stage is missing its name",
+            }));
+        }
+        return {
+            stageName: stage.name,
+            stageArn: stage.arn,
+            whipEndpoint: stage.endpoints?.whip,
+            eventsEndpoint: stage.endpoints?.events,
+            rtmpEndpoint: stage.endpoints?.rtmp,
+            rtmpsEndpoint: stage.endpoints?.rtmps,
+        };
+    });
+    const getByArn = Effect.fn(function* (arn) {
+        const response = yield* ivsrealtime.getStage({ arn }).pipe(retryWhileThrottled, Effect.catchTag("ResourceNotFoundException", () => Effect.succeed(undefined)));
+        return response?.stage;
+    });
+    /**
+     * ListStages has no name filter — enumerate and match exactly.
+     * Only used when the output ARN cache is unavailable.
+     */
+    const findByName = Effect.fn(function* (name) {
+        const summaries = yield* ivsrealtime.listStages.pages({}).pipe(Stream.runCollect, Effect.map((chunk) => Array.from(chunk).flatMap((page) => page.stages)), retryWhileThrottled);
+        const match = summaries.find((s) => s.name === name);
+        return match === undefined ? undefined : yield* getByArn(match.arn);
+    });
+    return {
+        stables: ["stageArn"],
+        read: Effect.fn(function* ({ id, olds, output }) {
+            const stage = output?.stageArn
+                ? yield* getByArn(output.stageArn)
+                : yield* findByName(yield* toName(id, olds ?? {}));
+            if (stage === undefined)
+                return undefined;
+            const attrs = yield* toAttrs(stage);
+            return (yield* hasAlchemyTags(id, toTagRecord(stage.tags)))
+                ? attrs
+                : Unowned(attrs);
+        }),
+        reconcile: Effect.fn(function* ({ id, news, output, session }) {
+            const name = yield* toName(id, news);
+            const internalTags = yield* createInternalTags(id);
+            const desiredTags = { ...internalTags, ...news.tags };
+            const desiredRecording = toWireRecordingConfig(news.autoParticipantRecordingConfiguration);
+            // 1. Observe.
+            let observed = output?.stageArn
+                ? yield* getByArn(output.stageArn)
+                : yield* findByName(name);
+            // 2. Ensure — create if missing.
+            if (observed === undefined) {
+                const created = yield* ivsrealtime
+                    .createStage({
+                    name,
+                    autoParticipantRecordingConfiguration: desiredRecording,
+                    tags: desiredTags,
+                })
+                    .pipe(retryWhileThrottled);
+                observed = created.stage;
+            }
+            if (observed === undefined) {
+                return yield* Effect.fail(new IvsRealtimeStageIncomplete({
+                    message: "IVS Real-Time CreateStage returned no stage",
+                }));
+            }
+            const arn = observed.arn;
+            // 3. Sync — name and recording configuration are mutable via
+            // UpdateStage; apply only on drift.
+            const patch = {};
+            if (observed.name !== name)
+                patch.name = name;
+            if (recordingConfigDrifted(desiredRecording, observed.autoParticipantRecordingConfiguration)) {
+                patch.autoParticipantRecordingConfiguration = desiredRecording;
+            }
+            if (Object.keys(patch).length > 0) {
+                yield* ivsrealtime
+                    .updateStage({ arn, ...patch })
+                    .pipe(retryWhileThrottled, retryWhileConflict);
+            }
+            // 3b. Sync tags — diff against OBSERVED cloud tags.
+            yield* syncIvsRealtimeTags(arn, desiredTags);
+            // 4. Return fresh attributes.
+            const final = yield* getByArn(arn);
+            if (final === undefined) {
+                return yield* Effect.fail(new IvsRealtimeStageIncomplete({
+                    message: `IVS Real-Time stage '${arn}' vanished during reconcile`,
+                }));
+            }
+            yield* session.note(arn);
+            return yield* toAttrs(final);
+        }),
+        delete: Effect.fn(function* ({ output }) {
+            // Deleting a stage with an active session raises
+            // ConflictException — retry through a bounded window.
+            yield* ivsrealtime.deleteStage({ arn: output.stageArn }).pipe(retryWhileThrottled, retryWhileConflict, Effect.catchTag("ResourceNotFoundException", () => Effect.void));
+        }),
+        list: () => ivsrealtime.listStages.pages({}).pipe(Stream.runCollect, Effect.map((chunk) => Array.from(chunk).flatMap((page) => page.stages)), Effect.flatMap(Effect.forEach((summary) => getByArn(summary.arn).pipe(Effect.flatMap((stage) => stage === undefined
+            ? Effect.succeed(undefined)
+            : toAttrs(stage))), { concurrency: 5 })), Effect.map((items) => items.filter((item) => item !== undefined))),
+    };
+}));
+//# sourceMappingURL=Stage.js.map

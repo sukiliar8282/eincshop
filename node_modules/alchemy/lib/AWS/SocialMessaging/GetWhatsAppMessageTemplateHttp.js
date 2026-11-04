@@ -1,0 +1,10 @@
+import * as socialmessaging from "@distilled.cloud/aws/socialmessaging";
+import * as Layer from "effect/Layer";
+import { makeWabaScopedHttpBinding } from "./BindingHttp.js";
+import { GetWhatsAppMessageTemplate } from "./GetWhatsAppMessageTemplate.js";
+export const GetWhatsAppMessageTemplateHttp = Layer.effect(GetWhatsAppMessageTemplate, makeWabaScopedHttpBinding({
+    tag: "AWS.SocialMessaging.GetWhatsAppMessageTemplate",
+    operation: socialmessaging.getWhatsAppMessageTemplate,
+    actions: ["social-messaging:GetWhatsAppMessageTemplate"],
+}));
+//# sourceMappingURL=GetWhatsAppMessageTemplateHttp.js.map

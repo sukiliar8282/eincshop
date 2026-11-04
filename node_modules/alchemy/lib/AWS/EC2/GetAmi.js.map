@@ -1,0 +1,1 @@
+{"version":3,"file":"GetAmi.js","sourceRoot":"","sources":["../../../src/AWS/EC2/GetAmi.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqD5C,MAAM,CAAC,MAAM,MAAM,GAAG,OAAO,CAAC,OAAO,CAAS,gBAAgB,CAAC,CAAC;AAEhE;;;;;;;GAOG;AACH,MAAM,CAAC,MAAM,MAAM,GAAG,MAAM,CAAC,OAAO,CAAC"}

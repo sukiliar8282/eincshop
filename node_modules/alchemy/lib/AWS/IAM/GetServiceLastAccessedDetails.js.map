@@ -1,0 +1,1 @@
+{"version":3,"file":"GetServiceLastAccessedDetails.js","sourceRoot":"","sources":["../../../src/AWS/IAM/GetServiceLastAccessedDetails.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,uCAAuC,CACxC,CAAC"}

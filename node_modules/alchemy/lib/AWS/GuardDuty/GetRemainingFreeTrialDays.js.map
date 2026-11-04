@@ -1,0 +1,1 @@
+{"version":3,"file":"GetRemainingFreeTrialDays.js","sourceRoot":"","sources":["../../../src/AWS/GuardDuty/GetRemainingFreeTrialDays.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,yCAAyC,CAC1C,CAAC"}

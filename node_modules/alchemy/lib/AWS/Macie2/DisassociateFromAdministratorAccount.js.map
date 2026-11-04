@@ -1,0 +1,1 @@
+{"version":3,"file":"DisassociateFromAdministratorAccount.js","sourceRoot":"","sources":["../../../src/AWS/Macie2/DisassociateFromAdministratorAccount.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiC5C,MAAM,CAAC,MAAM,oCAAoC,GAC/C,OAAO,CAAC,OAAO,CACb,iDAAiD,CAClD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteSMSSandboxPhoneNumber.js","sourceRoot":"","sources":["../../../src/AWS/SNS/DeleteSMSSandboxPhoneNumber.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiC5C,MAAM,CAAC,MAAM,2BAA2B,GACtC,OAAO,CAAC,OAAO,CACb,qCAAqC,CACtC,CAAC"}

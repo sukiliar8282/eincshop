@@ -1,0 +1,10 @@
+import * as guardduty from "@distilled.cloud/aws/guardduty";
+import * as Layer from "effect/Layer";
+import { makeGuardDutyDetectorHttpBinding } from "./BindingHttp.js";
+import { InviteMembers } from "./InviteMembers.js";
+export const InviteMembersHttp = Layer.effect(InviteMembers, makeGuardDutyDetectorHttpBinding({
+    tag: "AWS.GuardDuty.InviteMembers",
+    operation: guardduty.inviteMembers,
+    actions: ["guardduty:InviteMembers"],
+}));
+//# sourceMappingURL=InviteMembersHttp.js.map

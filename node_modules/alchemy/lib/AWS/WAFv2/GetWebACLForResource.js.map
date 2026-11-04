@@ -1,0 +1,1 @@
+{"version":3,"file":"GetWebACLForResource.js","sourceRoot":"","sources":["../../../src/AWS/WAFv2/GetWebACLForResource.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqC5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,gCAAgC,CACjC,CAAC"}

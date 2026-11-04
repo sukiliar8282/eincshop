@@ -1,0 +1,1 @@
+{"version":3,"file":"TagResource.js","sourceRoot":"","sources":["../../../src/AWS/SNS/TagResource.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA0C5C,MAAM,CAAC,MAAM,WAAW,GAAG,OAAO,CAAC,OAAO,CAAc,qBAAqB,CAAC,CAAC"}

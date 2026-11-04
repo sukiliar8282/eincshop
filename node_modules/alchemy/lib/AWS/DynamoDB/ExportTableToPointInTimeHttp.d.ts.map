@@ -1,0 +1,1 @@
+{"version":3,"file":"ExportTableToPointInTimeHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/ExportTableToPointInTimeHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,wBAAwB,EAEzB,MAAM,+BAA+B,CAAC;AAGvC,eAAO,MAAM,4BAA4B,6JA+CxC,CAAC"}

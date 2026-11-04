@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetTracesHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/XRay/BatchGetTracesHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EAAE,cAAc,EAAE,MAAM,qBAAqB,CAAC;AAGrD;;;;;;;;;;;;;;;;;GAiBG;AACH,eAAO,MAAM,kBAAkB,mJAO9B,CAAC"}

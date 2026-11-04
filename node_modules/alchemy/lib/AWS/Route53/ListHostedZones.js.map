@@ -1,0 +1,1 @@
+{"version":3,"file":"ListHostedZones.js","sourceRoot":"","sources":["../../../src/AWS/Route53/ListHostedZones.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAgC5C,MAAM,CAAC,MAAM,eAAe,GAAG,OAAO,CAAC,OAAO,CAC5C,6BAA6B,CAC9B,CAAC"}

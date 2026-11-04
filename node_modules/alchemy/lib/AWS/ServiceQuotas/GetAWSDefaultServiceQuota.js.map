@@ -1,0 +1,1 @@
+{"version":3,"file":"GetAWSDefaultServiceQuota.js","sourceRoot":"","sources":["../../../src/AWS/ServiceQuotas/GetAWSDefaultServiceQuota.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,6CAA6C,CAC9C,CAAC"}

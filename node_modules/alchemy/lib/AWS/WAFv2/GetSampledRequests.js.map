@@ -1,0 +1,1 @@
+{"version":3,"file":"GetSampledRequests.js","sourceRoot":"","sources":["../../../src/AWS/WAFv2/GetSampledRequests.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkD5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,8BAA8B,CAC/B,CAAC"}

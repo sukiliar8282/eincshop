@@ -1,0 +1,1 @@
+{"version":3,"file":"CreateBatchInferenceJob.js","sourceRoot":"","sources":["../../../src/AWS/Personalize/CreateBatchInferenceJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,yCAAyC,CAC1C,CAAC"}

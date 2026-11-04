@@ -1,0 +1,1 @@
+{"version":3,"file":"cfcode.d.ts","sourceRoot":"","sources":["../../../src/AWS/Website/cfcode.ts"],"names":[],"mappings":"AAEA;;;GAGG;AAEH;;;;;;;;;;;;;;GAcG;AACH,eAAO,MAAM,0BAA0B,sCAIpC;IACD,wCAAwC;IACxC,EAAE,EAAE,MAAM,GAAG,SAAS,CAAC;IACvB,gCAAgC;IAChC,KAAK,EAAE,MAAM,EAAE,CAAC;IAChB,0EAA0E;IAC1E,iBAAiB,EAAE,OAAO,CAAC;CAC5B,KAAG,MAaH,CAAC;AAIF,eAAO,MAAM,mBAAmB,m1NA4L9B,CAAC"}

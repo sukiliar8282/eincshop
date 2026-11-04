@@ -1,0 +1,1 @@
+{"version":3,"file":"LocalR2Gateway.d.ts","sourceRoot":"","sources":["../../../src/Cloudflare/R2/LocalR2Gateway.ts"],"names":[],"mappings":"AAsBA,OAAO,KAAK,KAAK,OAAO,MAAM,gBAAgB,CAAC;AAG/C,OAAO,EAAwB,KAAK,WAAW,EAAE,MAAM,oBAAoB,CAAC;AAa5E;;;;GAIG;AACH,eAAO,MAAM,sBAAsB,eACrB,MAAM;AAClB;;;;GAIG;SACM,OAAO,CAAC,OAAO,CAAC,KAAK,CAAC,KAC9B,UAAU,CAAC,OAAO,WAAW,CAgC/B,CAAC"}

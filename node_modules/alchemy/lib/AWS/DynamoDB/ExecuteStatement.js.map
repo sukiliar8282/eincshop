@@ -1,0 +1,1 @@
+{"version":3,"file":"ExecuteStatement.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/ExecuteStatement.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,QAAQ,MAAM,+BAA+B,CAAC;AAC1D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAuC5C,MAAM,CAAC,MAAM,gBAAgB,GAAG,OAAO,CAAC,OAAO,CAC7C,+BAA+B,CAChC,CAAC"}

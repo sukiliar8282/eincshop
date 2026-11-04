@@ -1,0 +1,1 @@
+{"version":3,"file":"GetQuerySuggestions.js","sourceRoot":"","sources":["../../../src/AWS/Kendra/GetQuerySuggestions.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,mBAAmB,GAAG,OAAO,CAAC,OAAO,CAChD,gCAAgC,CACjC,CAAC"}

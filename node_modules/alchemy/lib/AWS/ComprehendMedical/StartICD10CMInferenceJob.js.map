@@ -1,0 +1,1 @@
+{"version":3,"file":"StartICD10CMInferenceJob.js","sourceRoot":"","sources":["../../../src/AWS/ComprehendMedical/StartICD10CMInferenceJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,wBAAwB,GACnC,OAAO,CAAC,OAAO,CACb,gDAAgD,CACjD,CAAC"}

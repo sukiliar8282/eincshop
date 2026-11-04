@@ -1,0 +1,1 @@
+{"version":3,"file":"internal.d.ts","sourceRoot":"","sources":["../../../src/AWS/Pricing/internal.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,IAAI,SAAS,EAAE,MAAM,6BAA6B,CAAC;AAClE,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AASxC,eAAO,MAAM,cAAc,EAAG,WAAoB,CAAC;AAEnD,eAAO,MAAM,iBAAiB,GAAI,CAAC,EAAE,CAAC,EAAE,CAAC,UAAU,MAAM,CAAC,MAAM,CAAC,CAAC,EAAE,CAAC,EAAE,CAAC,CAAC,+CACM,CAAC"}

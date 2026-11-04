@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteMicrovmImageVersion.js","sourceRoot":"","sources":["../../../src/AWS/Lambda/DeleteMicrovmImageVersion.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA+B5C,MAAM,CAAC,MAAM,yBAAyB,GACpC,OAAO,CAAC,OAAO,CACb,sCAAsC,CACvC,CAAC"}

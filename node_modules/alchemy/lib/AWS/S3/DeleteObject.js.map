@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteObject.js","sourceRoot":"","sources":["../../../src/AWS/S3/DeleteObject.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,yBAAyB,CAAC;AAC9C,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAExC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,YAAY,GAAG,OAAO,CAAC,OAAO,CACzC,qBAAqB,CACtB,CAAC"}

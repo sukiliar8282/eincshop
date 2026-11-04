@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchGetDeploymentsHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/CodeDeploy/BatchGetDeploymentsHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EAAE,mBAAmB,EAAE,MAAM,0BAA0B,CAAC;AAI/D;;;;;GAKG;AACH,eAAO,MAAM,uBAAuB,wJA6BnC,CAAC"}

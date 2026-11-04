@@ -1,0 +1,10 @@
+import * as ivsrealtime from "@distilled.cloud/aws/ivs-realtime";
+import * as Layer from "effect/Layer";
+import { makeIvsRealtimeAccountHttpBinding } from "./BindingHttp.js";
+import { ListCompositions } from "./ListCompositions.js";
+export const ListCompositionsHttp = Layer.effect(ListCompositions, makeIvsRealtimeAccountHttpBinding({
+    tag: "AWS.IVSRealtime.ListCompositions",
+    operation: ivsrealtime.listCompositions,
+    actions: ["ivs:ListCompositions"],
+}));
+//# sourceMappingURL=ListCompositionsHttp.js.map

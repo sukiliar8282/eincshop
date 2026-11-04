@@ -1,0 +1,1 @@
+{"version":3,"file":"ListFleetsForVehicle.js","sourceRoot":"","sources":["../../../src/AWS/IoTFleetWise/ListFleetsForVehicle.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA4C5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,uCAAuC,CACxC,CAAC"}

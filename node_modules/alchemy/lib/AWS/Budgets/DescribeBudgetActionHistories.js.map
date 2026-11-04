@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeBudgetActionHistories.js","sourceRoot":"","sources":["../../../src/AWS/Budgets/DescribeBudgetActionHistories.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAkD5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,2CAA2C,CAC5C,CAAC"}

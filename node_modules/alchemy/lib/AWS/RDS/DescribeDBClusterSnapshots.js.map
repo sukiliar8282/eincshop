@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeDBClusterSnapshots.js","sourceRoot":"","sources":["../../../src/AWS/RDS/DescribeDBClusterSnapshots.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,0BAA0B,GACrC,OAAO,CAAC,OAAO,CACb,oCAAoC,CACrC,CAAC"}

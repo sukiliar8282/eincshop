@@ -1,0 +1,1 @@
+{"version":3,"file":"StartMessageMoveTask.js","sourceRoot":"","sources":["../../../src/AWS/SQS/StartMessageMoveTask.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoE5C,MAAM,CAAC,MAAM,oBAAoB,GAAG,OAAO,CAAC,OAAO,CACjD,8BAA8B,CAC/B,CAAC"}

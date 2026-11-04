@@ -1,0 +1,1 @@
+{"version":3,"file":"SendEmail.js","sourceRoot":"","sources":["../../../src/AWS/SES/SendEmail.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiF5C,MAAM,CAAC,MAAM,SAAS,GAAG,OAAO,CAAC,OAAO,CAAY,mBAAmB,CAAC,CAAC"}

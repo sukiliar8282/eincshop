@@ -1,0 +1,1 @@
+{"version":3,"file":"StopEntitiesDetectionJob.js","sourceRoot":"","sources":["../../../src/AWS/Comprehend/StopEntitiesDetectionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,wBAAwB,GACnC,OAAO,CAAC,OAAO,CACb,yCAAyC,CAC1C,CAAC"}

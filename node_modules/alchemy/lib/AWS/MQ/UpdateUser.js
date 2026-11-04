@@ -1,0 +1,3 @@
+import * as Binding from "../../Binding.js";
+export const UpdateUser = Binding.Service("AWS.MQ.UpdateUser");
+//# sourceMappingURL=UpdateUser.js.map

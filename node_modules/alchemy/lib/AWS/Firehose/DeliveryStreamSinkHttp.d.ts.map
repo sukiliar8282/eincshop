@@ -1,0 +1,1 @@
+{"version":3,"file":"DeliveryStreamSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Firehose/DeliveryStreamSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAMtC,OAAO,EACL,kBAAkB,EAEnB,MAAM,yBAAyB,CAAC;AACjC,OAAO,EAAE,cAAc,EAAE,MAAM,qBAAqB,CAAC;AAErD;;;;;;GAMG;AACH,eAAO,MAAM,sBAAsB,wDAiDlC,CAAC"}

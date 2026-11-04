@@ -1,0 +1,1 @@
+{"version":3,"file":"ListMicrovmImageBuilds.js","sourceRoot":"","sources":["../../../src/AWS/Lambda/ListMicrovmImageBuilds.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAgC5C,MAAM,CAAC,MAAM,sBAAsB,GAAG,OAAO,CAAC,OAAO,CACnD,mCAAmC,CACpC,CAAC"}

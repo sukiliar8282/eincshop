@@ -1,0 +1,1 @@
+{"version":3,"file":"ListBuildBatchesForProject.js","sourceRoot":"","sources":["../../../src/AWS/CodeBuild/ListBuildBatchesForProject.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA8B5C,MAAM,CAAC,MAAM,0BAA0B,GACrC,OAAO,CAAC,OAAO,CACb,0CAA0C,CAC3C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteQueuedMessagesHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/IoTWireless/DeleteQueuedMessagesHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAEtC,OAAO,EACL,oBAAoB,EAErB,MAAM,2BAA2B,CAAC;AAEnC,eAAO,MAAM,wBAAwB,yJAWpC,CAAC"}

@@ -1,0 +1,3 @@
+export * from "./Config.ts";
+export type { InferZarazEcommerceEvents, InferZarazEvents, ClientProperties, Ecommerce, EcommerceCheckoutStep, EcommerceEvents, EcommerceOrder, EcommercePayment, EcommerceProduct, EcommercePromotion, EcommerceRefund, EcommerceSearch, EventContract, EventMap, EventName, EventProperties, HttpEvent, HttpEventsPayload, SetScope, System, Track, WebApi, } from "./ZarazEventTypes.ts";
+//# sourceMappingURL=index.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"LogEventSinkHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/Logs/LogEventSinkHttp.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EAAE,YAAY,EAA0B,MAAM,mBAAmB,CAAC;AAEzE,OAAO,EAAE,YAAY,EAAE,MAAM,mBAAmB,CAAC;AAuCjD,eAAO,MAAM,gBAAgB,gDA4C5B,CAAC"}

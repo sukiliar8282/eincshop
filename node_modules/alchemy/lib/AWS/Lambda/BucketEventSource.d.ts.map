@@ -1,0 +1,1 @@
+{"version":3,"file":"BucketEventSource.d.ts","sourceRoot":"","sources":["../../../src/AWS/Lambda/BucketEventSource.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AAKtC,OAAO,EACL,iBAAiB,IAAI,mBAAmB,EAEzC,MAAM,4BAA4B,CAAC;AAMpC,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAGxC;;;;;;;;;;;;;;;;;GAiBG;AACH,eAAO,MAAM,iBAAiB,0DAkG7B,CAAC"}

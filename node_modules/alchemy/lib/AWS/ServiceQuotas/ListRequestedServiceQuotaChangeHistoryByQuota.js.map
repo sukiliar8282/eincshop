@@ -1,0 +1,1 @@
+{"version":3,"file":"ListRequestedServiceQuotaChangeHistoryByQuota.js","sourceRoot":"","sources":["../../../src/AWS/ServiceQuotas/ListRequestedServiceQuotaChangeHistoryByQuota.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAoC5C,MAAM,CAAC,MAAM,6CAA6C,GACxD,OAAO,CAAC,OAAO,CACb,iEAAiE,CAClE,CAAC"}

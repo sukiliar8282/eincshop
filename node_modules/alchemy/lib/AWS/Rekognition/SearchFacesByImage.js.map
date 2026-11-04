@@ -1,0 +1,1 @@
+{"version":3,"file":"SearchFacesByImage.js","sourceRoot":"","sources":["../../../src/AWS/Rekognition/SearchFacesByImage.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,oCAAoC,CACrC,CAAC"}

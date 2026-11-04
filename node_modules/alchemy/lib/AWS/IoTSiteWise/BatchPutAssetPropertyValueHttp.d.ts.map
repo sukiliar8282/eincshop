@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchPutAssetPropertyValueHttp.d.ts","sourceRoot":"","sources":["../../../src/AWS/IoTSiteWise/BatchPutAssetPropertyValueHttp.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,KAAK,MAAM,cAAc,CAAC;AACtC,OAAO,EACL,0BAA0B,EAE3B,MAAM,iCAAiC,CAAC;AAGzC,eAAO,MAAM,8BAA8B,+JAe1C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ListTagsOfResource.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/ListTagsOfResource.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,QAAQ,MAAM,+BAA+B,CAAC;AAC1D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAwC5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,iCAAiC,CAClC,CAAC"}

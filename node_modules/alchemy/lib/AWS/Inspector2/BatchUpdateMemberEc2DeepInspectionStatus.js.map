@@ -1,0 +1,1 @@
+{"version":3,"file":"BatchUpdateMemberEc2DeepInspectionStatus.js","sourceRoot":"","sources":["../../../src/AWS/Inspector2/BatchUpdateMemberEc2DeepInspectionStatus.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAqC5C,MAAM,CAAC,MAAM,wCAAwC,GACnD,OAAO,CAAC,OAAO,CACb,yDAAyD,CAC1D,CAAC"}

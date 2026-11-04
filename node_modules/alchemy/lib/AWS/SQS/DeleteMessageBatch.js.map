@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteMessageBatch.js","sourceRoot":"","sources":["../../../src/AWS/SQS/DeleteMessageBatch.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiD5C,MAAM,CAAC,MAAM,kBAAkB,GAAG,OAAO,CAAC,OAAO,CAC/C,4BAA4B,CAC7B,CAAC"}

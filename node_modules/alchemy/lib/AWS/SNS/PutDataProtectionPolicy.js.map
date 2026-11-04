@@ -1,0 +1,1 @@
+{"version":3,"file":"PutDataProtectionPolicy.js","sourceRoot":"","sources":["../../../src/AWS/SNS/PutDataProtectionPolicy.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,GAAG,MAAM,0BAA0B,CAAC;AAChD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAiD5C,MAAM,CAAC,MAAM,uBAAuB,GAAG,OAAO,CAAC,OAAO,CACpD,iCAAiC,CAClC,CAAC"}

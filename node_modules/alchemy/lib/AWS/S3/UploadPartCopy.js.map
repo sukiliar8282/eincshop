@@ -1,0 +1,1 @@
+{"version":3,"file":"UploadPartCopy.js","sourceRoot":"","sources":["../../../src/AWS/S3/UploadPartCopy.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,yBAAyB,CAAC;AAC9C,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AAExC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,cAAc,GAAG,OAAO,CAAC,OAAO,CAC3C,uBAAuB,CACxB,CAAC"}

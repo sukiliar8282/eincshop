@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeSentimentDetectionJob.js","sourceRoot":"","sources":["../../../src/AWS/Comprehend/DescribeSentimentDetectionJob.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAmC5C,MAAM,CAAC,MAAM,6BAA6B,GACxC,OAAO,CAAC,OAAO,CACb,8CAA8C,CAC/C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetMetricStream.js","sourceRoot":"","sources":["../../../src/AWS/CloudWatch/GetMetricStream.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,UAAU,MAAM,iCAAiC,CAAC;AAC9D,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA2C5C,MAAM,CAAC,MAAM,eAAe,GAAG,OAAO,CAAC,OAAO,CAC5C,gCAAgC,CACjC,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"DescribeStream.js","sourceRoot":"","sources":["../../../src/AWS/Kinesis/DescribeStream.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,8BAA8B,CAAC;AACxD,OAAO,KAAK,MAAM,MAAM,eAAe,CAAC;AACxC,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,cAAc,GAAG,OAAO,CAAC,OAAO,CAC3C,4BAA4B,CAC7B,CAAC"}

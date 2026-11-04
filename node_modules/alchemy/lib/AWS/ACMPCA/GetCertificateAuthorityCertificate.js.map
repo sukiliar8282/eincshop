@@ -1,0 +1,1 @@
+{"version":3,"file":"GetCertificateAuthorityCertificate.js","sourceRoot":"","sources":["../../../src/AWS/ACMPCA/GetCertificateAuthorityCertificate.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,kCAAkC,GAC7C,OAAO,CAAC,OAAO,CACb,+CAA+C,CAChD,CAAC"}

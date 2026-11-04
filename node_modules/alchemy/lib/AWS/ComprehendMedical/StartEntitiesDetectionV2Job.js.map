@@ -1,0 +1,1 @@
+{"version":3,"file":"StartEntitiesDetectionV2Job.js","sourceRoot":"","sources":["../../../src/AWS/ComprehendMedical/StartEntitiesDetectionV2Job.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AAsC5C,MAAM,CAAC,MAAM,2BAA2B,GACtC,OAAO,CAAC,OAAO,CACb,mDAAmD,CACpD,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"UpdateItem.js","sourceRoot":"","sources":["../../../src/AWS/DynamoDB/UpdateItem.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,OAAO,MAAM,kBAAkB,CAAC;AA6C5C,MAAM,CAAC,MAAM,UAAU,GAAG,OAAO,CAAC,OAAO,CACvC,yBAAyB,CAC1B,CAAC"}
