@@ -27,7 +27,12 @@ export function PayOrderButton({ orderNumber }: PayOrderButtonProps) {
   return (
     <div className="space-y-3">
       <form action={formAction}>
-        <LoadingButton type="submit" loading={isPending} className="w-full">
+        <LoadingButton
+          type="submit"
+          loading={isPending}
+          loadingText={isEn ? "Processing..." : "Memproses..."}
+          className="w-full"
+        >
           {isEn ? "Pay now" : "Bayar sekarang"}
         </LoadingButton>
       </form>
