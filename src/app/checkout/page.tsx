@@ -6,21 +6,36 @@ import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
 import { getCartForUser } from "@/modules/cart/service";
 import { CheckoutForm } from "./checkout-form";
+import { getDictionary } from "@/lib/i18n/server";
+import { localizeProduct } from "@/lib/i18n/catalog";
 
-export const metadata: Metadata = {
-  title: "Checkout",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Checkout" : "Pembayaran",
+  };
+}
 
 export default async function CheckoutPage() {
-  const user = await getCurrentUserOrGuest();
+  const [{ locale }, user] = await Promise.all([
+    getDictionary(),
+    getCurrentUserOrGuest(),
+  ]);
+
+  const isEn = locale === "en";
   const cart = await getCartForUser(user.id);
 
-  const items =
+  const rawItems =
     cart?.items.filter(
       (item) =>
         item.product.status === "PUBLISHED" &&
         item.product.productType === "DIGITAL",
     ) ?? [];
+
+  const items = rawItems.map((item) => ({
+    ...item,
+    product: localizeProduct(item.product, locale),
+  }));
 
   const subtotal = items.reduce(
     (total, item) => total + item.product.priceMinor * item.quantity,
@@ -37,14 +52,16 @@ export default async function CheckoutPage() {
             </h1>
 
             <p className="mt-4 text-[var(--color-text-muted)]">
-              Keranjang Anda kosong atau produk sudah tidak tersedia.
+              {isEn
+                ? "Your cart is currently empty or the selected products are no longer available."
+                : "Keranjang Anda kosong atau produk sudah tidak tersedia."}
             </p>
 
             <Link
               href="/products"
               className="mt-6 inline-block text-sm font-medium text-[var(--color-accent-strong)] hover:underline"
             >
-              Kembali ke katalog
+              {isEn ? "← Return to catalog" : "← Kembali ke katalog"}
             </Link>
           </div>
         </Container>
@@ -57,7 +74,7 @@ export default async function CheckoutPage() {
       <Container>
         <div className="max-w-xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Pembayaran Instan
+            {isEn ? "Instant Checkout" : "Pembayaran Instan"}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)] sm:text-5xl">
@@ -75,24 +92,24 @@ export default async function CheckoutPage() {
                     {item.product.title}
                   </p>
                   <p className="mt-1 text-[var(--color-text-muted)]">
-                    Jumlah: {item.quantity}
+                    {isEn ? "Qty" : "Jumlah"}: {item.quantity}
                   </p>
                 </div>
 
                 <p className="font-semibold text-[var(--color-ink)]">
-                  {formatIdr(item.product.priceMinor * item.quantity)}
+                  {formatIdr(item.product.priceMinor * item.quantity, locale)}
                 </p>
               </div>
             ))}
           </div>
 
           <div className="mt-8 flex items-center justify-between text-base font-semibold text-[var(--color-ink)]">
-            <span>Total Pembayaran</span>
-            <span>{formatIdr(subtotal)}</span>
+            <span>{isEn ? "Total Amount" : "Total Pembayaran"}</span>
+            <span>{formatIdr(subtotal, locale)}</span>
           </div>
 
           <div className="mt-8">
-            <CheckoutForm />
+            <CheckoutForm locale={locale} />
           </div>
         </div>
       </Container>

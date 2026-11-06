@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUserOrGuest } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getOrCreateActiveCart } from "@/modules/cart/service";
+import { getLocale } from "@/lib/i18n/server";
+import { sanitizeLocale } from "@/lib/i18n/config";
 
 export type CartActionState = {
   error?: string;
@@ -15,10 +17,14 @@ export type CartActionState = {
 export async function addToCartAction(
   productId: string,
   _previousState: CartActionState,
-  _formData: FormData,
+  formData?: FormData,
 ): Promise<CartActionState> {
-  void _previousState;
-  void _formData;
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
 
   // Bekerja untuk pengguna login maupun tamu tanpa dipaksa login
   const user = await getCurrentUserOrGuest();
@@ -36,7 +42,7 @@ export async function addToCartAction(
 
   if (!product) {
     return {
-      error: "Product tidak tersedia.",
+      error: isEn ? "Product is unavailable." : "Produk tidak tersedia.",
     };
   }
 
@@ -65,17 +71,23 @@ export async function addToCartAction(
   revalidatePath(`/products/${productId}`);
 
   return {
-    success: "Product berhasil ditambahkan ke keranjang.",
+    success: isEn
+      ? "Product added to cart successfully."
+      : "Produk berhasil ditambahkan ke keranjang.",
   };
 }
 
 export async function buyNowAction(
   productId: string,
   _previousState: CartActionState,
-  _formData: FormData,
+  formData?: FormData,
 ): Promise<CartActionState> {
-  void _previousState;
-  void _formData;
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
 
   // Bekerja untuk pengguna login maupun tamu tanpa dipaksa login
   const user = await getCurrentUserOrGuest();
@@ -93,7 +105,7 @@ export async function buyNowAction(
 
   if (!product) {
     return {
-      error: "Product tidak tersedia.",
+      error: isEn ? "Product is unavailable." : "Produk tidak tersedia.",
     };
   }
 

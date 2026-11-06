@@ -9,9 +9,12 @@ import { removeFromCartAction } from "@/modules/cart/actions";
 import { getDictionary } from "@/lib/i18n/server";
 import { localizeProduct } from "@/lib/i18n/catalog";
 
-export const metadata: Metadata = {
-  title: "Keranjang",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Shopping Cart" : "Keranjang Belanja",
+  };
+}
 
 export default async function CartPage() {
   const [{ dict, locale }, user] = await Promise.all([
@@ -120,7 +123,7 @@ export default async function CartPage() {
                           type="submit"
                           variant="ghost"
                           size="sm"
-                          className="min-h-8 px-0 text-[var(--color-danger-strong)] hover:bg-transparent hover:underline"
+                          className="min-h-8 px-0 text-[var(--color-danger-strong)] hover:bg-transparent hover:underline cursor-pointer"
                         >
                           {dict.common.delete}
                         </Button>

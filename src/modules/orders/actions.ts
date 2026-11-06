@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 
 import { getCurrentUserOrGuest } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
+import { getLocale } from "@/lib/i18n/server";
+import { sanitizeLocale } from "@/lib/i18n/config";
 
 export type OrderActionState = {
   error?: string;
@@ -17,8 +19,15 @@ function createOrderNumber(): string {
 
 export async function createOrderAction(
   _previousState: OrderActionState,
-  _formData: FormData,
+  formData: FormData,
 ): Promise<OrderActionState> {
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
+
   // Bekerja untuk pembeli tamu maupun pengguna terdaftar
   const user = await getCurrentUserOrGuest();
 
@@ -39,7 +48,9 @@ export async function createOrderAction(
 
   if (!cart || cart.items.length === 0) {
     return {
-      error: "Cart masih kosong.",
+      error: isEn
+        ? "Your cart is currently empty."
+        : "Keranjang masih kosong.",
     };
   }
 
@@ -61,13 +72,13 @@ export async function createOrderAction(
     },
   });
 
-  // 1. Ambil produk yang beneran ADA & PUBLISHED di DB
+  // 1. Ambil produk yang valid & PUBLISHED di DB
   const validProductsMap = new Map(products.map((p) => [p.id, p]));
   const validCartItems = cart.items.filter((item) =>
     validProductsMap.has(item.productId),
   );
 
-  // 2. Bersihkan otomatis ID lama/usang dari tabel CartItem DB
+  // 2. Bersihkan otomatis ID usang dari tabel CartItem DB
   const invalidCartItems = cart.items.filter(
     (item) => !validProductsMap.has(item.productId),
   );
@@ -82,7 +93,9 @@ export async function createOrderAction(
 
   if (validCartItems.length === 0) {
     return {
-      error: "Ada product yang sudah tidak tersedia.",
+      error: isEn
+        ? "Selected products are no longer available."
+        : "Ada produk yang sudah tidak tersedia.",
     };
   }
 
@@ -98,7 +111,7 @@ export async function createOrderAction(
 
   if (subtotalMinor <= 0) {
     return {
-      error: "Total order tidak valid.",
+      error: isEn ? "Invalid order total." : "Total order tidak valid.",
     };
   }
 
@@ -167,7 +180,9 @@ export async function createOrderAction(
     console.error("Order creation failed:", error);
 
     return {
-      error: "Order belum dapat dibuat. Silakan coba lagi.",
+      error: isEn
+        ? "Failed to process order. Please try again."
+        : "Order belum dapat dibuat. Silakan coba lagi.",
     };
   }
 

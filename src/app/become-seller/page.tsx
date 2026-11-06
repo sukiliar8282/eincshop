@@ -7,10 +7,19 @@ import { Container } from "@/components/ui/container";
 import { BecomeSellerForm } from "./become-seller-form";
 import { getDictionary } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Buka Toko Digital | Eincshop",
-  description: "Mulai perjalanan Anda sebagai seller aset digital di Eincshop.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title:
+      locale === "en"
+        ? "Open a Digital Store | Eincshop"
+        : "Buka Toko Digital | Eincshop",
+    description:
+      locale === "en"
+        ? "Start your journey as a digital goods seller on Eincshop."
+        : "Mulai perjalanan Anda sebagai seller aset digital di Eincshop.",
+  };
+}
 
 export default async function BecomeSellerPage() {
   const [sessionUser, { locale }] = await Promise.all([

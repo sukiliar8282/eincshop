@@ -8,9 +8,12 @@ import { Container } from "@/components/ui/container";
 import { OrderStatus } from "@/components/order/order-status";
 import { getDictionary } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Order History",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Order History" : "Riwayat Pesanan",
+  };
+}
 
 export default async function OrderHistoryPage() {
   const [user, { locale }] = await Promise.all([
@@ -27,7 +30,7 @@ export default async function OrderHistoryPage() {
     items: isEn ? "Items" : "Item",
     payment: isEn ? "Payment" : "Pembayaran",
     total: isEn ? "Total" : "Total",
-    empty: isEn ? "No orders placed yet." : "Belum ada order.",
+    empty: isEn ? "No orders placed yet." : "Belum ada pesanan.",
   };
 
   const orders = await prisma.order.findMany({
@@ -63,7 +66,7 @@ export default async function OrderHistoryPage() {
             {t.title}
           </h1>
 
-          <div className="mobile-scroll mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
+          <div className="mobile-scroll mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-[var(--color-line)] bg-[var(--color-surface-muted)]">
                 <tr>
@@ -102,8 +105,12 @@ export default async function OrderHistoryPage() {
                       {order._count.items}
                     </td>
 
+                    {/* Badge Status Pembayaran Dwibahasa */}
                     <td className="px-5 py-4">
-                      <OrderStatus status={order.paymentStatus} />
+                      <OrderStatus
+                        status={order.paymentStatus}
+                        locale={locale}
+                      />
                     </td>
 
                     <td className="px-5 py-4 font-medium text-[var(--color-ink)]">

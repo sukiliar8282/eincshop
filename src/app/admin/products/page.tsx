@@ -9,9 +9,12 @@ import { archiveProductAction } from "@/modules/catalog/actions";
 import { DeleteProductButton } from "@/components/admin/delete-product-button";
 import { getDictionary } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Kelola Produk Saya",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "My Product Catalog" : "Kelola Produk Saya",
+  };
+}
 
 type AdminProductsPageProps = {
   searchParams: Promise<{
@@ -74,27 +77,28 @@ export default async function AdminProductsPage({
     ...(status ? { status } : {}),
   };
 
-  // Gabungkan isolasi akun dan filter pencarian secara aman
   const where = {
-    AND: [isolationWhere, filterWhere],
+    ...isolationWhere,
+    ...filterWhere,
   };
 
   const products = await prisma.product.findMany({
     where,
+    orderBy: {
+      updatedAt: "desc",
+    },
     select: {
       id: true,
       title: true,
       slug: true,
       priceMinor: true,
       status: true,
+      updatedAt: true,
       category: {
         select: {
           name: true,
         },
       },
-    },
-    orderBy: {
-      updatedAt: "desc",
     },
   });
 
@@ -115,7 +119,8 @@ export default async function AdminProductsPage({
               : "← Kembali ke Dashboard Penjual"}
         </Link>
 
-        <div className="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        {/* Header Etalase Produk */}
+        <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
               {isEn ? "Your Store Catalog" : "Katalog Toko Anda"}

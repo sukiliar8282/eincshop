@@ -7,9 +7,12 @@ import { formatIdr } from "@/lib/format/currency";
 import { Container } from "@/components/ui/container";
 import { getDictionary } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Kelola Pesanan Masuk",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Manage Store Orders" : "Kelola Pesanan Masuk",
+  };
+}
 
 export default async function AdminOrdersPage() {
   const [admin, { locale }] = await Promise.all([
@@ -29,49 +32,30 @@ export default async function AdminOrdersPage() {
   // 1. Ambil ID produk milik seller ini
   const sellerProducts = await prisma.product.findMany({
     where: whereClause,
-    select: {
-      id: true,
-    },
+    select: { id: true },
   });
-
   const productIds = sellerProducts.map((p) => p.id);
 
-  // 2. Kueri pesanan terisolasi: hanya pesanan yang membeli produk milik seller ini
-  const orders =
+  // 2. Query Item Pesanan menggunakan Direct Indexed Scalar Query
+  const orderItems =
     productIds.length === 0
       ? []
-      : await prisma.order.findMany({
+      : await prisma.orderItem.findMany({
           where: {
-            items: {
-              some: {
-                productId: {
-                  in: productIds,
-                },
-              },
-            },
+            productId: { in: productIds },
           },
-          select: {
-            orderNumber: true,
-            status: true,
-            paymentStatus: true,
-            createdAt: true,
-            user: {
+          include: {
+            order: {
               select: {
-                email: true,
-                name: true,
-              },
-            },
-            // Ambil item khusus milik seller ini untuk kalkulasi omzet terisolasi
-            items: {
-              where: {
-                productId: {
-                  in: productIds,
+                orderNumber: true,
+                paymentStatus: true,
+                createdAt: true,
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                  },
                 },
-              },
-              select: {
-                lineTotalMinor: true,
-                productTitle: true,
-                quantity: true,
               },
             },
           },
@@ -116,7 +100,7 @@ export default async function AdminOrdersPage() {
 
         {/* Tabel Pesanan Terisolasi */}
         <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
-          {orders.length > 0 ? (
+          {orderItems.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="border-b border-[var(--color-line)] bg-[var(--color-surface-muted)] text-[var(--color-text-muted)] uppercase tracking-wider font-semibold">
@@ -140,63 +124,46 @@ export default async function AdminOrdersPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--color-line)]">
-                  {orders.map((order) => {
-                    const sellerSubtotal = order.items.reduce(
-                      (acc, item) => acc + item.lineTotalMinor,
-                      0,
-                    );
-
-                    return (
-                      <tr
-                        key={order.orderNumber}
-                        className="transition-colors hover:bg-[var(--color-canvas)]"
-                      >
-                        <td className="px-4 py-3.5 font-mono font-semibold text-[var(--color-ink)]">
-                          {order.orderNumber}
-                        </td>
-                        <td className="px-4 py-3.5 text-[var(--color-ink)]">
-                          <p className="font-medium">
-                            {order.user.name ||
-                              (isEn ? "Customer" : "Pelanggan")}
-                          </p>
-                          <p className="text-[11px] text-[var(--color-text-muted)]">
-                            {order.user.email}
-                          </p>
-                        </td>
-                        <td className="px-4 py-3.5 text-[var(--color-text-muted)] max-w-xs">
-                          {order.items.map((it, idx) => (
-                            <span key={idx} className="block truncate">
-                              • {it.productTitle} ({it.quantity}x)
-                            </span>
-                          ))}
-                        </td>
-                        <td className="px-4 py-3.5 font-bold text-emerald-600">
-                          {formatIdr(sellerSubtotal, locale)}
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <span
-                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                              order.paymentStatus === "PAID"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : "bg-amber-50 text-amber-700 border border-amber-200"
-                            }`}
-                          >
-                            {order.paymentStatus}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3.5 text-[var(--color-text-muted)] whitespace-nowrap">
-                          {new Date(order.createdAt).toLocaleDateString(
-                            isEn ? "en-US" : "id-ID",
-                            {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            },
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {orderItems.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="transition-colors hover:bg-[var(--color-canvas)]"
+                    >
+                      <td className="px-4 py-3.5 font-mono font-medium text-[var(--color-accent-strong)]">
+                        {item.order.orderNumber}
+                      </td>
+                      <td className="px-4 py-3.5 text-[var(--color-text-muted)]">
+                        {item.order.user?.name || item.order.user?.email || "-"}
+                      </td>
+                      <td className="px-4 py-3.5 font-medium text-[var(--color-ink)] max-w-xs truncate">
+                        {item.productTitle} × {item.quantity}
+                      </td>
+                      <td className="px-4 py-3.5 font-semibold text-[var(--color-ink)]">
+                        {formatIdr(item.lineTotalMinor, locale)}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            item.order.paymentStatus === "PAID"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-amber-50 text-amber-700 border border-amber-200"
+                          }`}
+                        >
+                          {item.order.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-[var(--color-text-muted)] whitespace-nowrap">
+                        {item.order.createdAt.toLocaleDateString(
+                          isEn ? "en-US" : "id-ID",
+                          {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          },
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -207,23 +174,23 @@ export default async function AdminOrdersPage() {
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                   />
                 </svg>
               </div>
-              <h3 className="mt-4 text-sm font-semibold text-[var(--color-ink)]">
-                {isEn ? "No incoming orders yet" : "Belum ada pesanan masuk"}
+              <h3 className="mt-2 text-sm font-semibold text-[var(--color-ink)]">
+                {isEn ? "No order activity yet" : "Belum ada aktivitas pesanan"}
               </h3>
-              <p className="mt-1 text-xs text-[var(--color-text-muted)] max-w-sm mx-auto">
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                 {isEn
-                  ? "Orders placed by buyers for your store products will automatically be logged here."
-                  : "Pesanan dari pembeli untuk produk toko Anda akan tercatat di sini secara otomatis."}
+                  ? "Orders for your items will automatically be recorded here once paid."
+                  : "Pesanan masuk untuk item toko Anda akan otomatis tercatat di sini setelah pembeli melakukan pembayaran."}
               </p>
             </div>
           )}

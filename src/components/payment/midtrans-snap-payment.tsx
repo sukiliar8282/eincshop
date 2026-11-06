@@ -3,6 +3,7 @@
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n/client";
 
 type MidtransSnapPaymentProps = {
   token: string;
@@ -14,7 +15,14 @@ export function MidtransSnapPayment({
   isProduction,
 }: MidtransSnapPaymentProps) {
   const router = useRouter();
-  const [message, setMessage] = useState("Menyiapkan halaman pembayaran...");
+  const { locale } = useI18n();
+  const isEn = locale === "en";
+
+  const [message, setMessage] = useState(
+    isEn
+      ? "Preparing payment interface..."
+      : "Menyiapkan halaman pembayaran...",
+  );
 
   const snapScript = isProduction
     ? "https://app.midtrans.com/snap/snap.js"
@@ -22,29 +30,47 @@ export function MidtransSnapPayment({
 
   function openPayment() {
     if (!window.snap) {
-      setMessage("Payment interface belum siap. Silakan coba lagi.");
+      setMessage(
+        isEn
+          ? "Payment interface is not ready yet. Please try again."
+          : "Payment interface belum siap. Silakan coba lagi.",
+      );
       return;
     }
 
     window.snap.pay(token, {
       onSuccess() {
-        setMessage("Pembayaran diterima. Menunggu konfirmasi server.");
+        setMessage(
+          isEn
+            ? "Payment received. Awaiting server confirmation."
+            : "Pembayaran diterima. Menunggu konfirmasi server.",
+        );
         router.refresh();
       },
 
       onPending() {
-        setMessage("Pembayaran masih menunggu penyelesaian.");
+        setMessage(
+          isEn
+            ? "Payment is pending completion."
+            : "Pembayaran masih menunggu penyelesaian.",
+        );
         router.refresh();
       },
 
       onError() {
-        setMessage("Pembayaran gagal diproses.");
+        setMessage(
+          isEn
+            ? "Payment failed to process."
+            : "Pembayaran gagal diproses.",
+        );
         router.refresh();
       },
 
       onClose() {
         setMessage(
-          "Halaman pembayaran ditutup. Status order tetap menunggu pembayaran.",
+          isEn
+            ? "Payment window closed. Order status remains pending payment."
+            : "Halaman pembayaran ditutup. Status order tetap menunggu pembayaran.",
         );
       },
     });
@@ -65,9 +91,9 @@ export function MidtransSnapPayment({
       <button
         type="button"
         onClick={openPayment}
-        className="mt-5 min-h-11 rounded-[var(--radius-control)] bg-[var(--color-ink)] px-4 text-sm font-medium text-white"
+        className="mt-5 min-h-11 cursor-pointer rounded-[var(--radius-control)] bg-[var(--color-ink)] px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 active:scale-98"
       >
-        Buka payment page
+        {isEn ? "Open payment interface" : "Buka halaman pembayaran"}
       </button>
     </div>
   );

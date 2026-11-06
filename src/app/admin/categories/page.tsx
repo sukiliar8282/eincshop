@@ -8,9 +8,12 @@ import { Container } from "@/components/ui/container";
 import { CategoryForm } from "./category-form";
 import { getDictionary } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Categories",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Manage Categories" : "Kelola Kategori",
+  };
+}
 
 type CategoryWithCount = Prisma.PromiseReturnType<typeof getCategories>[number];
 
@@ -65,7 +68,7 @@ export default async function AdminCategoriesPage() {
             <CategoryForm />
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white">
+          <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white shadow-xs">
             <div className="border-b border-[var(--color-line)] px-6 py-4">
               <h2 className="font-semibold text-[var(--color-ink)]">
                 {isEn ? "Available Categories" : "Kategori tersedia"}

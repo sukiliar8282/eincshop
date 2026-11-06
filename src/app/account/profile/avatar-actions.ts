@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { uploadProfileImage } from "@/lib/storage/profile-image";
+import { getLocale } from "@/lib/i18n/server";
+import { sanitizeLocale } from "@/lib/i18n/config";
 
 export type AvatarActionState = {
   error?: string;
@@ -16,12 +18,21 @@ export async function updateProfileImageAction(
   _previousState: AvatarActionState,
   formData: FormData,
 ): Promise<AvatarActionState> {
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
+
   const sessionUser = await requireUser();
   const file = formData.get("image");
 
   if (!(file instanceof File)) {
     return {
-      error: "Foto profile belum dipilih.",
+      error: isEn
+        ? "Please select a profile photo."
+        : "Foto profil belum dipilih.",
     };
   }
 
@@ -37,7 +48,7 @@ export async function updateProfileImageAction(
 
   if (!currentUser) {
     return {
-      error: "Data pengguna tidak ditemukan.",
+      error: isEn ? "User data not found." : "Data pengguna tidak ditemukan.",
     };
   }
 
@@ -69,7 +80,9 @@ export async function updateProfileImageAction(
     revalidatePath("/account/profile");
 
     return {
-      success: "Foto profile berhasil diperbarui.",
+      success: isEn
+        ? "Profile picture updated successfully."
+        : "Foto profil berhasil diperbarui.",
     };
   } catch (error) {
     if (uploadedStorageKey) {
@@ -80,11 +93,27 @@ export async function updateProfileImageAction(
       }
     }
 
+    const rawError = error instanceof Error ? error.message : "";
+    let localizedError = isEn
+      ? "Failed to update profile picture."
+      : "Foto profil gagal diperbarui.";
+
+    if (rawError.includes("belum dipilih") || rawError.includes("select")) {
+      localizedError = isEn
+        ? "Please select a profile photo."
+        : "Foto profil belum dipilih.";
+    } else if (rawError.includes("2 MB") || rawError.includes("Ukuran")) {
+      localizedError = isEn
+        ? "Image size must be under 2 MB."
+        : "Ukuran foto maksimal 2 MB.";
+    } else if (rawError.includes("Format") || rawError.includes("format")) {
+      localizedError = isEn
+        ? "Image format must be JPG, PNG, or WebP."
+        : "Format foto harus JPG, PNG, atau WebP.";
+    }
+
     return {
-      error:
-        error instanceof Error
-          ? error.message
-          : "Foto profile gagal diperbarui.",
+      error: localizedError,
     };
   }
 }

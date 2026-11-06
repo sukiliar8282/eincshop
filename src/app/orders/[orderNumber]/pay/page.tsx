@@ -14,9 +14,12 @@ type PaymentPageProps = {
   }>;
 };
 
-export const metadata: Metadata = {
-  title: "Payment",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Payment" : "Pembayaran",
+  };
+}
 
 export default async function PaymentPage({ params }: PaymentPageProps) {
   const [user, { locale }] = await Promise.all([
@@ -58,17 +61,17 @@ export default async function PaymentPage({ params }: PaymentPageProps) {
       <Container>
         <div className="mx-auto max-w-xl">
           <p className="text-sm font-medium uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-            Midtrans Snap
+            {isEn ? "Payment Gateway" : "Midtrans Snap"}
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-ink)]">
             {isEn ? "Complete your payment" : "Selesaikan pembayaran Anda"}
           </h1>
 
-          <div className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6">
+          <div className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6 shadow-xs">
             <p className="text-sm leading-6 text-[var(--color-text-muted)]">
               {isEn
-                ? "Once payment is completed, the order status will be automatically verified via the Midtrans webhook."
+                ? "Once payment is completed, the order status will be automatically verified via the secure webhook."
                 : "Setelah pembayaran selesai, status order tetap akan diverifikasi melalui webhook Midtrans."}
             </p>
 

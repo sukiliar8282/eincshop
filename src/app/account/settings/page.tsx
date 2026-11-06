@@ -7,10 +7,16 @@ import { prisma } from "@/lib/db";
 import { getDictionary } from "@/lib/i18n/server";
 import { DeleteAccountCard } from "./delete-account-card";
 
-export const metadata: Metadata = {
-  title: "Pengaturan Akun",
-  description: "Kelola preferensi dan keamanan akun Anda.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getDictionary();
+  return {
+    title: locale === "en" ? "Account Settings" : "Pengaturan Akun",
+    description:
+      locale === "en"
+        ? "Manage your account preferences and security."
+        : "Kelola preferensi dan keamanan akun Anda.",
+  };
+}
 
 export default async function AccountSettingsPage() {
   const [sessionUser, { locale }] = await Promise.all([

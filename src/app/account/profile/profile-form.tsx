@@ -16,7 +16,7 @@ type ProfileFormProps = {
 const initialState: ProfileActionState = {};
 
 export function ProfileForm({ name, email }: ProfileFormProps) {
-  const { dict } = useI18n();
+  const { locale, dict } = useI18n();
   const [state, formAction, isPending] = useActionState(
     updateProfileAction,
     initialState,
@@ -36,8 +36,10 @@ export function ProfileForm({ name, email }: ProfileFormProps) {
   return (
     <form
       action={formAction}
-      className="space-y-5 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6"
+      className="space-y-5 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-6 shadow-xs"
     >
+      <input type="hidden" name="locale" value={locale} />
+
       <div>
         <label
           htmlFor="name"

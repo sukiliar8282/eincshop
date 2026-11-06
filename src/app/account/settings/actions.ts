@@ -3,6 +3,8 @@
 import { signOut } from "@/lib/auth";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
+import { getLocale } from "@/lib/i18n/server";
+import { sanitizeLocale } from "@/lib/i18n/config";
 
 export type DeleteAccountState = {
   error?: string;
@@ -12,15 +14,28 @@ export async function deleteAccountAction(
   _previousState: DeleteAccountState,
   formData: FormData,
 ): Promise<DeleteAccountState> {
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
+
   const sessionUser = await requireUser();
   const confirmationText = formData.get("confirmation");
+  const cleanConfirmation =
+    typeof confirmationText === "string"
+      ? confirmationText.trim().toUpperCase()
+      : "";
 
   if (
-    typeof confirmationText !== "string" ||
-    confirmationText.trim() !== "HAPUS AKUN"
+    cleanConfirmation !== "HAPUS AKUN" &&
+    cleanConfirmation !== "DELETE ACCOUNT"
   ) {
     return {
-      error: "Konfirmasi tidak sesuai. Harap ketik persis 'HAPUS AKUN'.",
+      error: isEn
+        ? "Invalid confirmation phrase. Please type 'DELETE ACCOUNT' exactly."
+        : "Konfirmasi tidak sesuai. Harap ketik persis 'HAPUS AKUN'.",
     };
   }
 
@@ -119,7 +134,9 @@ export async function deleteAccountAction(
   } catch (error) {
     console.error("[DeleteAccount Error]:", error);
     return {
-      error: "Gagal menghapus akun karena kendala sistem. Silakan coba lagi.",
+      error: isEn
+        ? "Failed to delete account due to a system error. Please try again."
+        : "Gagal menghapus akun karena kendala sistem. Silakan coba lagi.",
     };
   }
 

@@ -8,6 +8,8 @@ import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { writeAuditLog } from "@/lib/security/audit";
 import { getRequestIp } from "@/lib/security/request";
+import { getLocale } from "@/lib/i18n/server";
+import { sanitizeLocale } from "@/lib/i18n/config";
 
 export type SellerRegistrationState = {
   error?: string;
@@ -16,17 +18,31 @@ export type SellerRegistrationState = {
   };
 };
 
-const sellerRegistrationSchema = z.object({
-  storeName: z
-    .string()
-    .trim()
-    .min(3, "Nama toko minimal 3 karakter.")
-    .max(50, "Nama toko maksimal 50 karakter.")
-    .regex(
-      /^[a-zA-Z0-9\s\-_.&]+$/,
-      "Nama toko hanya boleh berisi huruf, angka, spasi, dan simbol (- _ . &)",
-    ),
-});
+function getSellerRegistrationSchema(isEn: boolean) {
+  return z.object({
+    storeName: z
+      .string()
+      .trim()
+      .min(
+        3,
+        isEn
+          ? "Store name must be at least 3 characters."
+          : "Nama toko minimal 3 karakter.",
+      )
+      .max(
+        50,
+        isEn
+          ? "Store name cannot exceed 50 characters."
+          : "Nama toko maksimal 50 karakter.",
+      )
+      .regex(
+        /^[a-zA-Z0-9\s\-_.&]+$/,
+        isEn
+          ? "Store name can only contain letters, numbers, spaces, and symbols (- _ . &)"
+          : "Nama toko hanya boleh berisi huruf, angka, spasi, dan simbol (- _ . &)",
+      ),
+  });
+}
 
 /**
  * Server Action untuk mengaktifkan toko digital (Role Upgrade CUSTOMER -> SELLER).
@@ -36,19 +52,31 @@ export async function registerAsSellerAction(
   _previousState: SellerRegistrationState,
   formData: FormData,
 ): Promise<SellerRegistrationState> {
+  const formLocale = formData?.get?.("locale");
+  const locale =
+    typeof formLocale === "string"
+      ? sanitizeLocale(formLocale)
+      : await getLocale();
+  const isEn = locale === "en";
+
   // 1. Verifikasi pengguna sudah login
   const sessionUser = await requireUser();
 
-  // 2. Validasi input nama toko
+  // 2. Validasi input nama toko secara bilingual
   const rawStoreName = formData.get("storeName");
-  const validationResult = sellerRegistrationSchema.safeParse({
+  const schema = getSellerRegistrationSchema(isEn);
+  const validationResult = schema.safeParse({
     storeName: typeof rawStoreName === "string" ? rawStoreName : "",
   });
 
   if (!validationResult.success) {
     const flattened = validationResult.error.flatten();
     return {
-      error: flattened.formErrors[0] || "Nama toko belum sesuai ketentuan.",
+      error:
+        flattened.formErrors[0] ||
+        (isEn
+          ? "Store name does not meet requirements."
+          : "Nama toko belum sesuai ketentuan."),
       fieldErrors: flattened.fieldErrors,
     };
   }
@@ -70,7 +98,9 @@ export async function registerAsSellerAction(
 
   if (!dbUser || dbUser.status !== "ACTIVE") {
     return {
-      error: "Akun Anda tidak aktif atau tidak ditemukan.",
+      error: isEn
+        ? "Your account is not active or could not be found."
+        : "Akun Anda tidak aktif atau tidak ditemukan.",
     };
   }
 

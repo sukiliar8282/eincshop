@@ -19,7 +19,11 @@ export function DeleteAccountCard() {
     initialState,
   );
 
-  const isConfirmed = confirmInput.trim() === "HAPUS AKUN";
+  const cleanInput = confirmInput.trim().toUpperCase();
+  const isConfirmed =
+    cleanInput === "HAPUS AKUN" || cleanInput === "DELETE ACCOUNT";
+
+  const targetPhrase = isEn ? "DELETE ACCOUNT" : "HAPUS AKUN";
 
   return (
     <>
@@ -87,14 +91,16 @@ export function DeleteAccountCard() {
             </div>
 
             <form action={formAction} className="space-y-4">
+              <input type="hidden" name="locale" value={locale} />
+
               <div>
                 <label
                   htmlFor="confirmation"
                   className="mb-2 block text-xs font-semibold text-[var(--color-ink)]"
                 >
                   {isEn
-                    ? "Type 'HAPUS AKUN' below to confirm:"
-                    : "Ketik 'HAPUS AKUN' di bawah ini untuk konfirmasi:"}
+                    ? `Type '${targetPhrase}' below to confirm:`
+                    : `Ketik '${targetPhrase}' di bawah ini untuk konfirmasi:`}
                 </label>
                 <input
                   id="confirmation"
@@ -105,7 +111,7 @@ export function DeleteAccountCard() {
                   autoComplete="off"
                   value={confirmInput}
                   onChange={(e) => setConfirmInput(e.target.value)}
-                  placeholder="HAPUS AKUN"
+                  placeholder={targetPhrase}
                   className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 font-mono text-sm uppercase outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
                 />
               </div>
@@ -133,7 +139,7 @@ export function DeleteAccountCard() {
                   disabled={!isConfirmed}
                   className="min-h-10 bg-red-600 hover:bg-red-700 text-xs font-semibold"
                 >
-                  {isEn ? "Delete Account" : "Hapus Akun Permanen"}
+                  {isEn ? "Permanently Delete Account" : "Hapus Akun Permanen"}
                 </LoadingButton>
               </div>
             </form>

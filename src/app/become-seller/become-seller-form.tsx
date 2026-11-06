@@ -30,6 +30,8 @@ export function BecomeSellerForm({
 
   return (
     <form action={formAction} className="space-y-5">
+      <input type="hidden" name="locale" value={locale} />
+
       {state?.error && (
         <StatusMessage tone="error">{state.error}</StatusMessage>
       )}
@@ -102,7 +104,7 @@ export function BecomeSellerForm({
         </p>
       </div>
 
-      {/* Submit CTA Button (Touch target 44px) */}
+      {/* Submit CTA Button */}
       <div className="pt-3">
         <LoadingButton
           type="submit"

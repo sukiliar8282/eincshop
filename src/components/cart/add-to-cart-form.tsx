@@ -58,10 +58,11 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
       <div className="grid gap-3 sm:grid-cols-2">
         {/* Tombol 1: Tambah ke Keranjang - Langsung aktif tanpa login */}
         <form action={formAddAction}>
+          <input type="hidden" name="locale" value={locale} />
           <button
             type="submit"
             disabled={isAddPending || isBuyPending}
-            className="flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-ink)] bg-white px-5 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-neutral-50 active:scale-98 disabled:opacity-50"
+            className="flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-ink)] bg-white px-5 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-neutral-50 active:scale-98 disabled:opacity-50 cursor-pointer"
           >
             {isAddPending ? (
               <span className="inline-flex items-center gap-2">
@@ -76,6 +77,7 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
 
         {/* Tombol 2: Beli Langsung - Langsung ke checkout tanpa login */}
         <form action={formBuyAction}>
+          <input type="hidden" name="locale" value={locale} />
           <LoadingButton
             type="submit"
             loading={isBuyPending}

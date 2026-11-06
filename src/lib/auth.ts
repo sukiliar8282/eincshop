@@ -80,12 +80,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   providers: [
-    // 1. Google OAuth Provider (1-Klik Login Otomatis)
+    // 1. Google OAuth Provider (1-Klik Login Otomatis & Auto-Linking)
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      // Mitigasi F-02: Dinonaktifkan untuk mencegah silent account takeover antar-metode login
-      allowDangerousEmailAccountLinking: false,
+      // Diaktifkan agar pengguna yang terdaftar via email/password dapat langsung login 1-klik dengan akun Google resmi
+      allowDangerousEmailAccountLinking: true,
     }),
 
     // 2. Email & Password Credentials (Wajib @gmail.com)

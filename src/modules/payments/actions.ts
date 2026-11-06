@@ -68,13 +68,8 @@ export async function createMidtransPaymentAction(
     };
   }
 
+  // Mode Simulator Dummy (Aktif bila PAYMENT_PROVIDER="dummy" diatur, baik di lokal maupun di web publik Vercel)
   if (isDummyProvider()) {
-    if (process.env.NODE_ENV === "production") {
-      return {
-        error: "Dummy payment tidak boleh digunakan di production.",
-      };
-    }
-
     await prisma.payment.update({
       where: {
         id: payment.id,
@@ -123,7 +118,10 @@ export async function createMidtransPaymentAction(
     console.error("Payment creation failed:", error);
 
     return {
-      error: "Payment session gagal dibuat.",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Payment session gagal dibuat.",
     };
   }
 
@@ -135,8 +133,8 @@ export async function simulateDummyPaymentAction(
   result: DummyPaymentResult,
   _formData: FormData,
 ): Promise<void> {
-  if (!isDummyProvider() || process.env.NODE_ENV === "production") {
-    throw new Error("Dummy payment hanya tersedia di development.");
+  if (!isDummyProvider()) {
+    throw new Error("Dummy payment sedang tidak diaktifkan.");
   }
 
   const user = await requireUser();
