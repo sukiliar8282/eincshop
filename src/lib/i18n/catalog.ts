@@ -106,27 +106,22 @@ const CATALOG_TRANSLATIONS: Record<
     en: {
       title: "Clean Landing Starter",
       description:
-        "A high-converting, responsive landing page starter codebase built with modular architecture and clean Tailwind CSS.",
+        "A minimal, performance-first landing page starter built with Next.js 16 and Tailwind CSS v4.",
     },
   },
 };
 
-const CATEGORY_TRANSLATIONS: Record<string, { id: string; en: string }> = {
-  templates: { id: "Template", en: "Templates" },
-  template: { id: "Template", en: "Templates" },
-  "ui-kit": { id: "UI Kit", en: "UI Kits" },
-  ebooks: { id: "Ebook", en: "E-Books" },
-  ebook: { id: "Ebook", en: "E-Books" },
-  code: { id: "Code Starter", en: "Code Starters" },
-  "category-templates": { id: "Template", en: "Templates" },
-  "category-ui-kit": { id: "UI Kit", en: "UI Kits" },
-  "category-ebooks": { id: "Ebook", en: "E-Books" },
-  "category-code": { id: "Code Starter", en: "Code Starters" },
+const CATEGORY_TRANSLATIONS: Record<string, { en: string; id: string }> = {
+  templates: { en: "Templates", id: "Template" },
+  template: { en: "Templates", id: "Template" },
+  "ui-kit": { en: "UI Kits", id: "UI Kit" },
+  ebooks: { en: "E-Books", id: "Ebook" },
+  ebook: { en: "E-Books", id: "Ebook" },
+  code: { en: "Source Code", id: "Kode" },
 };
 
 /**
- * Defensive Localization for Product Entities:
- * Mengganti title, description, dan category name secara cerdas saat locale="en".
+ * Localize Product Data
  * Jika produk custom buatan admin yang belum terdaftar di kamus, data database asli tetap aman ditampilkan.
  */
 export function localizeProduct<
@@ -177,4 +172,29 @@ export function localizeCategoryName(
 
   const key = slugOrName.toLowerCase();
   return CATEGORY_TRANSLATIONS[key]?.en ?? fallbackName;
+}
+
+/**
+ * Mencari slug produk yang cocok dengan kata kunci pencarian pada judul atau deskripsi terjemahan
+ */
+export function getProductSlugsByTranslationQuery(query: string): string[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+
+  const matchedSlugs: string[] = [];
+
+  for (const [slug, data] of Object.entries(CATALOG_TRANSLATIONS)) {
+    const inEn =
+      data.en.title.toLowerCase().includes(q) ||
+      data.en.description.toLowerCase().includes(q);
+    const inId =
+      data.id.title.toLowerCase().includes(q) ||
+      data.id.description.toLowerCase().includes(q);
+
+    if (inEn || inId) {
+      matchedSlugs.push(slug);
+    }
+  }
+
+  return matchedSlugs;
 }

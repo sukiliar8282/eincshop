@@ -7,7 +7,12 @@ import { ProductCard } from "@/components/product/product-card";
 import { CatalogControls } from "@/components/product/catalog-controls";
 import { Pagination } from "@/components/product/pagination";
 import { getDictionary } from "@/lib/i18n/server";
-import { localizeProduct, localizeCategoryName } from "@/lib/i18n/catalog";
+import {
+  localizeProduct,
+  localizeCategoryName,
+  getProductSlugsByTranslationQuery,
+} from "@/lib/i18n/catalog";
+import { getProductSlugsByTech } from "@/lib/catalog/tech-stack";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -60,6 +65,13 @@ export default async function ProductsPage({
   const parsedPage = Number.parseInt(params.page ?? "1", 10);
   const currentPage = Number.isFinite(parsedPage) ? Math.max(parsedPage, 1) : 1;
 
+  // Temukan slug produk yang cocok dari pemetaan stack teknologi dan kamus terjemahan
+  const techSlugs = getProductSlugsByTech(query);
+  const translationSlugs = getProductSlugsByTranslationQuery(query);
+  const allMatchingSlugs = Array.from(
+    new Set([...techSlugs, ...translationSlugs]),
+  );
+
   const where = {
     productType: "DIGITAL" as const,
     status: "PUBLISHED" as const,
@@ -83,6 +95,15 @@ export default async function ProductsPage({
                 has: query,
               },
             },
+            ...(allMatchingSlugs.length > 0
+              ? [
+                  {
+                    slug: {
+                      in: allMatchingSlugs,
+                    },
+                  },
+                ]
+              : []),
           ],
         }
       : {}),

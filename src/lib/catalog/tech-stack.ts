@@ -65,3 +65,26 @@ export function getProductTechStack(
   const result = Array.from(matched);
   return result.length > 0 ? result.slice(0, 4) : ["Digital Asset"];
 }
+
+/**
+ * Mencari daftar slug produk yang memiliki keterkaitan dengan teknologi yang dicari
+ */
+export function getProductSlugsByTech(query: string): string[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+
+  const matchedSlugs: string[] = [];
+
+  for (const [slug, stacks] of Object.entries(CURATED_TECH_STACKS)) {
+    const hasMatch = stacks.some((tech) => {
+      const t = tech.toLowerCase();
+      return t.includes(q) || q.includes(t);
+    });
+
+    if (hasMatch) {
+      matchedSlugs.push(slug);
+    }
+  }
+
+  return matchedSlugs;
+}
