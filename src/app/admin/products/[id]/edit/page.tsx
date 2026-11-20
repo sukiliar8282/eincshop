@@ -29,7 +29,7 @@ export default async function EditProductPage({
   const isEn = locale === "en";
   const { id } = await params;
 
-  // Isolasi Kepemilikan Seller (IDOR Check) & Ambil Koleksi Foto
+  // Isolasi Kepemilikan Seller (IDOR Check) & Ambil Koleksi Foto serta Tech Stack
   const [product, categories] = await Promise.all([
     prisma.product.findFirst({
       where: {
@@ -45,6 +45,7 @@ export default async function EditProductPage({
         sku: true,
         categoryId: true,
         status: true,
+        techStack: true,
         images: {
           orderBy: {
             sortOrder: "asc",
@@ -123,6 +124,7 @@ export default async function EditProductPage({
               product={{
                 ...product,
                 images: normalizedImages,
+                techStack: product.techStack,
               }}
               categories={categories}
               currentAsset={product.digitalAssets[0] ?? null}

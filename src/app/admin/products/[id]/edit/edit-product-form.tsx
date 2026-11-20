@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useRef, useState, useEffect } from "react";
+import { useActionState, useState } from "react";
+import Link from "next/link";
 
 import { LoadingButton } from "@/components/ui/loading-button";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -8,8 +9,9 @@ import {
   updateProductAction,
   type CatalogActionState,
 } from "@/modules/catalog/actions";
-import { useI18n } from "@/lib/i18n/client";
 import { ImageCropUploader } from "@/components/ui/image-crop-uploader";
+import { TechStackInput } from "@/components/admin/tech-stack-input";
+import { useI18n } from "@/lib/i18n/client";
 
 type CategoryOption = {
   id: string;
@@ -32,6 +34,7 @@ type EditProductFormProps = {
     categoryId: string;
     status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
     images: ExistingImage[];
+    techStack?: string[];
   };
   categories: CategoryOption[];
   currentAsset: {
@@ -52,57 +55,35 @@ export function EditProductForm({
   const { locale } = useI18n();
   const isEn = locale === "en";
 
-  const updateAction = updateProductAction.bind(null, product.id);
-  const [state, formAction, isPending] = useActionState(
-    updateAction,
-    initialState,
-  );
+  const action = updateProductAction.bind(null, product.id);
+  const [state, formAction, isPending] = useActionState(action, initialState);
 
-  // STATE PERSISTENCE (Anti-Reset State)
+  // Form State Controlled untuk interaksi dinamis
   const [title, setTitle] = useState(product.title);
   const [slug, setSlug] = useState(product.slug);
   const [isSlugManual, setIsSlugManual] = useState(false);
-  const [description, setDescription] = useState(product.description);
-  const [priceIdr, setPriceIdr] = useState(String(product.priceMinor));
-  const [sku, setSku] = useState(product.sku ?? "");
-  const [status, setStatus] = useState(product.status);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    product.categoryId,
-  );
 
-  // State Mode Kategori: "existing" atau "custom"
+  // Kategori Dinamis: Dropdown yang ada atau Buat Kategori Baru
   const [categoryMode, setCategoryMode] = useState<"existing" | "custom">(
     "existing",
   );
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    product.categoryId,
+  );
   const [customCategoryInput, setCustomCategoryInput] = useState("");
 
-  // State & Ref Berkas Digital Downloadable
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [digitalFile, setDigitalFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    if (!fileInputRef.current || !digitalFile) return;
-    try {
-      const dt = new DataTransfer();
-      dt.items.add(digitalFile);
-      fileInputRef.current.files = dt.files;
-    } catch {
-      // Fallback aman
-    }
-  }, [digitalFile]);
-
-  // Otomatisasi Slug dari Judul
-  const handleTitleChange = (val: string) => {
+  // Otomatis generate slug jika seller belum pernah mengedit slug secara manual
+  function handleTitleChange(val: string) {
     setTitle(val);
     if (!isSlugManual) {
-      const generatedSlug = val
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      setSlug(generatedSlug);
+      setSlug(
+        val
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, ""),
+      );
     }
-  };
+  }
 
   return (
     <form
@@ -159,86 +140,63 @@ export function EditProductForm({
             setIsSlugManual(true);
             setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
           }}
-          placeholder={
-            isEn
-              ? "e.g. nextjs-saas-starter-kit"
-              : "contoh: template-web-marketplace-nextjs"
-          }
-          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
+          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-neutral-50 px-3 text-sm font-mono text-[var(--color-ink)] focus:border-[var(--color-ink)] focus:outline-none"
         />
       </div>
 
-      {/* 3. KATEGORI FLEKSIBEL (BAWAAN ATAU KUSTOM) */}
-      <div className="rounded-xl border border-[var(--color-line-strong)] bg-neutral-50/50 p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <label className="text-sm font-semibold text-[var(--color-ink)]">
+      {/* 3. KATEGORI PRODUK (BISA PILIH ATAU BUAT KUSTOM) */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label
+            htmlFor="categoryId"
+            className="block text-sm font-medium text-[var(--color-ink)]"
+          >
             {isEn ? "Product Category" : "Kategori Produk"}
           </label>
-
-          {isSuperAdmin && (
-            <div className="flex items-center rounded-lg border border-[var(--color-line-strong)] bg-white p-0.5 text-xs">
-              <button
-                type="button"
-                onClick={() => setCategoryMode("existing")}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
-                  categoryMode === "existing"
-                    ? "bg-[var(--color-ink)] text-white shadow-xs"
-                    : "text-gray-600 hover:text-[var(--color-ink)]"
-                }`}
-              >
-                {isEn ? "Available Categories" : "Kategori Bawaan"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategoryMode("custom")}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
-                  categoryMode === "custom"
-                    ? "bg-[var(--color-ink)] text-white shadow-xs"
-                    : "text-gray-600 hover:text-[var(--color-ink)]"
-                }`}
-              >
-                {isEn ? "+ Custom Category" : "+ Buat Kategori Sendiri"}
-              </button>
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              setCategoryMode(categoryMode === "existing" ? "custom" : "existing");
+              setCustomCategoryInput("");
+            }}
+            className="text-xs font-semibold text-[var(--color-accent-strong)] hover:underline cursor-pointer"
+          >
+            {categoryMode === "existing"
+              ? isEn
+                ? "+ Type New Custom Category"
+                : "+ Ketik Kategori Kustom Baru"
+              : isEn
+                ? "← Choose from Existing Categories"
+                : "← Pilih dari Kategori yang Ada"}
+          </button>
         </div>
 
-        <input
-          type="hidden"
-          name="isCustomCategory"
-          value={isSuperAdmin && categoryMode === "custom" ? "true" : "false"}
-        />
-
-        {categoryMode === "existing" || !isSuperAdmin ? (
-          <div>
+        {categoryMode === "existing" ? (
+          <div className="relative">
             <select
               id="categoryId"
               name="categoryId"
-              required
+              required={categoryMode === "existing"}
               value={selectedCategoryId}
               onChange={(e) => {
-                if (isSuperAdmin && e.target.value === "__CREATE_NEW__") {
+                if (e.target.value === "NEW_CUSTOM_TRIGGER") {
                   setCategoryMode("custom");
+                  setCustomCategoryInput("");
                 } else {
                   setSelectedCategoryId(e.target.value);
                 }
               }}
-              className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
+              className="min-h-11 w-full appearance-none rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 pr-8 text-sm focus:border-[var(--color-ink)] focus:outline-none cursor-pointer"
             >
-              <option value="" disabled>
-                {isEn
-                  ? "-- Select an available category --"
-                  : "-- Pilih kategori bawaan --"}
-              </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
                 </option>
               ))}
               {isSuperAdmin && (
                 <option
-                  value="__CREATE_NEW__"
-                  className="font-semibold text-[var(--color-accent-strong)]"
+                  value="NEW_CUSTOM_TRIGGER"
+                  className="font-medium text-[var(--color-accent-strong)]"
                 >
                   {isEn
                     ? "+ Create new custom category..."
@@ -268,7 +226,10 @@ export function EditProductForm({
         )}
       </div>
 
-      {/* 4. DESKRIPSI PRODUK */}
+      {/* 4. TECH STACK & FRAMEWORKS (SINKRON KE FILTER KATALOG) */}
+      <TechStackInput initialValues={product.techStack} isEn={isEn} />
+
+      {/* 5. DESKRIPSI PRODUK */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label
@@ -285,46 +246,44 @@ export function EditProductForm({
           id="description"
           name="description"
           required
-          rows={5}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          rows={4}
+          defaultValue={product.description}
           placeholder={
             isEn
               ? "Describe features, technical architecture, and included items..."
-              : "Jelaskan fitur utama, teknologi yang digunakan, serta apa saja yang didapatkan pembeli..."
+              : "Jelaskan fitur, arsitektur teknis, dan apa saja yang didapatkan pembeli..."
           }
           className="w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] p-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
         />
       </div>
 
-      {/* 5. HARGA PRODUK */}
+      {/* 6. HARGA PRODUK (IDR) */}
       <div>
         <label
-          htmlFor="priceIdr"
+          htmlFor="price"
           className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
         >
-          {isEn ? "Price (IDR)" : "Harga Jual (Rupiah)"}
+          {isEn ? "Price (IDR)" : "Harga Jual (IDR)"}
         </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[var(--color-text-muted)]">
+        <div className="relative flex items-center">
+          <span className="pointer-events-none absolute left-3.5 text-xs font-semibold text-[var(--color-text-muted)]">
             Rp
           </span>
           <input
-            id="priceIdr"
-            name="priceIdr"
+            id="price"
+            name="price"
             type="number"
-            min="0"
+            min="10000"
+            max="100000000"
             step="1000"
             required
-            value={priceIdr}
-            onChange={(e) => setPriceIdr(e.target.value)}
-            placeholder="50000"
+            defaultValue={product.priceMinor}
             className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] pl-10 pr-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
           />
         </div>
       </div>
 
-      {/* 6. SKU / KODE UNIK */}
+      {/* 7. KODE PRODUK / SKU (OPSIONAL) */}
       <div>
         <label
           htmlFor="sku"
@@ -332,174 +291,122 @@ export function EditProductForm({
         >
           {isEn
             ? "SKU / Product Code (Optional)"
-            : "SKU / Kode Unik (Opsional)"}
+            : "Kode SKU / Produk (Opsional)"}
         </label>
         <input
           id="sku"
           name="sku"
-          maxLength={64}
-          value={sku}
-          onChange={(e) => setSku(e.target.value)}
-          placeholder={
-            isEn ? "e.g. TEMPLATE-NEXTJS-01" : "contoh: TEMPLATE-NEXTJS-01"
-          }
-          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none"
+          maxLength={40}
+          defaultValue={product.sku ?? ""}
+          placeholder="e.g. TEMPLATE-NEXTJS-01"
+          className="min-h-11 w-full rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-3 text-sm focus:border-[var(--color-ink)] focus:outline-none font-mono uppercase"
         />
       </div>
 
-      {/* 7. FOTO PRODUK (CROPPER & PREVIEW) */}
+      {/* 8. FOTO PRODUK (INTEGRASI CROPPER RASIO 4:3) */}
       <ImageCropUploader initialImages={product.images} />
 
-      {/* 8. BERKAS DIGITAL DOWNLOADABLE */}
-      <div className="rounded-xl border border-[var(--color-line-strong)] bg-neutral-50/50 p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-1">
-          <label
-            htmlFor="file"
-            className="block text-sm font-semibold text-[var(--color-ink)]"
-          >
+      {/* 9. BERKAS DIGITAL UTAMA (.ZIP ATAU .PDF) */}
+      <div className="rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-neutral-50/50 p-4">
+        <label
+          htmlFor="file"
+          className="block text-sm font-semibold text-[var(--color-ink)]"
+        >
+          {isEn
+            ? "Downloadable Digital File (.zip or .pdf)"
+            : "Berkas Digital yang Dijual (.zip atau .pdf)"}
+        </label>
+
+        {currentAsset ? (
+          <div className="mt-2 text-xs flex flex-wrap items-center justify-between gap-2 border-b border-[var(--color-line)] pb-3">
+            <span className="text-[var(--color-text-muted)]">
+              {isEn ? "Current file:" : "Berkas aktif:"}{" "}
+              <strong className="text-[var(--color-ink)] font-mono">
+                {currentAsset.fileName}
+              </strong>{" "}
+              ({(currentAsset.fileSize / 1024 / 1024).toFixed(2)} MB).{" "}
+              {isEn
+                ? "Upload a new file below to replace it."
+                : "Unggah file baru di bawah jika ingin menggantinya."}
+            </span>
+            <span className="rounded bg-emerald-100 px-2 py-0.5 font-medium text-emerald-800 text-[10px]">
+              {isEn ? "File uploaded" : "File tersedia"}
+            </span>
+          </div>
+        ) : (
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">
             {isEn
-              ? "Downloadable Digital File (.zip or .pdf)"
-              : "Berkas Digital Downloadable (.zip atau .pdf)"}
-          </label>
-          {currentAsset && (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700">
-              {isEn ? "File uploaded" : "Berkas terpasang"}
-            </span>
-          )}
-        </div>
-        <p className="mb-3 text-xs text-[var(--color-text-muted)]">
-          {currentAsset
-            ? isEn
-              ? `Current file: ${currentAsset.fileName} (${(currentAsset.fileSize / 1024 / 1024).toFixed(2)} MB). Upload a new file below to replace it.`
-              : `Berkas aktif: ${currentAsset.fileName} (${(currentAsset.fileSize / 1024 / 1024).toFixed(2)} MB). Unggah berkas baru di bawah jika ingin menggantinya.`
-            : isEn
-              ? "Upload the primary file that customers will be able to download after payment."
-              : "Unggah berkas utama yang akan didapatkan pembeli setelah pembayaran berhasil."}
-        </p>
+              ? "Max 4 MB. Required for buyers to download after successful payment."
+              : "Maksimal 4 MB. Berkas ini yang otomatis dapat diunduh pembeli setelah lunas."}
+          </p>
+        )}
 
-        <input
-          ref={fileInputRef}
-          id="file"
-          name="file"
-          type="file"
-          accept=".zip,.pdf"
-          className="sr-only"
-        />
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <label
-            htmlFor="file-proxy"
-            className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-[var(--color-line-strong)] bg-white px-4 py-2.5 text-xs font-semibold text-[var(--color-ink)] shadow-2xs hover:bg-neutral-50 transition"
-          >
-            <svg
-              className="w-4 h-4 text-[var(--color-text-muted)]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-            <span>
-              {digitalFile
-                ? isEn
-                  ? "Change New File"
-                  : "Ganti Berkas Baru"
-                : currentAsset
-                  ? isEn
-                    ? "Replace File"
-                    : "Ganti Berkas"
-                  : isEn
-                    ? "Choose File"
-                    : "Pilih Berkas"}
-            </span>
-          </label>
+        <div className="mt-3">
           <input
-            id="file-proxy"
+            id="file"
+            name="file"
             type="file"
             accept=".zip,.pdf"
-            className="sr-only"
-            onChange={(e) => {
-              const file = e.target.files?.[0] || null;
-              setDigitalFile(file);
-            }}
+            className="block w-full text-xs text-[var(--color-text-muted)] file:mr-3 file:rounded-md file:border-0 file:bg-[var(--color-surface-muted)] file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-[var(--color-ink)] hover:file:bg-[var(--color-line)] cursor-pointer"
           />
-
-          <span className="text-xs text-[var(--color-text-muted)] truncate max-w-xs">
-            {digitalFile
-              ? `${digitalFile.name} (${(digitalFile.size / 1024 / 1024).toFixed(2)} MB)`
-              : currentAsset
-                ? isEn
-                  ? "Keep current file"
-                  : "Tetap gunakan berkas saat ini"
-                : isEn
-                  ? "No file selected (Max. 4 MB)"
-                  : "Belum ada berkas dipilih (Maks. 4 MB)"}
-          </span>
         </div>
       </div>
 
-      {/* 9. STATUS PRODUK */}
+      {/* 10. STATUS PUBLIKASI PRODUK */}
       <div>
         <label className="mb-2 block text-sm font-medium text-[var(--color-ink)]">
           {isEn ? "Product Status" : "Status Publikasi"}
         </label>
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => setStatus("DRAFT")}
-            className={`min-h-11 rounded-[var(--radius-control)] border px-4 text-sm font-semibold transition ${
-              status === "DRAFT"
-                ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
-                : "border-[var(--color-line-strong)] bg-white text-[var(--color-text-muted)] hover:bg-neutral-50"
-            }`}
-          >
-            Draft
-          </button>
-          <button
-            type="button"
-            onClick={() => setStatus("PUBLISHED")}
-            className={`min-h-11 rounded-[var(--radius-control)] border px-4 text-sm font-semibold transition ${
-              status === "PUBLISHED"
-                ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
-                : "border-[var(--color-line-strong)] bg-white text-[var(--color-text-muted)] hover:bg-neutral-50"
-            }`}
-          >
-            Published
-          </button>
-          <button
-            type="button"
-            onClick={() => setStatus("ARCHIVED")}
-            className={`min-h-11 rounded-[var(--radius-control)] border px-4 text-sm font-semibold transition ${
-              status === "ARCHIVED"
-                ? "border-red-600 bg-red-600 text-white"
-                : "border-[var(--color-line-strong)] bg-white text-[var(--color-text-muted)] hover:bg-neutral-50"
-            }`}
-          >
-            Archived
-          </button>
+        <div className="flex flex-wrap gap-2">
+          {(["DRAFT", "PUBLISHED", "ARCHIVED"] as const).map((s) => (
+            <label
+              key={s}
+              className="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-control)] border border-[var(--color-line-strong)] px-4 text-xs font-semibold text-[var(--color-ink)] has-checked:border-[var(--color-ink)] has-checked:bg-[var(--color-ink)] has-checked:!text-white has-checked:text-white! cursor-pointer transition-colors"
+            >
+              <input
+                type="radio"
+                name="status"
+                value={s}
+                defaultChecked={product.status === s}
+                className="hidden"
+              />
+              {s === "PUBLISHED"
+                ? isEn
+                  ? "Published"
+                  : "Rilis Publik"
+                : s === "DRAFT"
+                  ? isEn
+                    ? "Draft"
+                    : "Draf"
+                  : isEn
+                    ? "Archived"
+                    : "Arsip"}
+            </label>
+          ))}
         </div>
-        <input type="hidden" name="status" value={status} />
       </div>
 
-      {/* NOTIFIKASI ERROR / SUKSES */}
       {state.error && <StatusMessage tone="error">{state.error}</StatusMessage>}
       {state.success && (
         <StatusMessage tone="success">{state.success}</StatusMessage>
       )}
 
-      {/* TOMBOL SIMPAN / SUBMIT */}
-      <div className="pt-2">
+      {/* TOMBOL AKSI SIMPAN */}
+      <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-line)]">
+        <Link
+          href="/admin/products"
+          className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-5 text-xs font-semibold text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)]"
+        >
+          {isEn ? "Cancel" : "Batal"}
+        </Link>
+
         <LoadingButton
           type="submit"
           loading={isPending}
-          className="min-h-12 w-full rounded-[var(--radius-control)] bg-[var(--color-ink)] px-6 text-sm font-semibold text-white transition-all hover:bg-[var(--color-ink-soft)] active:scale-98 shadow-xs"
+          loadingText={isEn ? "Saving changes..." : "Menyimpan perubahan..."}
+          className="min-h-11 flex-1 shadow-xs font-semibold text-xs"
         >
-          {isEn ? "Save Changes" : "Simpan Perubahan"}
+          {isEn ? "Save Product Changes" : "Simpan Perubahan Produk"}
         </LoadingButton>
       </div>
     </form>

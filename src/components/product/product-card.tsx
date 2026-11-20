@@ -11,6 +11,7 @@ type ProductCardProps = {
     slug: string;
     description: string;
     priceMinor: number;
+    techStack?: string[];
     category: {
       name: string;
     };
@@ -27,10 +28,12 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
   const defaultTitle = isEn ? "Digital product" : "Produk digital";
   const title = product.title || defaultTitle;
 
+  // Baca stack teknologi: gunakan dari database bila tersedia
   const techStack = getProductTechStack(
     product.slug,
     product.description,
     product.title,
+    product.techStack,
   );
 
   const labels = {
@@ -59,20 +62,18 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full items-end p-5">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-              {labels.preview}
-            </span>
+          <div className="flex h-full items-center justify-center text-xs text-[var(--color-text-muted)]">
+            {labels.preview}
           </div>
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center justify-between gap-3">
-          <span className="rounded-full bg-[var(--color-accent-soft)] px-2.5 py-1 text-[11px] font-medium text-[var(--color-accent-strong)]">
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-2 text-xs">
+          <span className="font-semibold uppercase tracking-[0.12em] text-[var(--color-accent-strong)]">
             {product.category.name}
           </span>
-          <span className="text-[11px] text-[var(--color-text-muted)]">
+          <span className="rounded bg-[var(--color-surface-muted)] px-2 py-0.5 text-[10px] text-[var(--color-text-muted)]">
             {labels.typeBadge}
           </span>
         </div>
@@ -109,15 +110,14 @@ export function ProductCard({ product, locale = "id" }: ProductCardProps) {
             <p className="text-[11px] text-[var(--color-text-muted)]">
               {labels.price}
             </p>
-
-            <p className="mt-0.5 font-bold text-sm text-[var(--color-ink)]">
+            <p className="mt-1 font-mono text-sm font-semibold text-[var(--color-ink)]">
               {formatIdr(product.priceMinor, locale)}
             </p>
           </div>
 
           <Link
             href={`/products/${product.slug}`}
-            className="text-xs font-semibold text-[var(--color-accent-strong)] transition-colors hover:text-[var(--color-ink)]"
+            className="pressable focus-ring inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-line-strong)] bg-white px-3 py-1 text-xs font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)]"
           >
             {labels.viewDetail}
           </Link>

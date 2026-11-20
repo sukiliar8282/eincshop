@@ -17,12 +17,17 @@ export default async function HomePage() {
         productType: "DIGITAL",
       },
       select: {
+        id: true,
         title: true,
         slug: true,
         description: true,
         priceMinor: true,
+        updatedAt: true,
+        currency: true,
+        techStack: true,
         category: {
           select: {
+            id: true,
             name: true,
             slug: true,
           },

@@ -44,13 +44,19 @@ export function getProductTechStack(
   slug: string,
   description?: string,
   title?: string,
+  dbTechStack?: string[],
 ): string[] {
-  // 1. Cek kurasi manual berdasarkan slug
+  // 1. Cek kurasi manual berdasarkan slug (untuk produk bawaan katalog)
   if (CURATED_TECH_STACKS[slug]) {
     return CURATED_TECH_STACKS[slug];
   }
 
-  // 2. Ekstraksi otomatis dari judul dan deskripsi produk
+  // 2. Prioritaskan pilihan teknologi yang disimpan seller di database
+  if (dbTechStack && dbTechStack.length > 0) {
+    return dbTechStack;
+  }
+
+  // 3. Ekstraksi otomatis dari judul dan deskripsi produk jika ada kata kunci teknologi
   const content = `${title ?? ""} ${description ?? ""}`.toLowerCase();
   const matched = new Set<string>();
 

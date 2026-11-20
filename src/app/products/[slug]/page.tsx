@@ -38,6 +38,7 @@ async function getProduct(slug: string) {
       priceMinor: true,
       updatedAt: true,
       currency: true,
+      techStack: true, // <-- Tambahkan baris ini di sini
       category: {
         select: {
           id: true,
@@ -111,6 +112,7 @@ export default async function ProductDetailPage({
     product.slug,
     product.description,
     product.title,
+    rawProduct.techStack,
   );
 
   const rawRelatedProducts = await prisma.product.findMany({
