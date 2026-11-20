@@ -377,7 +377,7 @@ export async function createProductAction(
           id: imageId,
           productId: createdProduct.id,
           storageKey: uploadedImage.storageKey,
-          url: uploadedImage.url,
+          url: `/api/product-images/${imageId}`,
           altText: `${createdProduct.title} - ${index + 1}`,
           sortOrder: index,
         },
@@ -779,7 +779,7 @@ export async function updateProductAction(
         id: imageId,
         productId,
         storageKey: uploadedImage.storageKey,
-        url: uploadedImage.url,
+        url: `/api/product-images/${imageId}`,
         altText: `${parsed.data.title} - ${sortOrder + 1}`,
         sortOrder,
       },
@@ -806,7 +806,8 @@ export async function updateProductAction(
       : null;
   const fallbackFileName = file?.name ?? "digital-asset";
   let uploaded:
-    Awaited<ReturnType<typeof uploadPrivateDigitalAsset>> | undefined;
+    | Awaited<ReturnType<typeof uploadPrivateDigitalAsset>>
+    | undefined;
   let assetId: string | undefined;
 
   try {

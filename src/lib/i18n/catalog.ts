@@ -121,8 +121,8 @@ const CATEGORY_TRANSLATIONS: Record<string, { en: string; id: string }> = {
 };
 
 /**
- * Localize Product Data
- * Jika produk custom buatan admin yang belum terdaftar di kamus, data database asli tetap aman ditampilkan.
+ * Localize Product Data & Normalisasi URL Foto Produk
+ * Jika gambar tersimpan sebagai URL blob eksternal, otomatis dialihkan ke route internal yang aman.
  */
 export function localizeProduct<
   T extends {
@@ -130,24 +130,43 @@ export function localizeProduct<
     title?: string;
     description?: string;
     category?: { name: string; slug?: string } | null;
+    images?: Array<{ id?: string; url: string; altText?: string }>;
   },
 >(product: T, locale: Locale | string): T {
   const isEn = locale === "en" || locale === "en-US";
-  if (!isEn) return product;
 
-  const translation = CATALOG_TRANSLATIONS[product.slug]?.en;
+  const translation = isEn ? CATALOG_TRANSLATIONS[product.slug]?.en : undefined;
   const categorySlug = product.category?.slug?.toLowerCase();
   const categoryName = product.category?.name?.toLowerCase();
-  const translatedCategoryName = categorySlug
-    ? CATEGORY_TRANSLATIONS[categorySlug]?.en
-    : categoryName
-      ? CATEGORY_TRANSLATIONS[categoryName]?.en
-      : undefined;
+  const translatedCategoryName = isEn
+    ? categorySlug
+      ? CATEGORY_TRANSLATIONS[categorySlug]?.en
+      : categoryName
+        ? CATEGORY_TRANSLATIONS[categoryName]?.en
+        : undefined
+    : undefined;
+
+  // Normalisasi otomatis URL foto produk agar selalu bisa diakses publik secara aman
+  const normalizedImages = product.images?.map((img) => {
+    if (
+      img.url &&
+      img.id &&
+      !img.url.startsWith("/catalog/") &&
+      !img.url.startsWith("/api/product-images/")
+    ) {
+      return {
+        ...img,
+        url: `/api/product-images/${img.id}`,
+      };
+    }
+    return img;
+  });
 
   return {
     ...product,
     title: translation?.title ?? product.title,
     description: translation?.description ?? product.description,
+    ...(normalizedImages ? { images: normalizedImages } : {}),
     ...(product.category
       ? {
           category: {

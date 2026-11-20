@@ -15,24 +15,17 @@ export async function GET(
 ) {
   const { imageId } = await params;
 
-  const image = await prisma.productImage.findFirst({
+  // Temukan metadata gambar produk di database
+  const image = await prisma.productImage.findUnique({
     where: {
       id: imageId,
-      product: {
-        status: "PUBLISHED",
-      },
     },
     select: {
       storageKey: true,
-      product: {
-        select: {
-          productType: true,
-        },
-      },
     },
   });
 
-  if (!image || image.product.productType !== "DIGITAL") {
+  if (!image) {
     return NextResponse.json(
       { error: "Image tidak ditemukan." },
       { status: 404 },

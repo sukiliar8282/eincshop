@@ -10,6 +10,20 @@ const nextConfig: NextConfig = {
     allowedDevOrigins: ["192.168.1.64", "localhost:3000"],
   }),
 
+  // Pendaftaran domain Vercel Blob untuk Next.js Image Optimization
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.blob.vercel-storage.com",
+      },
+    ],
+  },
+
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",

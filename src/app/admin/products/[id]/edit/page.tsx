@@ -81,6 +81,17 @@ export default async function EditProductPage({
     notFound();
   }
 
+  // Normalisasi URL foto untuk form edit agar thumbnail selalu tampil
+  const normalizedImages = product.images.map((img) => ({
+    id: img.id,
+    url:
+      img.url &&
+      !img.url.startsWith("/catalog/") &&
+      !img.url.startsWith("/api/product-images/")
+        ? `/api/product-images/${img.id}`
+        : img.url,
+  }));
+
   return (
     <main className="py-16 sm:py-24">
       <Container>
@@ -101,15 +112,18 @@ export default async function EditProductPage({
             {isEn ? "Edit Product" : "Edit Produk"}
           </h1>
 
-          <p className="mt-4 text-sm leading-6 text-[var(--color-text-muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
             {isEn
-              ? "Update product details, crop photos, modify pricing, and manage downloadable assets."
-              : "Perbarui detail produk, sesuaikan foto sampul, ubah harga, dan kelola berkas digital."}
+              ? "Update product details, pricing, assets, or publish status."
+              : "Perbarui informasi produk, harga, berkas aset, atau status rilis."}
           </p>
 
           <div className="mt-8">
             <EditProductForm
-              product={product}
+              product={{
+                ...product,
+                images: normalizedImages,
+              }}
               categories={categories}
               currentAsset={product.digitalAssets[0] ?? null}
               isSuperAdmin={admin.role === "ADMIN"}
