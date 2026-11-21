@@ -171,6 +171,12 @@ export function EditProductForm({
           </button>
         </div>
 
+        <input
+          type="hidden"
+          name="isCustomCategory"
+          value={isSuperAdmin && categoryMode === "custom" ? "true" : "false"}
+        />
+
         {categoryMode === "existing" ? (
           <div className="relative">
             <select
@@ -257,10 +263,10 @@ export function EditProductForm({
         />
       </div>
 
-      {/* 6. HARGA PRODUK (IDR) */}
+      {/* 6. HARGA PRODUK (IDR) - Menggunakan name="priceIdr" agar sinkron dengan Server Action */}
       <div>
         <label
-          htmlFor="price"
+          htmlFor="priceIdr"
           className="mb-2 block text-sm font-medium text-[var(--color-ink)]"
         >
           {isEn ? "Price (IDR)" : "Harga Jual (IDR)"}
@@ -270,10 +276,10 @@ export function EditProductForm({
             Rp
           </span>
           <input
-            id="price"
-            name="price"
+            id="priceIdr"
+            name="priceIdr"
             type="number"
-            min="10000"
+            min="0"
             max="100000000"
             step="1000"
             required

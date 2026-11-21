@@ -586,7 +586,7 @@ export async function updateProductAction(
     title: formData.get("title"),
     slug: formData.get("slug"),
     description: formData.get("description"),
-    priceIdr: formData.get("priceIdr"),
+    priceIdr: formData.get("priceIdr") ?? formData.get("price"),
     sku: formData.get("sku"),
     status: formData.get("status"),
     techStack,
